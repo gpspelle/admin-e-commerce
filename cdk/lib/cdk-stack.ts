@@ -1,6 +1,7 @@
 import * as cdk from '@aws-cdk/core'
 import * as ec2 from '@aws-cdk/aws-ec2' // import ec2 library 
 import * as iam from '@aws-cdk/aws-iam' // import iam library for permissions
+import * as dynamodb from '@aws-cdk/aws-dynamodb'
 
 export class SimpleEc2Stack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
@@ -13,11 +14,11 @@ export class SimpleEc2Stack extends cdk.Stack {
     // Lets create a role for the instance
     // You can attach permissions to a role and determine what your
     // instance can or can not do
-      const role = new iam.Role(
-        this,
-        'ec2-admin-e-commerce-role', // this is a unique id that will represent this resource in a Cloudformation template
-        { assumedBy: new iam.ServicePrincipal('ec2.amazonaws.com') }
-      )
+    const role = new iam.Role(
+      this,
+      'ec2-admin-e-commerce-role', // this is a unique id that will represent this resource in a Cloudformation template
+      { assumedBy: new iam.ServicePrincipal('ec2.amazonaws.com') }
+    )
 
     // lets create a security group for our instance
     // A security group acts as a virtual firewall for your instance to control inbound and outbound traffic.
@@ -78,5 +79,19 @@ export class SimpleEc2Stack extends cdk.Stack {
     new cdk.CfnOutput(this, 'ec2-admin-e-commerce-output', {
       value: instance.instancePublicIp
     })
+
+    // 👇 create Dynamodb table
+    const table = new dynamodb.Table(this, id, {
+      tableName: "admins",
+      billingMode: dynamodb.BillingMode.PROVISIONED,
+      readCapacity: 1,
+      writeCapacity: 1,
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      partitionKey: { name: "email", type: dynamodb.AttributeType.STRING },
+      pointInTimeRecovery: true,
+    })
+
+    // 👇 grant the lambda role read permissions to our table
+    table.grantReadData(role)
   }
 }
