@@ -1,21 +1,13 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React from 'react';
  
-export default function ImageUploadPreview() {
-    const [file, setFile] = useState();
-
-    var imgPreview;
-    if (file) {
-        imgPreview = <img src={file} alt='' />;
-    } 
+export default function ImageUploadPreview( { images, setImages }) {
 
     return (
         <div>
             <div className="form-group preview">
-                {imgPreview}
             </div>
             <div className="form-group">
-                <input type="file" className="form-control" onChange={e => setFile(URL.createObjectURL(e.target.files[0]))} />
+                <input type="file" className="form-control" onChange={e => setImages(e.target)} />
             </div>
         </div >
     );
