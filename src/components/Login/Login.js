@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './Login.css';
 
+const serverIp = 'http://ec2-3-228-19-200.compute-1.amazonaws.com';
+
 async function loginUser(credentials) {
- return fetch('http://ec2-34-205-50-208.compute-1.amazonaws.com/login', {
+ return fetch(`${serverIp}/login`, {
    method: 'POST',
    headers: {
      'Content-Type': 'application/json'

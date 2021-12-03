@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import axios from 'axios';
 import ImageUploadPreview from "../ImageUploadPreview/ImageUploadPreview";
-import axios from "axios";
+
+const api = 'https://5q1q0zygmk.execute-api.us-east-1.amazonaws.com/dev';
 
 export default function Form() {
     const [name, setName] = useState();
@@ -8,26 +10,29 @@ export default function Form() {
     const [price, setPrice] = useState();
     const [images, setImages] = useState();
 
-    async function handleSubmit() {
+    async function handleSubmit(event) {
+        event.preventDefault();
+        const image = [{
+            name: images.name,
+            content: images,
+        }];
 
-        const image = [];
+        console.log(images);
 
-        images.forEach((i) => {
-            image.append({
-                name: i.name,
-                content: i
-            })
-        });
-
-        const request = {
+        const body = JSON.stringify({
             name,
             description,
             price,
             image,
-        }
+        });
+
+        var config = {
+            headers: { 'Content-Type': 'application/json' },
+          };
 
         try {
-            const res = await fetch();
+            const res = await axios.put(`${api}/product`, body, config);
+            console.log(res.json());
             console.log('sucessfuly uploaded image');
         } catch (error) {
             console.error(error);
