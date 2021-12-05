@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './Login.css';
 
-const serverIp = 'http://ec2-3-228-19-200.compute-1.amazonaws.com';
+const api = 'https://qbhf2c9996.execute-api.us-east-1.amazonaws.com/dev';
 
 async function loginUser(credentials) {
- return fetch(`${serverIp}/login`, {
+ return fetch(`${api}/login`, {
    method: 'POST',
    headers: {
      'Content-Type': 'application/json'
@@ -19,8 +19,9 @@ export default function Login({ setToken }) {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     const token = await loginUser({
       email,
       password

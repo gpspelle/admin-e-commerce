@@ -2,22 +2,22 @@ import React, { useState } from "react";
 import axios from 'axios';
 import ImageUploadPreview from "../ImageUploadPreview/ImageUploadPreview";
 
-const api = 'https://5q1q0zygmk.execute-api.us-east-1.amazonaws.com/dev';
+const api = 'https://qbhf2c9996.execute-api.us-east-1.amazonaws.com/dev';
 
 export default function Form() {
     const [name, setName] = useState();
     const [description, setDescription] = useState();
     const [price, setPrice] = useState();
     const [images, setImages] = useState();
-
+    const [imageNames, setImageNames] = useState();
+    
     async function handleSubmit(event) {
         event.preventDefault();
+
         const image = [{
-            name: images.name,
+            name: imageNames,
             content: images,
         }];
-
-        console.log(images);
 
         const body = JSON.stringify({
             name,
@@ -55,7 +55,7 @@ export default function Form() {
                   <label className="form-label">Price</label>
                   <input type="number" className="form-control" id="inputPrice" aria-describedby="priceHelp" onChange={e => setPrice(e.target.value)} />
                 </div>
-                <ImageUploadPreview images={images} setImages={setImages}/>
+                <ImageUploadPreview setImages={setImages} setImageNames={setImageNames} />
                 <button type="submit" className="btn btn-primary">Submit</button>
             </form>
         </div>
