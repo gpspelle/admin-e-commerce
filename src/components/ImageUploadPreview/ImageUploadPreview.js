@@ -1,8 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
  
-export default function ImageUploadPreview( { setImages, setImageNames }) {
-    const [imagePreview, setImagePreview] = useState();
-
+export default function ImageUploadPreview( { imageInput, imagePreview, setImagePreview, setImages, setImageNames }) {
     const convertToBase64 = (file) => {
         return new Promise((resolve, reject) => {
           const fileReader = new FileReader();
@@ -17,20 +15,29 @@ export default function ImageUploadPreview( { setImages, setImageNames }) {
     };
 
     const handleFileUpload = async (e) => {
-        const file = e.target.files[0];
-        setImagePreview(URL.createObjectURL(e.target.files[0]));
-        const base64 = await convertToBase64(file);
-        setImages(base64);
-        setImageNames(e.target.files[0].name);
+        const filesAsArray = [...e.target.files];
+        setImagePreview(filesAsArray);
+        const base64Images = [];
+        const imageNames = [];
+        filesAsArray.forEach(async (file) => {
+            const base64File = await convertToBase64(file);
+            base64Images.push(base64File);
+            imageNames.push(file.name);
+        })
+
+        setImages(base64Images);
+        setImageNames(imageNames);
     };
 
     return (
         <div>
             <div className="form-group preview">
-                {<img src={imagePreview} alt='' />}
+                {imagePreview && imagePreview.map((image) => 
+                    <img key={image.name} src={URL.createObjectURL(image)} alt='' />
+                )}
             </div>
             <div className="form-group">
-                <input type="file" className="form-control" accept=".jpg, .jpeg, .png" onChange={(e) => handleFileUpload(e)} />
+                <input ref={imageInput} type="file" multiple={true} className="form-control" accept=".jpg, .jpeg, .png" onChange={(e) => handleFileUpload(e)} />
             </div>
         </div >
     );
