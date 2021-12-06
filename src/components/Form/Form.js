@@ -66,19 +66,19 @@ export default function Form() {
             <CreateAlert status={createStatus} createdProductName={createdProductName} />
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                  <label className="form-label">Name</label>
+                  <label className="form-label">Nome</label>
                   <input ref={textInputName} type="text" className="form-control" id="inputName" aria-describedby="nameHelp" onChange={e => setName(e.target.value)} />
                 </div>
                 <div className="mb-3">
-                  <label className="form-label">Description</label>
+                  <label className="form-label">Descrição</label>
                   <textarea ref={textInputDescription} value={description} className="form-control" aria-label="With textarea" onChange={e => setDescription(e.target.value)} />
                 </div>
                 <div className="mb-3">
-                  <label className="form-label">Price</label>
+                  <label className="form-label">Preço</label>
                   <input ref={textInputPrice} value={price} type="number" className="form-control" id="inputPrice" aria-describedby="priceHelp" onChange={e => setPrice(e.target.value)} />
                 </div>
                 <ImageUploadPreview imageInput={imageInput} imagePreview={imagePreview} setImagePreview={setImagePreview} setImages={setImages} setImageNames={setImageNames} />
-                <button type="submit" className="btn btn-primary">Submit</button>
+                <button type="submit" className="btn btn-primary">Enviar</button>
             </form>
         </div>
       )

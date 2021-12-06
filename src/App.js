@@ -1,4 +1,5 @@
 import React from 'react';
+import { Container, Nav, Navbar } from 'react-bootstrap';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
@@ -17,14 +18,22 @@ function App() {
 
   return (
     <div className="wrapper">
-      <Form />
+      <Navbar bg="dark" variant="dark">
+        <Container>
+        <Navbar.Brand href="/home">Administração E-commerce</Navbar.Brand>
+        <Nav className="me-auto">
+          <Nav.Link href="/adicionar-produto">Adicionar Produto</Nav.Link>
+          <Nav.Link href="/remover-produto">Remover Produto</Nav.Link>
+        </Nav>
+        </Container>
+      </Navbar>
       <BrowserRouter>
         <Switch>
-          <Route path="/dashboard">
-            <Dashboard />
+          <Route path="/adicionar-produto">
+            <Form />
           </Route>
-          <Route path="/preferences">
-            <Preferences />
+          <Route path="/remover-produto">
+            <div>Hi</div>
           </Route>
         </Switch>
       </BrowserRouter>
