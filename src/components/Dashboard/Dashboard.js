@@ -12,8 +12,8 @@ export default function Dashboard() {
   const [products, setProducts] = useState();
   const [deleteStatus, setDeleteStatus] = useState();
   const [deletedProductName, setDeletedProductName] = useState();
-
-  useEffect(() => {
+  const [fetchData, setFetchData] = useState(0);
+  useEffect(() => {    
     async function getProductsFromDatabase() {
         const data = await fetch(`${api}/${endpoint}`);
         const json = await data.json();
@@ -21,7 +21,7 @@ export default function Dashboard() {
     }
 
     getProductsFromDatabase();
-  }, [])
+  }, [fetchData]);
 
   return (
     <Container>
@@ -31,13 +31,15 @@ export default function Dashboard() {
             return (
                 <Col key={i}>
                 <Product
-                    setDeleteStatus={setDeleteStatus}
-                    setDeletedProductName={setDeletedProductName}
-                    id={item.id}
-                    name={item.PRODUCT_NAME}
-                    description={item.PRODUCT_DESCRIPTION}
-                    price={item.PRODUCT_PRICE}
-                    images={item.PRODUCT_IMAGES}
+                  fetchData={fetchData}
+                  setFetchData={setFetchData}
+                  setDeleteStatus={setDeleteStatus}
+                  setDeletedProductName={setDeletedProductName}
+                  id={item.id}
+                  name={item.PRODUCT_NAME}
+                  description={item.PRODUCT_DESCRIPTION}
+                  price={item.PRODUCT_PRICE}
+                  images={item.PRODUCT_IMAGES}
                 />
                 </Col>
             )

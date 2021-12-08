@@ -7,23 +7,24 @@ import axios from "axios"
 
 const api = 'https://qbhf2c9996.execute-api.us-east-1.amazonaws.com/dev';
 
-export default function Product({ setDeleteStatus, setDeletedProductName, id, name, description, price, images }) {
+export default function Product({ fetchData, setFetchData, setDeleteStatus, setDeletedProductName, id, name, description, price, images }) {
   const deleteProduct = async (e) => {
     const body = {
-        id,
+      id,
     };
 
     var config = {
-        headers: { 'Content-Type': 'text/plain' },
-      };
+      headers: { 'Content-Type': 'text/plain' },
+    };
 
     try {
-        setDeletedProductName(name);
-        const res = await axios.delete(`${api}/product`, {data: body}, config);
-        setDeleteStatus(res.status);
+      setDeletedProductName(name);
+      const res = await axios.delete(`${api}/product`, {data: body}, config);
+      setDeleteStatus(res.status);
+      setFetchData(fetchData + 1);
     } catch (error) {
-        console.error(error);
-        setDeleteStatus('500');
+      console.error(error);
+      setDeleteStatus('500');
     }
   }
 
