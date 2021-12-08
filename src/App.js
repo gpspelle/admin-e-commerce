@@ -1,12 +1,10 @@
 import React from 'react';
 import { Container, Nav, Navbar } from 'react-bootstrap';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import Dashboard from './components/Dashboard/Dashboard';
 import Form from './components/Form/Form';
 import Login from './components/Login/Login';
-import Preferences from './components/Preferences/Preferences';
 import useToken from './hooks/useToken';
 
 function App() {
@@ -33,7 +31,7 @@ function App() {
             <Form />
           </Route>
           <Route path="/remover-produto">
-            <div>Hi</div>
+            <Dashboard />
           </Route>
         </Switch>
       </BrowserRouter>
