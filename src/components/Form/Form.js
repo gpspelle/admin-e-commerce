@@ -19,7 +19,7 @@ export default function Form() {
   const [name, setName] = useState("");
   const [createdProductName, setCreatedProductName] = useState("");
   const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("0");
+  const [price, setPrice] = useState("");
   const [images, setImages] = useState(null);
   const [imageNames, setImageNames] = useState([]);
   const [imagePreview, setImagePreview] = useState();
@@ -37,8 +37,18 @@ export default function Form() {
     }
   }, [location]);
 
+  const isCreateInputValid = () => {
+    return name !== "" &&
+      description !== "" &&
+      price !== "" &&
+      images &&
+      images.length > 0
+  }
+
   async function handleCreateSubmit(event) {
     event.preventDefault();
+
+    if (!isCreateInputValid()) return;
 
     const transformedImages = [];
     
@@ -70,7 +80,7 @@ export default function Form() {
           setCreatedProductName(name);
           setName("");
           setDescription("");
-          setPrice("0");
+          setPrice("");
           setImagePreview();
         }
     } catch (error) {
