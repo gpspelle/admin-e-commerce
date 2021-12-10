@@ -21,7 +21,7 @@ function App() {
         <Navbar.Brand href="/home">Administração E-commerce</Navbar.Brand>
         <Nav className="me-auto">
           <Nav.Link href="/adicionar-produto">Adicionar Produto</Nav.Link>
-          <Nav.Link href="/remover-produto">Remover Produto</Nav.Link>
+          <Nav.Link href="/gerenciar-produtos">Gerenciar Produtos</Nav.Link>
         </Nav>
         </Container>
       </Navbar>
@@ -30,8 +30,11 @@ function App() {
           <Route path="/adicionar-produto">
             <Form />
           </Route>
-          <Route path="/remover-produto">
+          <Route path="/gerenciar-produtos">
             <Dashboard />
+          </Route>
+          <Route path="/:id/edit">
+            <Form />
           </Route>
         </Switch>
       </BrowserRouter>

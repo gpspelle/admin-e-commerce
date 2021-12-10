@@ -1,6 +1,6 @@
 import React from 'react';
  
-export default function ImageUploadPreview( { imageInput, imagePreview, setImagePreview, setImages, setImageNames }) {
+export default function ImageUploadPreview({ imageInput, imagePreview, setImagePreview, setImages, setImageNames }) {
     const convertToBase64 = (file) => {
         return new Promise((resolve, reject) => {
           const fileReader = new FileReader();
@@ -33,7 +33,7 @@ export default function ImageUploadPreview( { imageInput, imagePreview, setImage
         <div>
             <div className="form-group preview">
                 {imagePreview && imagePreview.map((image) => 
-                    <img key={image.name} src={URL.createObjectURL(image)} alt='' />
+                    <img key={image.name ? image.name : image} src={image.name ? URL.createObjectURL(image) : image} alt='' />
                 )}
             </div>
             <div className="form-group">

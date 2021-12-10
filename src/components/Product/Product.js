@@ -1,4 +1,5 @@
 import React from "react"
+import { useHistory } from "react-router-dom"
 import Card from "react-bootstrap/Card"
 import Button from "react-bootstrap/Button"
 import Badge from "react-bootstrap/Badge"
@@ -8,6 +9,8 @@ import axios from "axios"
 const api = 'https://qbhf2c9996.execute-api.us-east-1.amazonaws.com/dev';
 
 export default function Product({ fetchData, setFetchData, setDeleteStatus, setDeletedProductName, id, name, description, price, images }) {
+  const history = useHistory()
+
   const deleteProduct = async (e) => {
     const body = {
       id,
@@ -28,6 +31,10 @@ export default function Product({ fetchData, setFetchData, setDeleteStatus, setD
     }
   }
 
+  const editProduct = async (e) => {
+    history.push({pathname: `/${id}/edit`, state: { id, name, description, price, images }})
+  }
+
   return (
     <Card style={{ width: "18rem" }}>
       <Carousel interval={null}>
@@ -42,6 +49,9 @@ export default function Product({ fetchData, setFetchData, setDeleteStatus, setD
       <Card.Body>
         <Card.Title>{name}</Card.Title>
         <Card.Text>{description}</Card.Text>
+        <Button variant="secondary" onClick={(e) => editProduct(e)}>
+          Editar
+        </Button>
         <Button variant="danger" onClick={(e) => deleteProduct(e)}>
           Deletar
         </Button>
