@@ -17,6 +17,7 @@ export default function Dashboard() {
     async function getProductsFromDatabase() {
         const data = await fetch(`${api}/${endpoint}`);
         const json = await data.json();
+        json.sort((a, b) => (a.PRODUCT_NAME > b.PRODUCT_NAME ? 1 : -1));
         setProducts(json);
     }
 
@@ -29,7 +30,15 @@ export default function Dashboard() {
         <Row>
             {products?.map((item, i) => {
             return (
-                <Col key={i}>
+                <Col
+                  key={i}
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    padding: "30px",
+                  }}
+                >
                 <Product
                   fetchData={fetchData}
                   setFetchData={setFetchData}

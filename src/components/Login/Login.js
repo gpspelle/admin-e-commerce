@@ -16,35 +16,33 @@ async function loginUser(credentials) {
 }
 
 export default function Login({ setToken }) {
-  const [email, setEmail] = useState();
+  const [username, setUsername] = useState();
   const [password, setPassword] = useState();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const token = await loginUser({
-      email,
+      username,
       password
     });
 
     setToken(token);
   }
 
-  // TODO: input type="text" can become type="email" for email
   return (
     <div>
-        <h1>Please Log In</h1>
+        <h1>Realize Login</h1>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-              <label className="form-label">Email address</label>
-              <input type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" onChange={e => setEmail(e.target.value)} />
-              <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div>
+              <label className="form-label">Usuário</label>
+              <input type="text" className="form-control" id="exampleInputUsername1" onChange={e => setUsername(e.target.value)} />
             </div>
             <div className="mb-3">
-              <label className="form-label">Password</label>
+              <label className="form-label">Senha</label>
               <input type="password" className="form-control" id="exampleInputPassword1" onChange={e => setPassword(e.target.value)} />
             </div>
-            <button type="submit" className="btn btn-primary">Submit</button>
+            <button type="submit" className="btn btn-primary">Enviar</button>
         </form>
     </div>
   )

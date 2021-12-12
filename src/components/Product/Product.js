@@ -1,9 +1,6 @@
 import React from "react"
 import { useHistory } from "react-router-dom"
-import Card from "react-bootstrap/Card"
-import Button from "react-bootstrap/Button"
-import Badge from "react-bootstrap/Badge"
-import { Carousel } from "react-bootstrap"
+import { Button, Card } from "react-bootstrap"
 import axios from "axios"
 
 const api = 'https://qbhf2c9996.execute-api.us-east-1.amazonaws.com/dev';
@@ -37,27 +34,25 @@ export default function Product({ fetchData, setFetchData, setDeleteStatus, setD
 
   return (
     <Card style={{ width: "18rem" }}>
-      <Carousel interval={null}>
-        {images?.map((item, i) => {
-          return (
-            <Carousel.Item key={i}>
-              <img className="d-block w-100" src={item} alt={`${i}`} />
-            </Carousel.Item>
-          )
-        })}
-      </Carousel>
+      <img
+        className="d-block w-100"
+        width="256px"
+        height="256px"
+        src={images[0]}
+        alt={`256x256`}
+      />
       <Card.Body>
-        <Card.Title>{name}</Card.Title>
-        <Card.Text>{description}</Card.Text>
-        <Button variant="secondary" onClick={(e) => editProduct(e)}>
+        <Card.Title className="notranslate">{name}</Card.Title>
+        <Card.Text className="notranslate">{description}</Card.Text>
+        <Button variant="outline-secondary" style={{ width: "100%", marginBottom: "8%" }} onClick={(e) => editProduct(e)}>
           Editar
         </Button>
-        <Button variant="danger" onClick={(e) => deleteProduct(e)}>
+        <Button variant="danger" style={{ width: "100%", marginBottom: "8%" }} onClick={(e) => deleteProduct(e)}>
           Deletar
         </Button>
-        <Badge pill bg="success">
-          {price} R$
-        </Badge>
+        <Card.Text className="notranslate" style={{ textAlign: "center" }}>
+          R$ {price}
+        </Card.Text>
       </Card.Body>
     </Card>
   )

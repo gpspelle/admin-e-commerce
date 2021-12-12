@@ -16,7 +16,7 @@ function App() {
 
   return (
     <div className="wrapper">
-      <Navbar bg="dark" variant="dark">
+      <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
         <Container>
         <Navbar.Brand href="/home">Administração E-commerce</Navbar.Brand>
         <Nav className="me-auto">
