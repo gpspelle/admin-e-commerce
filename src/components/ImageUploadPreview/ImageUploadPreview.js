@@ -33,7 +33,7 @@ export default function ImageUploadPreview({ imageInput, imagePreview, setImageP
         <div>
             <div className="form-group preview">
                 {imagePreview && imagePreview.map((image) => 
-                    <img key={image.name ? image.name : image} src={image.name ? URL.createObjectURL(image) : image} alt='' />
+                    <img key={image.name ? image.name : image} width={256} height={256} src={image.name ? URL.createObjectURL(image) : image} alt='' />
                 )}
             </div>
             <div className="form-group">
