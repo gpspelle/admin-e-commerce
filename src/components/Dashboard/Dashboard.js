@@ -4,9 +4,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Product from "../Product/Product";
 import DeleteAlert from "../Alert/DeleteAlert";
-
-const api = "https://qbhf2c9996.execute-api.us-east-1.amazonaws.com/dev";
-const endpoint = "products";
+import { API, PRODUCTS_ENDPOINT } from "../../constants/constants";
 
 export default function Dashboard() {
   const [products, setProducts] = useState();
@@ -15,7 +13,7 @@ export default function Dashboard() {
   const [fetchData, setFetchData] = useState(0);
   useEffect(() => {    
     async function getProductsFromDatabase() {
-        const data = await fetch(`${api}/${endpoint}`);
+        const data = await fetch(`${API}/${PRODUCTS_ENDPOINT}`);
         const json = await data.json();
         json.sort((a, b) => (a.PRODUCT_NAME > b.PRODUCT_NAME ? 1 : -1));
         setProducts(json);

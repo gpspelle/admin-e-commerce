@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './Login.css';
-
-const api = 'https://qbhf2c9996.execute-api.us-east-1.amazonaws.com/dev';
+import { API, LOGIN_ENDPOINT } from '../../constants/constants';
 
 async function loginUser(credentials) {
- return fetch(`${api}/login`, {
+ return fetch(`${API}/${LOGIN_ENDPOINT}`, {
    method: 'POST',
    headers: {
      'Content-Type': 'application/json'

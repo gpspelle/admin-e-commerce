@@ -2,8 +2,7 @@ import React from "react"
 import { useHistory } from "react-router-dom"
 import { Button, Card } from "react-bootstrap"
 import axios from "axios"
-
-const api = 'https://qbhf2c9996.execute-api.us-east-1.amazonaws.com/dev';
+import { API, PRODUCT_ENDPOINT } from "../../constants/constants"
 
 export default function Product({ fetchData, setFetchData, setDeleteStatus, setDeletedProductName, id, name, description, price, images }) {
   const history = useHistory()
@@ -19,7 +18,7 @@ export default function Product({ fetchData, setFetchData, setDeleteStatus, setD
 
     try {
       setDeletedProductName(name);
-      const res = await axios.delete(`${api}/product`, {data: body}, config);
+      const res = await axios.delete(`${API}/${PRODUCT_ENDPOINT}`, {data: body}, config);
       setDeleteStatus(res.status);
       setFetchData(fetchData + 1);
     } catch (error) {

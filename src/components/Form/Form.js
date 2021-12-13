@@ -4,8 +4,7 @@ import axios from 'axios';
 import ImageUploadPreview from "../ImageUploadPreview/ImageUploadPreview";
 import CreateAlert from "../Alert/CreateAlert";
 import EditAlert from "../Alert/EditAlert";
-
-const api = 'https://qbhf2c9996.execute-api.us-east-1.amazonaws.com/dev';
+import { API, PRODUCT_ENDPOINT } from "../../constants/constants";
 
 export default function Form() {
   const history = useHistory();
@@ -68,7 +67,7 @@ export default function Form() {
       };
 
     try {
-        const res = await axios.put(`${api}/product`, body, config);
+        const res = await axios.put(`${API}/${PRODUCT_ENDPOINT}`, body, config);
         setCreateStatus(res.status);
 
         if (res.status === 200) {
@@ -114,7 +113,7 @@ export default function Form() {
     };
 
     try {
-      const res = await axios.patch(`${api}/product`, JSON.stringify(body), config);
+      const res = await axios.patch(`${API}/${PRODUCT_ENDPOINT}`, JSON.stringify(body), config);
       setEditStatus(res.status);
 
       if (res.status === 200) {
