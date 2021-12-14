@@ -1,13 +1,18 @@
-import React from "react"
+import React, { useState } from "react"
 import { useHistory } from "react-router-dom"
-import { Button, Card } from "react-bootstrap"
+import { Button, Card, Modal } from "react-bootstrap"
 import axios from "axios"
 import { API, PRODUCT_ENDPOINT } from "../../constants/constants"
 
 export default function Product({ fetchData, setFetchData, setDeleteStatus, setDeletedProductName, id, name, description, price, images }) {
   const history = useHistory()
+  const [showModal, setShowModal] = useState(false);
+
+  const handleCloseModal = () => setShowModal(false);
+  const handleShowModal = () => setShowModal(true);
 
   const deleteProduct = async (e) => {
+    handleCloseModal()
     const body = {
       id,
     };
@@ -32,7 +37,22 @@ export default function Product({ fetchData, setFetchData, setDeleteStatus, setD
   }
 
   return (
-    <Card style={{ width: "18rem" }}>
+    <div>
+      <Modal show={showModal} onHide={handleCloseModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Deletar produto</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{`Deseja mesmo deletar o produto ${name}?`}</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Não
+          </Button>
+          <Button variant="primary" onClick={(e) => deleteProduct(e)}>
+            Sim
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Card style={{ width: "18rem" }}>
       <img
         className="d-block w-100"
         width="256px"
@@ -46,7 +66,7 @@ export default function Product({ fetchData, setFetchData, setDeleteStatus, setD
         <Button variant="outline-secondary" style={{ width: "100%", marginBottom: "8%" }} onClick={(e) => editProduct(e)}>
           Editar
         </Button>
-        <Button variant="danger" style={{ width: "100%", marginBottom: "8%" }} onClick={(e) => deleteProduct(e)}>
+        <Button variant="danger" style={{ width: "100%", marginBottom: "8%" }} onClick={handleShowModal}>
           Deletar
         </Button>
         <Card.Text className="notranslate" style={{ textAlign: "center" }}>
@@ -54,5 +74,7 @@ export default function Product({ fetchData, setFetchData, setDeleteStatus, setD
         </Card.Text>
       </Card.Body>
     </Card>
+    </div>
+    
   )
 }
