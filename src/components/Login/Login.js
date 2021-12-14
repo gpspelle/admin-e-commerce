@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './Login.css';
 import { API, LOGIN_ENDPOINT } from '../../constants/constants';
+import { Form, Button, Container} from 'react-bootstrap';
 
 async function loginUser(credentials) {
  return fetch(`${API}/${LOGIN_ENDPOINT}`, {
@@ -30,20 +31,30 @@ export default function Login({ setToken }) {
   }
 
   return (
-    <div>
-        <h1>Realize Login</h1>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-              <label className="form-label">Usuário</label>
-              <input type="text" className="form-control" id="exampleInputUsername1" onChange={e => setUsername(e.target.value)} />
-            </div>
-            <div className="mb-3">
-              <label className="form-label">Senha</label>
-              <input type="password" className="form-control" id="exampleInputPassword1" onChange={e => setPassword(e.target.value)} />
-            </div>
-            <button type="submit" className="btn btn-primary">Enviar</button>
-        </form>
-    </div>
+    <Container
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "30px",
+      }}
+    >
+      <Form onSubmit={handleSubmit}>
+        <h1>Bem vindo</h1>
+        <Form.Group className="mb-3" controlId="formBasicEmail">
+          <Form.Label>Usuário</Form.Label>
+          <Form.Control onChange={e => setUsername(e.target.value)} type="text" placeholder="" />
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="formBasicPassword">
+          <Form.Label >Senha</Form.Label>
+          <Form.Control onChange={e => setPassword(e.target.value)} type="password" placeholder="" />
+        </Form.Group>
+        <Button variant="primary" type="submit">
+          Enviar
+        </Button>
+      </Form>
+    </Container>
+    
   )
 }
 
