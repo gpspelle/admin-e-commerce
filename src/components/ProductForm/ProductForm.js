@@ -1,18 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import axios from 'axios';
 import ImageUploadPreview from "../ImageUploadPreview/ImageUploadPreview";
 import CreateAlert from "../Alert/CreateAlert";
 import EditAlert from "../Alert/EditAlert";
 import { API, PRODUCT_ENDPOINT } from "../../constants/constants";
+import { Form, Container, Button } from "react-bootstrap";
 
-export default function Form() {
+export default function ProductForm() {
   const history = useHistory();
   const location = useLocation();
-  const textInputName = useRef();
-  const textInputDescription = useRef();
-  const textInputPrice = useRef();
-  const imageInput = useRef();
   const [edit, setEdit] = useState();
   const [id, setId] = useState();
   const [name, setName] = useState("");
@@ -71,11 +68,6 @@ export default function Form() {
         setCreateStatus(res.status);
 
         if (res.status === 200) {
-          textInputName.current.value = "";
-          textInputDescription.current.value = "";
-          textInputPrice.current.value = "0";
-          imageInput.current.value = null;
-
           setCreatedProductName(name);
           setName("");
           setDescription("");
@@ -125,25 +117,32 @@ export default function Form() {
   }
 
   return (
-    <div>
-        <h1>{edit ? 'Edite o produto' : 'Crie um novo produto'}</h1>
-        {edit ? <EditAlert status={editStatus} editedProductName={location.state.name} newEditedProductName={name} /> : <CreateAlert status={createStatus} createdProductName={createdProductName} />}
-        <form onSubmit={edit ? handleEditSubmit : handleCreateSubmit}>
-          <div className="mb-3">
-            <label className="form-label">Nome</label>
-            <input ref={textInputName} value={name} type="text" className="form-control" id="inputName" aria-describedby="nameHelp" onChange={e => setName(e.target.value)} />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Descrição</label>
-            <textarea ref={textInputDescription} value={description} className="form-control" aria-label="With textarea" onChange={e => setDescription(e.target.value)} />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Preço</label>
-            <input ref={textInputPrice} value={price} type="number" className="form-control" id="inputPrice" aria-describedby="priceHelp" onChange={e => setPrice(e.target.value)} />
-          </div>
-          <ImageUploadPreview imageInput={imageInput} imagePreview={imagePreview} setImagePreview={setImagePreview} setImages={setImages} setImageNames={setImageNames} />
-          <button type="submit" className="btn btn-primary">Enviar</button>
-        </form>
-    </div>
+    <Container
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "30px",
+      }}
+    >
+        <Form onSubmit={edit ? handleEditSubmit : handleCreateSubmit}>
+          <h1>{edit ? 'Edite o produto' : 'Crie um novo produto'}</h1>
+          {edit ? <EditAlert status={editStatus} editedProductName={location.state.name} newEditedProductName={name} /> : <CreateAlert status={createStatus} createdProductName={createdProductName} />}
+          <Form.Group className="mb-3" controlId="formBasicProductName">
+            <Form.Label>Nome</Form.Label>
+            <Form.Control onChange={e => setName(e.target.value)} type="text" placeholder="" />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="formBasicDescription">
+            <Form.Label >Descrição</Form.Label>
+            <Form.Control onChange={e => setDescription(e.target.value)} type="text" placeholder="" />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="formBasicPrice">
+            <Form.Label>Preço</Form.Label>
+            <Form.Control onChange={e => setPrice(e.target.value)} type="text" placeholder="" />
+          </Form.Group>
+          <ImageUploadPreview imagePreview={imagePreview} setImagePreview={setImagePreview} setImages={setImages} setImageNames={setImageNames} />
+          <Button type="submit" className="btn btn-primary">Enviar</Button>
+        </Form>
+    </Container>
   )
 }

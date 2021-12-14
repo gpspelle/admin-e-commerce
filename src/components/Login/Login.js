@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import './Login.css';
 import { API, LOGIN_ENDPOINT } from '../../constants/constants';
 import { Form, Button, Container} from 'react-bootstrap';
 
@@ -41,12 +40,12 @@ export default function Login({ setToken }) {
     >
       <Form onSubmit={handleSubmit}>
         <h1>Bem vindo</h1>
-        <Form.Group className="mb-3" controlId="formBasicEmail">
+        <Form.Group className="mb-3" controlId="formBasicUsername">
           <Form.Label>Usuário</Form.Label>
           <Form.Control onChange={e => setUsername(e.target.value)} type="text" placeholder="" />
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicPassword">
-          <Form.Label >Senha</Form.Label>
+          <Form.Label>Senha</Form.Label>
           <Form.Control onChange={e => setPassword(e.target.value)} type="password" placeholder="" />
         </Form.Group>
         <Button variant="primary" type="submit">

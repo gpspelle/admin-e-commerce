@@ -1,6 +1,7 @@
 import React from 'react';
+import { Form } from 'react-bootstrap';
  
-export default function ImageUploadPreview({ imageInput, imagePreview, setImagePreview, setImages, setImageNames }) {
+export default function ImageUploadPreview({ imagePreview, setImagePreview, setImages, setImageNames }) {
     const convertToBase64 = (file) => {
         return new Promise((resolve, reject) => {
           const fileReader = new FileReader();
@@ -30,15 +31,11 @@ export default function ImageUploadPreview({ imageInput, imagePreview, setImageP
     };
 
     return (
-        <div>
-            <div className="form-group preview">
-                {imagePreview && imagePreview.map((image) => 
-                    <img key={image.name ? image.name : image} width={256} height={256} src={image.name ? URL.createObjectURL(image) : image} alt='' />
-                )}
-            </div>
-            <div className="form-group">
-                <input ref={imageInput} type="file" multiple={true} className="form-control" accept=".jpg, .jpeg, .png" onChange={(e) => handleFileUpload(e)} />
-            </div>
-        </div >
+        <Form.Group className="mb-3 preview" controlId="formBasicPrice">
+            {imagePreview && imagePreview.map((image) => 
+                <img key={image.name ? image.name : image} width={256} height={256} src={image.name ? URL.createObjectURL(image) : image} alt='' />
+            )}
+            <Form.Control type="file" multiple={true} className="form-control" accept=".jpg, .jpeg, .png" onChange={(e) => handleFileUpload(e)} />
+        </Form.Group>
     );
 }
