@@ -3,8 +3,8 @@ import { Container, Nav, Navbar } from 'react-bootstrap';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import './App.css';
 import Dashboard from './components/Dashboard/Dashboard';
-import Form from './components/Form/Form';
 import Login from './components/Login/Login';
+import ProductForm from './components/ProductForm/ProductForm';
 import useToken from './hooks/useToken';
 
 function App() {
@@ -28,13 +28,13 @@ function App() {
       <BrowserRouter>
         <Switch>
           <Route path="/adicionar-produto">
-            <Form />
+            <ProductForm />
           </Route>
           <Route path="/gerenciar-produtos">
             <Dashboard />
           </Route>
           <Route path="/:id/edit">
-            <Form />
+            <ProductForm />
           </Route>
         </Switch>
       </BrowserRouter>
