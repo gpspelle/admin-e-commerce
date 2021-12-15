@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import axios from 'axios';
 import ImageUploadPreview from "../ImageUploadPreview/ImageUploadPreview";
@@ -12,6 +12,7 @@ import { areArraysEqual } from "../../utils/compareTwoArrays";
 export default function ProductForm() {
   const history = useHistory();
   const location = useLocation();
+  const imageInput = useRef();
   const [edit, setEdit] = useState();
   const [id, setId] = useState();
   const [name, setName] = useState("");
@@ -73,6 +74,7 @@ export default function ProductForm() {
         setCreateStatus(res.status);
 
         if (res.status === 200) {
+          imageInput.current.value = null;
           setCreatedProductName(name);
           setName("");
           setDescription("");
@@ -148,7 +150,7 @@ export default function ProductForm() {
             <Form.Control value={price} onChange={e => setPrice(e.target.value)} type="number" placeholder="" />
           </Form.Group>
           <TagSelector tags={tags} setTags={setTags} />
-          <ImageUploadPreview imagePreview={imagePreview} setImagePreview={setImagePreview} setImages={setImages} setImageNames={setImageNames} />
+          <ImageUploadPreview imageInput={imageInput} imagePreview={imagePreview} setImagePreview={setImagePreview} setImages={setImages} setImageNames={setImageNames} />
           <Button type="submit" className="btn btn-primary">Enviar</Button>
         </Form>
     </Container>

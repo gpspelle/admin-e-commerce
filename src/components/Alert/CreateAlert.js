@@ -6,7 +6,8 @@ export default function CreateAlert({ status, createdProductName }) {
 
     const statusToAlert = {
         200: { variant: 'success', Heading: `O produto ${createdProductName} foi criado com sucesso.`},
-        400: { variant: 'danger', Heading: `O produto ${createdProductName} não foi criado corretamente, tente novamente.`}
+        400: { variant: 'danger', Heading: `O produto ${createdProductName} não foi criado corretamente, tente novamente.`},
+        500: { variant: 'danger', Heading: `O produto ${createdProductName} não foi criado corretamente, tente novamente.`}
     }
 
     if (statusToAlert[status] && show) {

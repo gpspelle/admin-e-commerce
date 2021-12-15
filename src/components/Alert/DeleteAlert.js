@@ -6,6 +6,7 @@ export default function DeleteAlert({ status, deletedProductName }) {
 
     const statusToAlert = {
         200: { variant: 'success', Heading: `O produto ${deletedProductName} foi deletado com sucesso.`},
+        400: { variant: 'danger', Heading: `O produto ${deletedProductName} não foi deletado corretamente, tente novamente.`},
         500: { variant: 'danger', Heading: `O produto ${deletedProductName} não foi deletado corretamente, tente novamente.`}
     }
 

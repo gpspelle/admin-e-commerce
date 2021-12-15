@@ -5,6 +5,7 @@ export default function EditAlert({ status, editedProductName, newEditedProductN
     const [show, setShow] = useState(true);
 
     const statusToAlert = {
+        400: { variant: 'danger', Heading: `O produto anteriormente chamado de ${editedProductName}, com novo nome de ${newEditedProductName} não foi alterado corretamente, tente novamente.`},
         500: { variant: 'danger', Heading: `O produto anteriormente chamado de ${editedProductName}, com novo nome de ${newEditedProductName} não foi alterado corretamente, tente novamente.`}
     }
 
