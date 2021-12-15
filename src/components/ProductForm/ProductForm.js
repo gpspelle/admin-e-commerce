@@ -6,6 +6,8 @@ import CreateAlert from "../Alert/CreateAlert";
 import EditAlert from "../Alert/EditAlert";
 import { API, PRODUCT_ENDPOINT } from "../../constants/constants";
 import { Form, Container, Button } from "react-bootstrap";
+import TagSelector from "../TagSelector/TagSelector";
+import { areArraysEqual } from "../../utils/compareTwoArrays";
 
 export default function ProductForm() {
   const history = useHistory();
@@ -16,6 +18,7 @@ export default function ProductForm() {
   const [createdProductName, setCreatedProductName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
+  const [tags, setTags] = useState([]);
   const [images, setImages] = useState(null);
   const [imageNames, setImageNames] = useState([]);
   const [imagePreview, setImagePreview] = useState();
@@ -29,6 +32,7 @@ export default function ProductForm() {
       setName(location.state.name);
       setDescription(location.state.description);
       setPrice(location.state.price);
+      setTags(location.state.tags);
       setImagePreview(location.state.images);
     }
   }, [location]);
@@ -56,6 +60,7 @@ export default function ProductForm() {
         name,
         description,
         price,
+        tags,
         images: transformedImages,
     });
 
@@ -72,6 +77,7 @@ export default function ProductForm() {
           setName("");
           setDescription("");
           setPrice("");
+          setTags([]);
           setImagePreview();
         }
     } catch (error) {
@@ -89,6 +95,7 @@ export default function ProductForm() {
     if (location.state.name !== name) body.PRODUCT_NAME = name; 
     if (location.state.description !== description) body.PRODUCT_DESCRIPTION = description;
     if (location.state.price !== price) body.PRODUCT_PRICE = price;
+    if (!areArraysEqual(location.state.tags, (tags))) body.PRODUCT_TAGS = tags;
 
     if (images) {
       const transformedImages = [];
@@ -130,16 +137,17 @@ export default function ProductForm() {
           {edit ? <EditAlert status={editStatus} editedProductName={location.state.name} newEditedProductName={name} /> : <CreateAlert status={createStatus} createdProductName={createdProductName} />}
           <Form.Group className="mb-3" controlId="formBasicProductName">
             <Form.Label>Nome</Form.Label>
-            <Form.Control onChange={e => setName(e.target.value)} type="text" placeholder="" />
+            <Form.Control value={name} onChange={e => setName(e.target.value)} type="text" placeholder="" />
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicDescription">
             <Form.Label >Descrição</Form.Label>
-            <Form.Control onChange={e => setDescription(e.target.value)} type="text" placeholder="" />
+            <Form.Control value={description} onChange={e => setDescription(e.target.value)} type="text" placeholder="" />
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicPrice">
             <Form.Label>Preço</Form.Label>
-            <Form.Control onChange={e => setPrice(e.target.value)} type="text" placeholder="" />
+            <Form.Control value={price} onChange={e => setPrice(e.target.value)} type="number" placeholder="" />
           </Form.Group>
+          <TagSelector tags={tags} setTags={setTags} />
           <ImageUploadPreview imagePreview={imagePreview} setImagePreview={setImagePreview} setImages={setImages} setImageNames={setImageNames} />
           <Button type="submit" className="btn btn-primary">Enviar</Button>
         </Form>

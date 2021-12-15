@@ -4,7 +4,7 @@ import { Button, Card, Modal } from "react-bootstrap"
 import axios from "axios"
 import { API, PRODUCT_ENDPOINT } from "../../constants/constants"
 
-export default function Product({ fetchData, setFetchData, setDeleteStatus, setDeletedProductName, id, name, description, price, images }) {
+export default function Product({ fetchData, setFetchData, setDeleteStatus, setDeletedProductName, id, name, description, price, tags, images }) {
   const history = useHistory()
   const [showModal, setShowModal] = useState(false);
 
@@ -33,7 +33,7 @@ export default function Product({ fetchData, setFetchData, setDeleteStatus, setD
   }
 
   const editProduct = async (e) => {
-    history.push({pathname: `/${id}/edit`, state: { id, name, description, price, images }})
+    history.push({pathname: `/${id}/edit`, state: { id, name, description, price, tags, images }})
   }
 
   return (

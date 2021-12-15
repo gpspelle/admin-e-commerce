@@ -46,6 +46,7 @@ export default function Dashboard() {
                   name={item.PRODUCT_NAME}
                   description={item.PRODUCT_DESCRIPTION}
                   price={item.PRODUCT_PRICE}
+                  tags={item.PRODUCT_TAGS ? item.PRODUCT_TAGS : []}
                   images={item.PRODUCT_IMAGES}
                 />
                 </Col>

@@ -31,7 +31,7 @@ export default function ImageUploadPreview({ imagePreview, setImagePreview, setI
     };
 
     return (
-        <Form.Group className="mb-3 preview" controlId="formBasicPrice">
+        <Form.Group className="mb-3 preview" controlId="formBasicImages">
             {imagePreview && imagePreview.map((image) => 
                 <img key={image.name ? image.name : image} width={256} height={256} src={image.name ? URL.createObjectURL(image) : image} alt='' />
             )}
