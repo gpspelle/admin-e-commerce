@@ -143,9 +143,7 @@ export default function ProductForm() {
       console.error(error);
     }
   }
-  
-  console.log(missingFieldsAlert);
-  
+    
   return (
     <Container
       style={{

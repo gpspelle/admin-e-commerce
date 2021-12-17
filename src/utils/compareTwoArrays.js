@@ -8,7 +8,7 @@ export const areArraysEqual = (array1, array2) => {
     if (array1.length !== array2.length)
         return false;
 
-    for (var i = 0, l = this.length; i < l; i++) {
+    for (var i = 0, l = array1.length; i < l; i++) {
         // Check if we have nested arrays
         if (array1[i] instanceof Array && array2[i] instanceof Array) {
             // recurse into the nested arrays
