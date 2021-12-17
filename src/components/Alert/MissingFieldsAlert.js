@@ -3,7 +3,7 @@ import { Alert } from "react-bootstrap";
 
 const getMissingRequiredFields = (name, description, price, images) => {
     let missingRequiredFields = '';
-    console.log(name, description, price, images)
+
     if (name === "") {
         missingRequiredFields += "nome, ";
     }
