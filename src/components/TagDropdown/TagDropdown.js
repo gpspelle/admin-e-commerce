@@ -29,7 +29,7 @@ const TagMenu = React.forwardRef(
                             overflowY: "scroll", // At the end only from the top and bottom overflow to scrollable
                     }}
                 >
-                    {value.length > 0 && !isValueInSelectedTags && <Dropdown.Item active={!isValueInSelectedTags} style={{ paddingLeft: "12px" }} onClick={() => onClick(value, setValue)} key={"createTag"} eventKey={"createTag"}>Criar <strong>{value}</strong></Dropdown.Item>}
+                    {value.length > 0 && !isValueInSelectedTags && <Dropdown.Item active={!isValueInSelectedTags} style={{ paddingLeft: "12px" }} onClick={() => onClick(value, setValue)} key={"createTag"} eventKey={"createTag"}>Criar tag <strong>{value}</strong></Dropdown.Item>}
                     {
                         createdTags && createdTags.filter(
                             (child) => {
