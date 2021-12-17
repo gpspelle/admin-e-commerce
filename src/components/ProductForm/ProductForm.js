@@ -4,7 +4,7 @@ import axios from 'axios';
 import ImageUploadPreview from "../ImageUploadPreview/ImageUploadPreview";
 import CreateAlert from "../Alert/CreateAlert";
 import EditAlert from "../Alert/EditAlert";
-import { API, PRODUCT_ENDPOINT } from "../../constants/constants";
+import { API, PRODUCT_ENDPOINT, TAGS_ENDPOINT } from "../../constants/constants";
 import { Form, Container, Button } from "react-bootstrap";
 import TagSelector from "../TagSelector/TagSelector";
 import { areArraysEqual } from "../../utils/compareTwoArrays";
@@ -13,18 +13,30 @@ export default function ProductForm() {
   const history = useHistory();
   const location = useLocation();
   const imageInput = useRef();
+  const [createdTags, setCreatedTags] = useState([]);
   const [edit, setEdit] = useState();
   const [id, setId] = useState();
   const [name, setName] = useState("");
   const [createdProductName, setCreatedProductName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
-  const [tags, setTags] = useState([]);
+  const [tags, setTags] = useState(new Set([]));
   const [images, setImages] = useState(null);
   const [imageNames, setImageNames] = useState([]);
   const [imagePreview, setImagePreview] = useState();
   const [createStatus, setCreateStatus] = useState();
   const [editStatus, setEditStatus] = useState();
+
+  useEffect(() => {
+    async function getTagsFromDatabase() {
+      const data = await fetch(`${API}/${TAGS_ENDPOINT}`);
+      const json = await data.json();
+
+      setCreatedTags(json);
+    }
+
+    getTagsFromDatabase();
+  }, [createStatus, editStatus]);
 
   useEffect(() => {
     if (location.state) {
@@ -33,7 +45,7 @@ export default function ProductForm() {
       setName(location.state.name);
       setDescription(location.state.description);
       setPrice(location.state.price);
-      setTags(location.state.tags);
+      setTags(new Set(location.state.tags));
       setImagePreview(location.state.images);
     }
   }, [location]);
@@ -61,7 +73,7 @@ export default function ProductForm() {
         name,
         description,
         price,
-        tags,
+        tags: [...tags],
         images: transformedImages,
     });
 
@@ -79,7 +91,7 @@ export default function ProductForm() {
           setName("");
           setDescription("");
           setPrice("");
-          setTags([]);
+          setTags(new Set([]));
           setImagePreview();
         }
     } catch (error) {
@@ -97,7 +109,7 @@ export default function ProductForm() {
     if (location.state.name !== name) body.PRODUCT_NAME = name; 
     if (location.state.description !== description) body.PRODUCT_DESCRIPTION = description;
     if (location.state.price !== price) body.PRODUCT_PRICE = price;
-    if (!areArraysEqual(location.state.tags, (tags))) body.PRODUCT_TAGS = tags;
+    if (!areArraysEqual(location.state.tags, [...tags])) body.PRODUCT_TAGS = [...tags];
 
     if (images) {
       const transformedImages = [];
@@ -149,7 +161,7 @@ export default function ProductForm() {
             <Form.Label>Preço</Form.Label>
             <Form.Control value={price} onChange={e => setPrice(e.target.value)} type="number" placeholder="" />
           </Form.Group>
-          <TagSelector tags={tags} setTags={setTags} />
+          <TagSelector createdTags={createdTags} tags={tags} setTags={setTags} />
           <ImageUploadPreview imageInput={imageInput} imagePreview={imagePreview} setImagePreview={setImagePreview} setImages={setImages} setImageNames={setImageNames} />
           <Button type="submit" className="btn btn-primary">Enviar</Button>
         </Form>

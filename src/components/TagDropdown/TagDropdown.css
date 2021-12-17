@@ -1,0 +1,12 @@
+ul {
+    list-style-type: none;
+    padding: 0;
+    border: 1px solid #ddd;
+}
+
+ul:empty {
+    list-style-type: none;
+    padding: 0;
+    border: none;
+    margin-bottom: 0px;
+}

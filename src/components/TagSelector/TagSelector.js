@@ -1,47 +1,36 @@
 import React, { useState } from "react";
-import { Form, Button, FormControl, InputGroup, Col } from "react-bootstrap";
+import { Form, InputGroup, Col, Button } from "react-bootstrap";
 import Tag from "../Tag/Tag";
+import TagDropdown from "../TagDropdown/TagDropdown";
 
-export default function TagSelector({ tags, setTags }) {
-    const [actualTag, setActualTag] = useState("");
+export default function TagSelector({ createdTags, tags, setTags }) {
+    const [showTagMenu, setShowTagMenu] = useState(false);
 
-    const addTag = () => {
-        const newTag = [...tags];
-        newTag.push(actualTag);
-        setActualTag("")
-        return newTag;
+    const addTag = (tag, setValue) => {
+        const deepCopySet = new Set([...tags]);
+        deepCopySet.add(tag);
+        setTags(deepCopySet);
+        setValue("")
     }
 
     const onDeleteTag = (tag) => {
-        const index = tags.indexOf(tag);
-        if (index !== -1) {
-            const newTags = [...tags];
-            newTags.splice(index, 1);
-            setTags(newTags);
-        }
+        const deepCopySet = new Set([...tags]);
+        deepCopySet.delete(tag);
+        setTags(deepCopySet);
     }
 
     return (
         <Form.Group className="mb-3 preview" controlId="formBasicTags">
-            <Form.Label>Tags</Form.Label>
             <InputGroup>
-                <FormControl
-                    aria-label="Example text with button addon"
-                    aria-describedby="basic-tag"
-                    value={actualTag}
-                    onChange={e => setActualTag(e.target.value)} type="text" placeholder=""
-                />
-                <Button onClick={() => setTags(addTag)} variant="outline-secondary" id="button-add-tag">
-                    Adicionar tag
-                </Button>
+                <Button style={{width: "100%"}} variant="outline-primary" onClick={() => setShowTagMenu(!showTagMenu)}>Adicionar Tags</Button>
             </InputGroup>
-            {tags.map((tag, i) =>
+            <TagDropdown showTagMenu={showTagMenu} createdTags={createdTags} selectedTags={[...tags]} onClick={addTag} />
+            {[...tags].map((tag, i) =>
                 <Col
                     style={{
                         display: "flex",
-                        justifyContent: "left",
                         alignItems: "center",
-                        padding: "4px",
+                        paddingTop: "8px"
                     }}
                     key={i}
                 >
