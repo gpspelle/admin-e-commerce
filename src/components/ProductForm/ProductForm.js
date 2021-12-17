@@ -8,6 +8,7 @@ import { API, PRODUCT_ENDPOINT, TAGS_ENDPOINT } from "../../constants/constants"
 import { Form, Container, Button } from "react-bootstrap";
 import TagSelector from "../TagSelector/TagSelector";
 import { areArraysEqual } from "../../utils/compareTwoArrays";
+import MissingFieldsAlert from "../Alert/MissingFieldsAlert";
 
 export default function ProductForm() {
   const history = useHistory();
@@ -26,6 +27,7 @@ export default function ProductForm() {
   const [imagePreview, setImagePreview] = useState();
   const [createStatus, setCreateStatus] = useState();
   const [editStatus, setEditStatus] = useState();
+  const [missingFieldsAlert, setMissingFielsdAlert] = useState(false);
 
   useEffect(() => {
     async function getTagsFromDatabase() {
@@ -60,8 +62,12 @@ export default function ProductForm() {
 
   async function handleCreateSubmit(event) {
     event.preventDefault();
+    setMissingFielsdAlert(false);
 
-    if (!isCreateInputValid()) return;
+    if (!isCreateInputValid()) {
+      setMissingFielsdAlert(true);
+      return; 
+    }
 
     const transformedImages = [];
     
@@ -101,6 +107,7 @@ export default function ProductForm() {
 
   async function handleEditSubmit(event) {
     event.preventDefault();
+    setMissingFielsdAlert(false);
 
     const body = {
       id,
@@ -136,7 +143,9 @@ export default function ProductForm() {
       console.error(error);
     }
   }
-
+  
+  console.log(missingFieldsAlert);
+  
   return (
     <Container
       style={{
@@ -148,6 +157,7 @@ export default function ProductForm() {
     >
         <Form onSubmit={edit ? handleEditSubmit : handleCreateSubmit}>
           <h1>{edit ? 'Edite o produto' : 'Crie um novo produto'}</h1>
+          {missingFieldsAlert && <MissingFieldsAlert name={name} description={description} price={price} images={images} />}
           {edit ? <EditAlert status={editStatus} editedProductName={location.state.name} newEditedProductName={name} /> : <CreateAlert status={createStatus} createdProductName={createdProductName} />}
           <Form.Group className="mb-3" controlId="formBasicProductName">
             <Form.Label>Nome</Form.Label>
