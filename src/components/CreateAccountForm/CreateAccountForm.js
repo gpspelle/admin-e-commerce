@@ -3,28 +3,37 @@ import axios from 'axios';
 import { useHistory } from "react-router-dom"
 import { ACCOUNT_ENDPOINT, API } from "../../constants/constants";
 import { Form, Container, Button } from "react-bootstrap";
+import PhoneNumberInput from "../PhoneNumberInput/PhoneNumberInput";
+import CreateAccountAlert from "../Alert/CreateAccountAlert";
 
 var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
-const passwordMeetRequirements = (password) => strongRegex.test(password)
+const isValidPassword = (password) => strongRegex.test(password)
+const isValidPhoneNumber = (phoneNumber) => String(phoneNumber).match(/^\+?[1-9]\d{1,14}$/)
 
 export default function CreateAccountForm() {
     const history = useHistory();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [commercialName, setCommercialName] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
     const [password, setPassword] = useState("");
+    const [show, setShow] = useState(false);
+    const [createAccountStatus, setCreateAccountStatus] = useState();
+    const [createAccountBackendMessage, setCreateAccountBackendMessage] = useState();
 
     const isCreateInputValid = () => {
         return (email !== "" &&
             name !== "" &&
             commercialName !== "" &&
+            phoneNumber !== "" &&
+            isValidPhoneNumber(phoneNumber) &&
             password !== "" &&
-            passwordMeetRequirements(password));
+            isValidPassword(password));
     }
 
     async function handleCreateAccount(event) {
         event.preventDefault();
-
+        setShow(false);
         if (!isCreateInputValid()) {
             return; 
         }
@@ -33,6 +42,7 @@ export default function CreateAccountForm() {
             email,
             name,
             commercialName,
+            phoneNumber,
             password,
         });
 
@@ -41,13 +51,13 @@ export default function CreateAccountForm() {
         };
 
         try {
-            const res = await axios.put(`${API}/${ACCOUNT_ENDPOINT}`, body, config);
+            await axios.put(`${API}/${ACCOUNT_ENDPOINT}`, body, config);
+            history.push({pathname: "/", state: { email: email }})
 
-            if (res.status === 200) {
-                history.push({pathname: "/", state: { email: email }})
-            }
         } catch (error) {
-            console.error(error);
+            setCreateAccountStatus(error.response.status);
+            setCreateAccountBackendMessage(error.response.data.message);
+            setShow(true);
         }
     }
 
@@ -62,6 +72,7 @@ export default function CreateAccountForm() {
         >
             <Form onSubmit={handleCreateAccount}>
             <h1>Crie uma nova conta</h1>
+            {createAccountStatus && <CreateAccountAlert show={show} setShow={setShow} message={createAccountBackendMessage}/>}
             <Form.Group className="mb-3" controlId="formCreateAccountEmail">
                 <Form.Label>Email</Form.Label>
                 <Form.Control value={email} onChange={e => setEmail(e.target.value)} type="email" placeholder="gabriel@gmail.com" />
@@ -74,6 +85,7 @@ export default function CreateAccountForm() {
                 <Form.Label>Nome comercial</Form.Label>
                 <Form.Control value={commercialName} onChange={e => setCommercialName(e.target.value)} type="text" placeholder="Ateliê do Gabriel" />
             </Form.Group>
+            <PhoneNumberInput phoneNumber={phoneNumber} setPhoneNumber={setPhoneNumber} />
             <Form.Group className="mb-3" controlId="formCreateAccountPassword">
                 <Form.Label >Senha</Form.Label>
                 <Form.Control value={password} onChange={e => setPassword(e.target.value)} type="password" placeholder="" />
