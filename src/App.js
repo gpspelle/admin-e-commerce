@@ -2,6 +2,7 @@ import React from 'react';
 import { Container, Nav, Navbar } from 'react-bootstrap';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import './App.css';
+import CreateAccountForm from './components/CreateAccountForm/CreateAccountForm';
 import Dashboard from './components/Dashboard/Dashboard';
 import Login from './components/Login/Login';
 import ProductForm from './components/ProductForm/ProductForm';
@@ -10,19 +11,28 @@ import useToken from './hooks/useToken';
 function App() {
   const { token, setToken } = useToken();
     
-  if(!token) {
-    return <Login setToken={setToken} />
+  if (!token) {
+    return (
+      <BrowserRouter>
+        <Switch>
+          <Route path="/create-account">
+            <CreateAccountForm />
+          </Route>
+          <Login setToken={setToken} />
+        </Switch>
+      </BrowserRouter>
+    )
   }
 
   return (
     <div className="wrapper">
       <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
         <Container>
-        <Navbar.Brand href="/home">Administração E-commerce</Navbar.Brand>
-        <Nav className="me-auto">
-          <Nav.Link href="/adicionar-produto">Adicionar Produto</Nav.Link>
-          <Nav.Link href="/gerenciar-produtos">Gerenciar Produtos</Nav.Link>
-        </Nav>
+          <Navbar.Brand href="/home">Administração E-commerce</Navbar.Brand>
+          <Nav className="me-auto">
+            <Nav.Link href="/adicionar-produto">Adicionar Produto</Nav.Link>
+            <Nav.Link href="/gerenciar-produtos">Gerenciar Produtos</Nav.Link>
+          </Nav>
         </Container>
       </Navbar>
       <BrowserRouter>
