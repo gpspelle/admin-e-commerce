@@ -38,9 +38,8 @@ export default function Login({ setToken }) {
         }
       )
 
-      const token = await axios.post(`${API}/${LOGIN_ENDPOINT}`, body, config);
-      
-      setToken(token);
+      const res = await axios.post(`${API}/${LOGIN_ENDPOINT}`, body, config);
+      setToken(res.data);
     } catch (error) {
       setLoginStatusMessage(error.response.data);
       setShow(true);
