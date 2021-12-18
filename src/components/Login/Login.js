@@ -1,26 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 import { useHistory, useLocation } from "react-router-dom"
 import { API, LOGIN_ENDPOINT } from '../../constants/constants';
 import { Form, Button, Container} from 'react-bootstrap';
-
-async function loginUser(credentials) {
-  return fetch(`${API}/${LOGIN_ENDPOINT}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(credentials)
-  })
-   .then(data => data.json())
-}
+import DangerAlertWithMessage from '../Alert/DangerAlertWithMessage';
 
 export default function Login({ setToken }) {
   const history = useHistory();
   const location = useLocation();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
-  
+  const [show, setShow] = useState();
+  const [loginStatusMessage, setLoginStatusMessage] = useState(false);
+
   useEffect(() => {
     if (location.state) {
       setEmail(location.state.email);
@@ -29,13 +22,29 @@ export default function Login({ setToken }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setShow(false);
 
-    const token = await loginUser({
-      email,
-      password
-    });
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      } 
 
-    setToken(token);
+      const body = JSON.stringify(
+        {
+          email,
+          password
+        }
+      )
+
+      const token = await axios.post(`${API}/${LOGIN_ENDPOINT}`, body, config);
+      
+      setToken(token);
+    } catch (error) {
+      setLoginStatusMessage(error.response.data);
+      setShow(true);
+    }
   }
 
   return (
@@ -49,6 +58,7 @@ export default function Login({ setToken }) {
     >
       <Form onSubmit={handleSubmit}>
         <h1>Bem vindo</h1>
+        <DangerAlertWithMessage show={show} setShow={setShow} message={loginStatusMessage} />
         <Button onClick={() => history.push("/create-account")} className="w-100 my-2" variant="outline-success">Criar nova conta</Button>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Email</Form.Label>

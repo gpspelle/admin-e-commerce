@@ -1,7 +1,7 @@
 import React from "react";
 import { Alert } from "react-bootstrap";
 
-export default function CreateAccountAlert({ show, setShow, message }) {
+export default function DangerAlertWithMessage({ show, setShow, message }) {
     if (show) {
         return (
             <Alert variant="danger" onClose={() => setShow(false)} dismissible>

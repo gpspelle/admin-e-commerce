@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom"
 import { ACCOUNT_ENDPOINT, API } from "../../constants/constants";
 import { Form, Container, Button } from "react-bootstrap";
 import PhoneNumberInput from "../PhoneNumberInput/PhoneNumberInput";
-import CreateAccountAlert from "../Alert/CreateAccountAlert";
+import DangerAlertWithMessage from "../Alert/DangerAlertWithMessage";
 
 var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
 const isValidPassword = (password) => strongRegex.test(password)
@@ -18,7 +18,6 @@ export default function CreateAccountForm() {
     const [phoneNumber, setPhoneNumber] = useState("");
     const [password, setPassword] = useState("");
     const [show, setShow] = useState(false);
-    const [createAccountStatus, setCreateAccountStatus] = useState();
     const [createAccountBackendMessage, setCreateAccountBackendMessage] = useState();
 
     const isCreateInputValid = () => {
@@ -55,7 +54,6 @@ export default function CreateAccountForm() {
             history.push({pathname: "/", state: { email: email }})
 
         } catch (error) {
-            setCreateAccountStatus(error.response.status);
             setCreateAccountBackendMessage(error.response.data.message);
             setShow(true);
         }
@@ -72,7 +70,7 @@ export default function CreateAccountForm() {
         >
             <Form onSubmit={handleCreateAccount}>
             <h1>Crie uma nova conta</h1>
-            {createAccountStatus && <CreateAccountAlert show={show} setShow={setShow} message={createAccountBackendMessage}/>}
+            <DangerAlertWithMessage show={show} setShow={setShow} message={createAccountBackendMessage} />
             <Form.Group className="mb-3" controlId="formCreateAccountEmail">
                 <Form.Label>Email</Form.Label>
                 <Form.Control value={email} onChange={e => setEmail(e.target.value)} type="email" placeholder="gabriel@gmail.com" />
