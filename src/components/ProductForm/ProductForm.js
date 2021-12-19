@@ -9,8 +9,10 @@ import { Form, Container, Button } from "react-bootstrap";
 import TagSelector from "../TagSelector/TagSelector";
 import { areArraysEqual } from "../../utils/compareTwoArrays";
 import MissingFieldsAlert from "../Alert/MissingFieldsAlert";
+import useToken from "../../hooks/useToken";
 
 export default function ProductForm() {
+  const { token } = useToken();
   const history = useHistory();
   const location = useLocation();
   const imageInput = useRef();
@@ -83,8 +85,11 @@ export default function ProductForm() {
         images: transformedImages,
     });
 
-    var config = {
-        headers: { 'Content-Type': 'application/json' },
+    const config = {
+        headers: { 
+          'Content-Type': 'application/json',
+          'x-access-token': token,
+        },
       };
 
     try {
@@ -128,8 +133,11 @@ export default function ProductForm() {
       body.PRODUCT_IMAGES = transformedImages;
     }
 
-    var config = {
-      headers: { 'Content-Type': 'application/json' },
+    const config = {
+      headers: { 
+        'Content-Type': 'application/json',
+        'x-access-token': token,
+      },
     };
 
     try {

@@ -3,27 +3,30 @@ import { useHistory } from "react-router-dom"
 import { Button, Card, Modal } from "react-bootstrap"
 import axios from "axios"
 import { API, PRODUCT_ENDPOINT } from "../../constants/constants"
+import useToken from "../../hooks/useToken"
 
 export default function Product({ fetchData, setFetchData, setDeleteStatus, setDeletedProductName, id, name, description, price, tags, images }) {
+  const { token } = useToken()
   const history = useHistory()
   const [showModal, setShowModal] = useState(false);
 
   const handleCloseModal = () => setShowModal(false);
   const handleShowModal = () => setShowModal(true);
 
-  const deleteProduct = async (e) => {
+  const deleteProduct = async () => {
     handleCloseModal()
     const body = {
       id,
     };
-
-    var config = {
-      headers: { 'Content-Type': 'text/plain' },
+  
+    const headers = { 
+      "Content-Type": "text/plain",
+      "x-access-token": token
     };
 
     try {
       setDeletedProductName(name);
-      const res = await axios.delete(`${API}/${PRODUCT_ENDPOINT}`, {data: body}, config);
+      const res = await axios.delete(`${API}/${PRODUCT_ENDPOINT}`, { data: body, headers });
       setDeleteStatus(res.status);
       setFetchData(fetchData + 1);
     } catch (error) {
@@ -47,7 +50,7 @@ export default function Product({ fetchData, setFetchData, setDeleteStatus, setD
           <Button variant="secondary" onClick={handleCloseModal}>
             Não
           </Button>
-          <Button variant="primary" onClick={(e) => deleteProduct(e)}>
+          <Button variant="primary" onClick={() => deleteProduct()}>
             Sim
           </Button>
         </Modal.Footer>

@@ -1,26 +1,41 @@
 import React, { useState, useEffect } from "react";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import axios from "axios"
+import { Container, Row, Col } from "react-bootstrap";
 import Product from "../Product/Product";
 import DeleteAlert from "../Alert/DeleteAlert";
 import { API, PRODUCTS_ENDPOINT } from "../../constants/constants";
+import useToken from "../../hooks/useToken";
 
 export default function Dashboard() {
+  const { token } = useToken();
   const [products, setProducts] = useState();
   const [deleteStatus, setDeleteStatus] = useState();
   const [deletedProductName, setDeletedProductName] = useState();
   const [fetchData, setFetchData] = useState(0);
-  useEffect(() => {    
+
+  useEffect(() => {  
     async function getProductsFromDatabase() {
-        const data = await fetch(`${API}/${PRODUCTS_ENDPOINT}`);
-        const json = await data.json();
-        json.sort((a, b) => (a.PRODUCT_NAME > b.PRODUCT_NAME ? 1 : -1));
-        setProducts(json);
+        if (token) {
+          try {
+            const config = {
+              headers: {
+                "Content-Type": "application/json",
+                "x-access-token": token,
+              }
+            } 
+      
+            const res = await axios.get(`${API}/${PRODUCTS_ENDPOINT}`, config);
+            const { data } = res;
+            data.sort((a, b) => (a.PRODUCT_NAME > b.PRODUCT_NAME ? 1 : -1));
+            setProducts(data);
+          } catch (error) {
+            console.error(error);
+          }
+        }
     }
 
     getProductsFromDatabase();
-  }, [fetchData]);
+  }, [fetchData, token]);
 
   return (
     <Container>
