@@ -5,8 +5,9 @@ import "./TagDropdown.css";
 // forwardRef again here!
 // Dropdown needs access to the DOM of the Menu to measure it
 const TagMenu = React.forwardRef(
-    ({ value, setValue, onClick, createdTags, selectedTags, style, className, 'aria-labelledby': labeledBy }, ref) => {
+    ({ value, setValue, onClick, createdTagsItems, createdTags, selectedTags, style, className, 'aria-labelledby': labeledBy }, ref) => {
         const isValueInSelectedTags = selectedTags.includes(value);
+        const isValueInCreatedTags = createdTags.includes(value);
         return (
             <div
                 ref={ref}
@@ -24,14 +25,14 @@ const TagMenu = React.forwardRef(
                 <ul 
                     style={{
                             paddingLeft: "0px",
-                            maxHeight: "60px",
+                            maxHeight: "100px",
                             overflow: "hidden",   // then set overflow to hidden in all respects
                             overflowY: "scroll", // At the end only from the top and bottom overflow to scrollable
                     }}
                 >
-                    {value.length > 0 && !isValueInSelectedTags && <Dropdown.Item active={!isValueInSelectedTags} style={{ paddingLeft: "12px" }} onClick={() => onClick(value, setValue)} key={"createTag"} eventKey={"createTag"}>Criar tag <strong>{value}</strong></Dropdown.Item>}
+                    {value.length > 0 && !isValueInSelectedTags && !isValueInCreatedTags && <Dropdown.Item active={!isValueInSelectedTags} style={{ paddingLeft: "12px" }} onClick={() => onClick(value, setValue)} key={"createTag"} eventKey={"createTag"}>Criar tag <strong>{value}</strong></Dropdown.Item>}
                     {
-                        createdTags && createdTags.filter(
+                        createdTagsItems && createdTagsItems.filter(
                             (child) => {
                                 if (selectedTags.includes(child.props.children.toLowerCase())) {
                                     return false;
@@ -51,15 +52,23 @@ const TagMenu = React.forwardRef(
 export default function TagDropdown({ showTagMenu, selectedTags, createdTags, onClick }) {
     const menuRef = useRef();
     const [value, setValue] = useState("");
-
-    const createdTagsItems = createdTags.map((tag, i) =>
-        <Dropdown.Item active={tag.TAG_NAME === value} style={{ paddingLeft: "12px" }} onClick={(e) => onClick(e.target.text, setValue)} key={i} eventKey={i}>{tag.TAG_NAME}</Dropdown.Item>
+    const createdTagsNames = createdTags.map((tag) => tag.TAG_NAME).sort()
+    const createdTagsItems = createdTagsNames.map((tag, i) =>
+        <Dropdown.Item active={tag === value} style={{ paddingLeft: "12px" }} onClick={(e) => onClick(e.target.text, setValue)} key={i} eventKey={i}>{tag}</Dropdown.Item>
     )
 
     return (
         <Dropdown>
             {showTagMenu && 
-                <TagMenu ref={menuRef} onClick={onClick} value={value} setValue={setValue} createdTags={createdTagsItems} selectedTags={selectedTags} />
+                <TagMenu 
+                    ref={menuRef}
+                    onClick={onClick}
+                    value={value}
+                    setValue={setValue}
+                    createdTagsItems={createdTagsItems} 
+                    createdTags={createdTagsNames} 
+                    selectedTags={selectedTags}
+                />
             } 
         </Dropdown>
    ) 
