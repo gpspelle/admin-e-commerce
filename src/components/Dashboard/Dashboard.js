@@ -12,6 +12,7 @@ export default function Dashboard() {
   const [deleteStatus, setDeleteStatus] = useState();
   const [deletedProductName, setDeletedProductName] = useState();
   const [fetchData, setFetchData] = useState(0);
+  const [showDeleteAlert, setShowDeleteAlert] = useState(false);
 
   useEffect(() => {  
     async function getProductsFromDatabase() {
@@ -39,7 +40,7 @@ export default function Dashboard() {
 
   return (
     <Container>
-        <DeleteAlert status={deleteStatus} deletedProductName={deletedProductName}/>
+        <DeleteAlert show={showDeleteAlert} setShow={setShowDeleteAlert} status={deleteStatus} deletedProductName={deletedProductName}/>
         <Row>
             {products?.map((item, i) => {
             return (
@@ -53,6 +54,7 @@ export default function Dashboard() {
                   }}
                 >
                 <Product
+                  setShowDeleteAlert={setShowDeleteAlert}
                   fetchData={fetchData}
                   setFetchData={setFetchData}
                   setDeleteStatus={setDeleteStatus}

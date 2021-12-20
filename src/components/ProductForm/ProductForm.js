@@ -29,7 +29,9 @@ export default function ProductForm() {
   const [imagePreview, setImagePreview] = useState();
   const [createStatus, setCreateStatus] = useState();
   const [editStatus, setEditStatus] = useState();
-  const [missingFieldsAlert, setMissingFielsdAlert] = useState(false);
+  const [showMissingFieldsAlert, setShowMissingFieldsAlert] = useState(false);
+  const [showEditAlert, setShowEditAlert] = useState(false);
+  const [showCreateAlert, setShowCreateAlert] = useState(false);
 
   useEffect(() => {
     async function getTagsFromDatabase() {
@@ -64,10 +66,12 @@ export default function ProductForm() {
 
   async function handleCreateSubmit(event) {
     event.preventDefault();
-    setMissingFielsdAlert(false);
-
+    setShowMissingFieldsAlert(false);
+    setShowCreateAlert(false);
+    setShowEditAlert(false);
+  
     if (!isCreateInputValid()) {
-      setMissingFielsdAlert(true);
+      setShowMissingFieldsAlert(true);
       return; 
     }
 
@@ -106,13 +110,17 @@ export default function ProductForm() {
           setImagePreview();
         }
     } catch (error) {
-        console.error(error);
+        setCreateStatus(error.statusCode)
+    } finally {
+      setShowCreateAlert(true);
     }
 }
 
   async function handleEditSubmit(event) {
     event.preventDefault();
-    setMissingFielsdAlert(false);
+    setShowMissingFieldsAlert(false);
+    setShowCreateAlert(false);
+    setShowEditAlert(false);
 
     const body = {
       id,
@@ -142,13 +150,13 @@ export default function ProductForm() {
 
     try {
       const res = await axios.patch(`${API}/${PRODUCT_ENDPOINT}`, JSON.stringify(body), config);
-      setEditStatus(res.status);
 
       if (res.status === 200) {
         history.push('/gerenciar-produtos')
       }
     } catch (error) {
-      console.error(error);
+      setEditStatus(error.statusCode);
+      setShowEditAlert(true);
     }
   }
     
@@ -163,8 +171,8 @@ export default function ProductForm() {
     >
         <Form onSubmit={edit ? handleEditSubmit : handleCreateSubmit}>
           <h1>{edit ? 'Edite o produto' : 'Crie um novo produto'}</h1>
-          {missingFieldsAlert && <MissingFieldsAlert name={name} description={description} price={price} images={images} />}
-          {edit ? <EditAlert status={editStatus} editedProductName={location.state.name} newEditedProductName={name} /> : <CreateAlert status={createStatus} createdProductName={createdProductName} />}
+          {<MissingFieldsAlert show={showMissingFieldsAlert} setShow={setShowMissingFieldsAlert} name={name} description={description} price={price} images={images} />}
+          {edit ? <EditAlert show={showEditAlert} setShow={setShowEditAlert} status={editStatus} editedProductName={location.state.name} newEditedProductName={name} /> : <CreateAlert show={showCreateAlert} setShow={setShowCreateAlert} status={createStatus} createdProductName={createdProductName} />}
           <Form.Group className="mb-3" controlId="formBasicProductName">
             <Form.Label>Nome</Form.Label>
             <Form.Control value={name} onChange={e => setName(e.target.value)} type="text" placeholder="" />

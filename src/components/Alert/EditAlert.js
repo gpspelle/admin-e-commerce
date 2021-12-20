@@ -1,21 +1,26 @@
-import React, { useState } from "react";
+import React from "react";
 import { Alert } from "react-bootstrap";
 
-export default function EditAlert({ status, editedProductName, newEditedProductName}) {
-    const [show, setShow] = useState(true);
+export default function EditAlert({ show, setShow, status, editedProductName, newEditedProductName}) {
+    
+    const alertMessageAndType = {}
 
-    const statusToAlert = {
-        400: { variant: 'danger', Heading: `O produto anteriormente chamado de ${editedProductName}, com novo nome de ${newEditedProductName} não foi alterado corretamente, tente novamente.`},
-        500: { variant: 'danger', Heading: `O produto anteriormente chamado de ${editedProductName}, com novo nome de ${newEditedProductName} não foi alterado corretamente, tente novamente.`}
+    if (status >= 200 && status <= 300) {
+        alertMessageAndType.variant = "success"
+        alertMessageAndType.Heading = `O produto ${editedProductName} foi deletado com sucesso.`
+    } else {
+        alertMessageAndType.variant = "danger"
+        alertMessageAndType.Heading = `O produto anteriormente chamado de ${editedProductName}, com novo nome de ${newEditedProductName} não foi alterado corretamente, tente novamente.`
     }
 
-    if (statusToAlert[status] && show) {
+    if (show) {
         return (
-            <Alert variant={statusToAlert[status].variant} onClose={() => setShow(false)} dismissible>
-                <Alert.Heading>{statusToAlert[status].Heading}</Alert.Heading>
+            <Alert variant={alertMessageAndType.variant} onClose={() => setShow(false)} dismissible>
+                <Alert.Heading>{alertMessageAndType.Heading}</Alert.Heading>
             </Alert>
         )
     }
+
 
     return null;
 }

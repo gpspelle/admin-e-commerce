@@ -52,7 +52,6 @@ export default function CreateAccountForm() {
         try {
             await axios.put(`${API}/${ACCOUNT_ENDPOINT}`, body, config);
             history.push({pathname: "/", state: { email: email }})
-
         } catch (error) {
             setCreateAccountBackendMessage(error.response.data.message);
             setShow(true);

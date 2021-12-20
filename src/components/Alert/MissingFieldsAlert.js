@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Alert } from "react-bootstrap";
 
 const getMissingRequiredFields = (name, description, price, images) => {
@@ -23,8 +23,7 @@ const getMissingRequiredFields = (name, description, price, images) => {
     return missingRequiredFields.substring(0, missingRequiredFields.length - 2);
 }
 
-export default function MissingFieldsAlert({ name, description, price, images }) {
-    const [show, setShow] = useState(true);
+export default function MissingFieldsAlert({ show, setShow, name, description, price, images }) {
     const missingRequiredFields = getMissingRequiredFields(name, description, price, images);
 
     if (show) {

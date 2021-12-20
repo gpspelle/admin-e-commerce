@@ -1,19 +1,21 @@
-import React, { useState } from "react";
+import React from "react";
 import { Alert } from "react-bootstrap";
 
-export default function DeleteAlert({ status, deletedProductName }) {
-    const [show, setShow] = useState(true);
+export default function DeleteAlert({ show, setShow, status, deletedProductName }) {
+    const alertMessageAndType = {}
 
-    const statusToAlert = {
-        200: { variant: 'success', Heading: `O produto ${deletedProductName} foi deletado com sucesso.`},
-        400: { variant: 'danger', Heading: `O produto ${deletedProductName} não foi deletado corretamente, tente novamente.`},
-        500: { variant: 'danger', Heading: `O produto ${deletedProductName} não foi deletado corretamente, tente novamente.`}
+    if (status >= 200 && status <= 300) {
+        alertMessageAndType.variant = "success"
+        alertMessageAndType.Heading = `O produto ${deletedProductName} foi deletado com sucesso.`
+    } else {
+        alertMessageAndType.variant = "danger"
+        alertMessageAndType.Heading = `O produto ${deletedProductName} não foi deletado corretamente, tente novamente.`
     }
 
-    if (statusToAlert[status] && show) {
+    if (show) {
         return (
-            <Alert variant={statusToAlert[status].variant} onClose={() => setShow(false)} dismissible>
-                <Alert.Heading>{statusToAlert[status].Heading}</Alert.Heading>
+            <Alert variant={alertMessageAndType.variant} onClose={() => setShow(false)} dismissible>
+                <Alert.Heading>{alertMessageAndType.Heading}</Alert.Heading>
             </Alert>
         )
     }

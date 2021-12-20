@@ -1,19 +1,22 @@
-import React, { useState } from "react";
+import React from "react";
 import { Alert } from "react-bootstrap";
 
-export default function CreateAlert({ status, createdProductName }) {
-    const [show, setShow] = useState(true);
+export default function CreateAlert({ show, setShow, status, createdProductName }) {
 
-    const statusToAlert = {
-        200: { variant: 'success', Heading: `O produto ${createdProductName} foi criado com sucesso.`},
-        400: { variant: 'danger', Heading: `O produto ${createdProductName} não foi criado corretamente, tente novamente.`},
-        500: { variant: 'danger', Heading: `O produto ${createdProductName} não foi criado corretamente, tente novamente.`}
+    const alertMessageAndType = {}
+
+    if (status >= 200 && status <= 300) {
+        alertMessageAndType.variant = "success"
+        alertMessageAndType.Heading = `O produto ${createdProductName} foi criado com sucesso.`
+    } else {
+        alertMessageAndType.variant = "danger"
+        alertMessageAndType.Heading = `O produto ${createdProductName} não foi criado corretamente, tente novamente.`
     }
 
-    if (statusToAlert[status] && show) {
+    if (show) {
         return (
-            <Alert variant={statusToAlert[status].variant} onClose={() => setShow(false)} dismissible>
-                <Alert.Heading>{statusToAlert[status].Heading}</Alert.Heading>
+            <Alert variant={alertMessageAndType.variant} onClose={() => setShow(false)} dismissible>
+                <Alert.Heading>{alertMessageAndType.Heading}</Alert.Heading>
             </Alert>
         )
     }

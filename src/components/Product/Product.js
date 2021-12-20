@@ -5,7 +5,7 @@ import axios from "axios"
 import { API, PRODUCT_ENDPOINT } from "../../constants/constants"
 import useToken from "../../hooks/useToken"
 
-export default function Product({ fetchData, setFetchData, setDeleteStatus, setDeletedProductName, id, name, description, price, tags, images }) {
+export default function Product({ setShowDeleteAlert, fetchData, setFetchData, setDeleteStatus, setDeletedProductName, id, name, description, price, tags, images }) {
   const { token } = useToken()
   const history = useHistory()
   const [showModal, setShowModal] = useState(false);
@@ -14,6 +14,7 @@ export default function Product({ fetchData, setFetchData, setDeleteStatus, setD
   const handleShowModal = () => setShowModal(true);
 
   const deleteProduct = async () => {
+    setShowDeleteAlert(false);
     handleCloseModal()
     const body = {
       id,
@@ -30,8 +31,9 @@ export default function Product({ fetchData, setFetchData, setDeleteStatus, setD
       setDeleteStatus(res.status);
       setFetchData(fetchData + 1);
     } catch (error) {
-      console.error(error);
-      setDeleteStatus('500');
+      setDeleteStatus(error.statusCode);
+    } finally {
+      setShowDeleteAlert(true);
     }
   }
 
