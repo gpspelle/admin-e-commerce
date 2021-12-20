@@ -5,7 +5,7 @@ import ImageUploadPreview from "../ImageUploadPreview/ImageUploadPreview";
 import CreateAlert from "../Alert/CreateAlert";
 import EditAlert from "../Alert/EditAlert";
 import { API, PRODUCT_ENDPOINT, TAGS_ENDPOINT } from "../../constants/constants";
-import { Form, Container, Button } from "react-bootstrap";
+import { Form, Container, Button, Spinner } from "react-bootstrap";
 import TagSelector from "../TagSelector/TagSelector";
 import { areArraysEqual } from "../../utils/compareTwoArrays";
 import MissingFieldsAlert from "../Alert/MissingFieldsAlert";
@@ -32,6 +32,7 @@ export default function ProductForm() {
   const [showMissingFieldsAlert, setShowMissingFieldsAlert] = useState(false);
   const [showEditAlert, setShowEditAlert] = useState(false);
   const [showCreateAlert, setShowCreateAlert] = useState(false);
+  const [isWaitingResponse, setIsWaitingResponse] = useState(false);
 
   useEffect(() => {
     async function getTagsFromDatabase() {
@@ -97,6 +98,7 @@ export default function ProductForm() {
       };
 
     try {
+        setIsWaitingResponse(true);
         const res = await axios.put(`${API}/${PRODUCT_ENDPOINT}`, body, config);
         setCreateStatus(res.status);
 
@@ -112,6 +114,7 @@ export default function ProductForm() {
     } catch (error) {
         setCreateStatus(error.statusCode)
     } finally {
+      setIsWaitingResponse(false);
       setShowCreateAlert(true);
     }
 }
@@ -149,6 +152,7 @@ export default function ProductForm() {
     };
 
     try {
+      setIsWaitingResponse(true);
       const res = await axios.patch(`${API}/${PRODUCT_ENDPOINT}`, JSON.stringify(body), config);
 
       if (res.status === 200) {
@@ -171,8 +175,6 @@ export default function ProductForm() {
     >
         <Form onSubmit={edit ? handleEditSubmit : handleCreateSubmit}>
           <h1>{edit ? 'Edite o produto' : 'Crie um novo produto'}</h1>
-          {<MissingFieldsAlert show={showMissingFieldsAlert} setShow={setShowMissingFieldsAlert} name={name} description={description} price={price} images={images} />}
-          {edit ? <EditAlert show={showEditAlert} setShow={setShowEditAlert} status={editStatus} editedProductName={location.state.name} newEditedProductName={name} /> : <CreateAlert show={showCreateAlert} setShow={setShowCreateAlert} status={createStatus} createdProductName={createdProductName} />}
           <Form.Group className="mb-3" controlId="formBasicProductName">
             <Form.Label>Nome</Form.Label>
             <Form.Control value={name} onChange={e => setName(e.target.value)} type="text" placeholder="" />
@@ -187,7 +189,25 @@ export default function ProductForm() {
           </Form.Group>
           <TagSelector createdTags={createdTags} tags={tags} setTags={setTags} />
           <ImageUploadPreview imageInput={imageInput} imagePreview={imagePreview} setImagePreview={setImagePreview} setImages={setImages} setImageNames={setImageNames} />
-          <Button type="submit" className="btn btn-primary">Enviar</Button>
+          <Button variant="primary" type="submit" disabled={isWaitingResponse}>
+            {isWaitingResponse &&
+            <>
+              <Spinner
+                as="span"
+                animation="border"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+              />
+              <span className="visually-hidden">Aguarde...</span>
+            </>
+            }
+            {isWaitingResponse ? "Aguarde..." : "Enviar"}
+          </Button>
+          <Form.Group className="mb-3 my-2" controlId="formBasicAlerts">
+            {<MissingFieldsAlert show={showMissingFieldsAlert} setShow={setShowMissingFieldsAlert} name={name} description={description} price={price} images={images} />}
+            {edit ? <EditAlert show={showEditAlert} setShow={setShowEditAlert} status={editStatus} editedProductName={location.state.name} newEditedProductName={name} /> : <CreateAlert show={showCreateAlert} setShow={setShowCreateAlert} status={createStatus} createdProductName={createdProductName} />}
+          </Form.Group>
         </Form>
     </Container>
   )

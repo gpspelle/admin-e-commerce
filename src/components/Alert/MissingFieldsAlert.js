@@ -25,6 +25,9 @@ const getMissingRequiredFields = (name, description, price, images) => {
 
 export default function MissingFieldsAlert({ show, setShow, name, description, price, images }) {
     const missingRequiredFields = getMissingRequiredFields(name, description, price, images);
+    if (missingRequiredFields.length === 0) {
+        setShow(false);
+    }
 
     if (show) {
         return (

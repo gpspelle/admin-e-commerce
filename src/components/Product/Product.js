@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { useHistory } from "react-router-dom"
-import { Button, Card, Modal } from "react-bootstrap"
+import { Button, Card, Modal, Spinner } from "react-bootstrap"
 import axios from "axios"
 import { API, PRODUCT_ENDPOINT } from "../../constants/constants"
 import useToken from "../../hooks/useToken"
@@ -9,13 +9,14 @@ export default function Product({ setShowDeleteAlert, fetchData, setFetchData, s
   const { token } = useToken()
   const history = useHistory()
   const [showModal, setShowModal] = useState(false);
+  const [isWaitingResponse, setIsWaitingResponse] = useState(false);
 
   const handleCloseModal = () => setShowModal(false);
   const handleShowModal = () => setShowModal(true);
 
   const deleteProduct = async () => {
     setShowDeleteAlert(false);
-    handleCloseModal()
+    handleCloseModal();
     const body = {
       id,
     };
@@ -27,12 +28,14 @@ export default function Product({ setShowDeleteAlert, fetchData, setFetchData, s
 
     try {
       setDeletedProductName(name);
+      setIsWaitingResponse(true);
       const res = await axios.delete(`${API}/${PRODUCT_ENDPOINT}`, { data: body, headers });
       setDeleteStatus(res.status);
       setFetchData(fetchData + 1);
     } catch (error) {
       setDeleteStatus(error.statusCode);
     } finally {
+      setIsWaitingResponse(false);
       setShowDeleteAlert(true);
     }
   }
@@ -68,11 +71,32 @@ export default function Product({ setShowDeleteAlert, fetchData, setFetchData, s
       <Card.Body>
         <Card.Title className="notranslate">{name}</Card.Title>
         <Card.Text className="notranslate">{description}</Card.Text>
-        <Button variant="outline-secondary" style={{ width: "100%", marginBottom: "8%" }} onClick={(e) => editProduct(e)}>
+        <Button 
+          variant="outline-secondary" 
+          style={{ width: "100%", marginBottom: "8%" }} 
+          onClick={(e) => editProduct(e)}
+        >
           Editar
         </Button>
-        <Button variant="danger" style={{ width: "100%", marginBottom: "8%" }} onClick={handleShowModal}>
-          Deletar
+        <Button 
+          disabled={isWaitingResponse} 
+          variant="danger" 
+          style={{ width: "100%", marginBottom: "8%" }}
+          onClick={handleShowModal}
+        >
+          {isWaitingResponse &&
+            <>
+              <Spinner
+                as="span"
+                animation="border"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+              />
+              <span className="visually-hidden">Aguarde...</span>
+            </>
+          }
+          {isWaitingResponse ? "Aguarde..." : "Deletar"}
         </Button>
         <Card.Text className="notranslate" style={{ textAlign: "center" }}>
           R$ {price}
