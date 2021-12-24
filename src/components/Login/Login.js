@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useHistory, useLocation } from "react-router-dom"
 import { API, LOGIN_ENDPOINT } from '../../constants/constants';
 import { Form, Button, Container} from 'react-bootstrap';
-import DangerAlertWithMessage from '../Alert/DangerAlertWithMessage';
+import AlertWithMessage from '../Alert/AlertWithMessage';
 
 export default function Login({ setToken }) {
   const history = useHistory();
@@ -57,7 +57,7 @@ export default function Login({ setToken }) {
     >
       <Form onSubmit={handleSubmit}>
         <h1>Bem vindo</h1>
-        <DangerAlertWithMessage show={show} setShow={setShow} message={loginStatusMessage} />
+        <AlertWithMessage variant="danger" show={show} setShow={setShow} message={loginStatusMessage} />
         <Button onClick={() => history.push("/create-account")} className="w-100 my-2" variant="outline-success">Criar nova conta</Button>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Email</Form.Label>
