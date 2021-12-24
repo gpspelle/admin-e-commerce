@@ -43,36 +43,38 @@ export default function Dashboard() {
         <DeleteAlert show={showDeleteAlert} setShow={setShowDeleteAlert} status={deleteStatus} deletedProductName={deletedProductName}/>
         <Row>
             {products?.map((item, i) => {
-            var index = item.PRODUCT_TAGS.indexOf("!@#$no-tag%^&*");
-            if (index !== -1) {
-              item.PRODUCT_TAGS.splice(index, 1);
-            }
+              if (item.PRODUCT_TAGS) {
+                var index = item.PRODUCT_TAGS.indexOf("!@#$no-tag%^&*");
+                if (index !== -1) {
+                  item.PRODUCT_TAGS.splice(index, 1);
+                }
+              }
 
-            return (
-                <Col
-                  key={i}
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    padding: "30px",
-                  }}
-                >
-                <Product
-                  setShowDeleteAlert={setShowDeleteAlert}
-                  fetchData={fetchData}
-                  setFetchData={setFetchData}
-                  setDeleteStatus={setDeleteStatus}
-                  setDeletedProductName={setDeletedProductName}
-                  id={item.id}
-                  name={item.PRODUCT_NAME}
-                  description={item.PRODUCT_DESCRIPTION}
-                  price={item.PRODUCT_PRICE}
-                  tags={item.PRODUCT_TAGS ? item.PRODUCT_TAGS : []}
-                  images={item.PRODUCT_IMAGES}
-                />
-                </Col>
-            )
+              return (
+                  <Col
+                    key={i}
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      padding: "30px",
+                    }}
+                  >
+                  <Product
+                    setShowDeleteAlert={setShowDeleteAlert}
+                    fetchData={fetchData}
+                    setFetchData={setFetchData}
+                    setDeleteStatus={setDeleteStatus}
+                    setDeletedProductName={setDeletedProductName}
+                    id={item.id}
+                    name={item.PRODUCT_NAME}
+                    description={item.PRODUCT_DESCRIPTION}
+                    price={item.PRODUCT_PRICE}
+                    tags={item.PRODUCT_TAGS ? item.PRODUCT_TAGS : []}
+                    images={item.PRODUCT_IMAGES}
+                  />
+                  </Col>
+              )
             })}
         </Row>
     </Container>
