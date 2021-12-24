@@ -151,10 +151,11 @@ export default function ProductForm() {
       },
     };
 
+    console.log(body);
     try {
       setIsWaitingResponse(true);
       const res = await axios.patch(`${API}/${PRODUCT_ENDPOINT}`, JSON.stringify(body), config);
-
+      
       if (res.status === 200) {
         history.push('/gerenciar-produtos')
       }

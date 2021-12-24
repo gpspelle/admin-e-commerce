@@ -43,6 +43,11 @@ export default function Dashboard() {
         <DeleteAlert show={showDeleteAlert} setShow={setShowDeleteAlert} status={deleteStatus} deletedProductName={deletedProductName}/>
         <Row>
             {products?.map((item, i) => {
+            var index = item.PRODUCT_TAGS.indexOf("!@#$no-tag%^&*");
+            if (index !== -1) {
+              item.PRODUCT_TAGS.splice(index, 1);
+            }
+
             return (
                 <Col
                   key={i}
