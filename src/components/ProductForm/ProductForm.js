@@ -4,7 +4,7 @@ import axios from 'axios';
 import ImageUploadPreview from "../ImageUploadPreview/ImageUploadPreview";
 import CreateAlert from "../Alert/CreateAlert";
 import EditAlert from "../Alert/EditAlert";
-import { API, PRODUCT_ENDPOINT, TAGS_ENDPOINT } from "../../constants/constants";
+import { ACCESS_TOKEN_NAME, API, PRODUCT_ENDPOINT, TAGS_ENDPOINT } from "../../constants/constants";
 import { Form, Container, Button, Spinner } from "react-bootstrap";
 import TagSelector from "../TagSelector/TagSelector";
 import { areArraysEqual } from "../../utils/compareTwoArrays";
@@ -93,7 +93,7 @@ export default function ProductForm() {
     const config = {
         headers: { 
           'Content-Type': 'application/json',
-          'x-access-token': token,
+          [ACCESS_TOKEN_NAME]: token,
         },
       };
 
@@ -147,7 +147,7 @@ export default function ProductForm() {
     const config = {
       headers: { 
         'Content-Type': 'application/json',
-        'x-access-token': token,
+        [ACCESS_TOKEN_NAME]: token,
       },
     };
 

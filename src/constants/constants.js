@@ -1,6 +1,9 @@
 export const API = "https://qbhf2c9996.execute-api.us-east-1.amazonaws.com/dev";
+export const HTTP_API = "https://j4x7ut5onh.execute-api.us-east-1.amazonaws.com";
 export const PRODUCT_ENDPOINT = "product";
 export const PRODUCTS_ENDPOINT = "products";
 export const TAGS_ENDPOINT = "tags";
 export const LOGIN_ENDPOINT = "login";
 export const ACCOUNT_ENDPOINT = "account";
+export const SEND_VERIFY_EMAIL_ENDPOINT = "send-verify-email";
+export const ACCESS_TOKEN_NAME = "x-access-token";

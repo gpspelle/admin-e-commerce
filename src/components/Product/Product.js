@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { useHistory } from "react-router-dom"
 import { Button, Card, Modal, Spinner } from "react-bootstrap"
 import axios from "axios"
-import { API, PRODUCT_ENDPOINT } from "../../constants/constants"
+import { ACCESS_TOKEN_NAME, API, PRODUCT_ENDPOINT } from "../../constants/constants"
 import useToken from "../../hooks/useToken"
 
 export default function Product({ setShowDeleteAlert, fetchData, setFetchData, setDeleteStatus, setDeletedProductName, id, name, description, price, tags, images }) {
@@ -23,7 +23,7 @@ export default function Product({ setShowDeleteAlert, fetchData, setFetchData, s
   
     const headers = { 
       "Content-Type": "text/plain",
-      "x-access-token": token
+      [ACCESS_TOKEN_NAME]: token
     };
 
     try {

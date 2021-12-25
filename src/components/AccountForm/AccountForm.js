@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import { useHistory } from "react-router-dom"
-import { ACCOUNT_ENDPOINT, API } from "../../constants/constants";
-import { Form, Container, Button, Spinner } from "react-bootstrap";
+import { ACCESS_TOKEN_NAME, ACCOUNT_ENDPOINT, API, HTTP_API, SEND_VERIFY_EMAIL_ENDPOINT } from "../../constants/constants";
+import { Form, Container, Button, Spinner, Modal } from "react-bootstrap";
 import PhoneNumberInput from "../PhoneNumberInput/PhoneNumberInput";
 import useToken from "../../hooks/useToken";
 import AlertWithMessage from "../Alert/AlertWithMessage";
+import "./AccountForm.css";
 
 var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
 const isValidPassword = (password) => strongRegex.test(password)
@@ -16,17 +17,26 @@ export default function AccountForm(props) {
     const history = useHistory();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
+    const [isEmailVerified, setIsEmailVerified] = useState(false);
     const [commercialName, setCommercialName] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
+    const [oldPassword, setOldPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
     const [password, setPassword] = useState("");
     const [show, setShow] = useState(false);
     const [createEditAccountBackendMessage, setCreateEditAccountBackendMessage] = useState();
     const [isWaitingResponse, setIsWaitingResponse] = useState(false);
     const [alertVariant, setAlertVariant] = useState();
+    const [showModal, setShowModal] = useState(false);
+    const [isPropsSet, setIsPropsSet] = useState(false);
+    const handleCloseModal = () => setShowModal(false);
+    const handleShowModal = () => setShowModal(true);
 
     useEffect(() => {
-        if (props) {
+        if (Object.keys(props).length > 0) {
+            setIsPropsSet(true);
             setName(props.name)
+            setIsEmailVerified(props.isEmailVerified)
             setEmail(props.email)
             setCommercialName(props.commercialName)
             setPhoneNumber(props.phoneNumber)
@@ -50,6 +60,14 @@ export default function AccountForm(props) {
             phoneNumber !== "" &&
             isValidPhoneNumber(phoneNumber));
     }
+
+    const isEditPasswordInputValid = () => {
+        return (email !== "" &&
+            newPassword !== "" &&
+            isValidPassword(newPassword) &&
+            oldPassword !== "" &&
+            isValidPassword(oldPassword));
+        }
 
     async function handleCreateAccount(event) {
         event.preventDefault();
@@ -87,13 +105,13 @@ export default function AccountForm(props) {
             return; 
         }
 
-        const body = { email: props.email }
-
         if (props.email !== email) {
             // we still do not allow change of email as it is
             // the partition key of the admins table
             return;
         }
+
+        const body = { email: props.email }
 
         if (props.name !== name) body.name = name
         if (props.commercialName !== commercialName) body.commercial_name = commercialName
@@ -106,7 +124,7 @@ export default function AccountForm(props) {
         var config = {
             headers: { 
                 "Content-Type": "application/json",
-                "x-access-token": token
+                [ACCESS_TOKEN_NAME]: token
             },
         };
         
@@ -124,64 +142,184 @@ export default function AccountForm(props) {
         }
     }
 
+    async function handleEditPasswordAccount(event) {
+        event.preventDefault();
+        setShow(false);
+        if (!isEditPasswordInputValid()) {
+            return; 
+        }
+        
+        if (props.email !== email) {
+            // we still do not allow change of email as it is
+            // the partition key of the admins table
+            return;
+        }
+
+        const body = { 
+            email: props.email,
+            oldPassword,
+            newPassword,
+        }
+
+        var config = {
+            headers: { 
+                "Content-Type": "application/json",
+                [ACCESS_TOKEN_NAME]: token
+            },
+        };
+        
+        try {
+            setIsWaitingResponse(true);
+            handleCloseModal();
+            const response = await axios.patch(`${API}/${ACCOUNT_ENDPOINT}`, JSON.stringify(body), config);
+            setAlertVariant("success");
+            setCreateEditAccountBackendMessage(response.data.message);
+        } catch (error) {
+            setAlertVariant("danger");
+            setCreateEditAccountBackendMessage(error.response.data.message);
+        } finally {
+            setShow(true);
+            setIsWaitingResponse(false);
+            setOldPassword("");
+            setNewPassword("");
+        }
+    }
+
+    async function sendVerificationEmail() {
+        var config = {
+            headers: { 
+                "Content-Type": "application/json",
+            },
+        };
+
+        const body = JSON.stringify({
+            email,
+            name,
+        })
+        
+        try {
+            setIsWaitingResponse(true);
+            const response = await axios.post(`${HTTP_API}/${SEND_VERIFY_EMAIL_ENDPOINT}?${ACCESS_TOKEN_NAME}=${token}`, body, config);
+            setAlertVariant("success");
+            console.log(response);
+            setCreateEditAccountBackendMessage(response.data.body.message);
+        } catch (error) {
+            setAlertVariant("danger");
+            console.log(error);
+            setCreateEditAccountBackendMessage(error.response.data.body.message);
+        } finally {
+            setShow(true);
+            setIsWaitingResponse(false);
+        }
+    }
+
+    if (isPropsSet && (!email || !name || !commercialName || !phoneNumber)) {
+        return <></>;
+    }
     return (
-        <Container
-            style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                padding: "30px",
-            }}
-        >
-            <Form onSubmit={props ? handleEditAccount : handleCreateAccount}>
-                <h1>{props ? `Bem vindo, ${name}` : "Crie uma nova conta"}</h1>
-                <AlertWithMessage variant={alertVariant} show={show} setShow={setShow} message={createEditAccountBackendMessage} />
-                <Form.Group className="mb-3" controlId="formCreateAccountEmail">
-                    <Form.Label>Email</Form.Label>
-                    <Form.Control disabled={props ? true : false} value={email} onChange={e => setEmail(e.target.value)} type="email" placeholder="gabriel@gmail.com" />
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="formCreateAccountFullName">
-                    <Form.Label>Nome completo</Form.Label>
-                    <Form.Control value={name} onChange={e => setName(e.target.value)} type="text" placeholder="Gabriel da Silva" />
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="formCreateAccountCommercialName">
-                    <Form.Label>Nome comercial</Form.Label>
-                    <Form.Control value={commercialName} onChange={e => setCommercialName(e.target.value)} type="text" placeholder="Ateliê do Gabriel" />
-                </Form.Group>
-                <PhoneNumberInput phoneNumber={phoneNumber} setPhoneNumber={setPhoneNumber} />
-                {!props && 
-                    <Form.Group className="mb-3" controlId="formCreateAccountPassword">
-                        <Form.Label>Senha</Form.Label>
-                        <Form.Control value={password} onChange={e => setPassword(e.target.value)} type="password" placeholder="" />
-                        <ol type="I">
-                            <li>Pelo menos 8 (oito) caracteres</li>
-                            <li>Pelo menos uma letra minúscula</li>
-                            <li>Pelo menos uma letra maiúscula</li>
-                            <li>Pelo menos um número</li>
-                        </ol>
+        <div>
+            {isPropsSet && 
+                <Modal show={showModal} onHide={handleCloseModal}>
+                    <Modal.Header closeButton>
+                    <Modal.Title>Alterar senha</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form.Group className="mb-3" controlId="formChangeAccountOldPassword">
+                            <Form.Label>Senha antiga</Form.Label>
+                            <Form.Control value={oldPassword} onChange={e => setOldPassword(e.target.value)} type="password" placeholder="" />
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="formChangeAccountNewPassword">
+                            <Form.Label>Senha nova</Form.Label>
+                            <Form.Control value={newPassword} onChange={e => setNewPassword(e.target.value)} type="password" placeholder="" />
+                            <ol type="I">
+                                <li>Pelo menos 8 (oito) caracteres</li>
+                                <li>Pelo menos uma letra minúscula</li>
+                                <li>Pelo menos uma letra maiúscula</li>
+                                <li>Pelo menos um número</li>
+                            </ol>
+                        </Form.Group>
+                    </Modal.Body>
+                    <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseModal}>
+                        Cancelar
+                    </Button>
+                    <Button variant="primary" onClick={handleEditPasswordAccount}>
+                        Alterar senha
+                    </Button>
+                    </Modal.Footer>
+                </Modal>
+            }
+            <Container
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    padding: "30px",
+                }}
+            >
+                <Form onSubmit={isPropsSet ? handleEditAccount : handleCreateAccount}>
+                    <h1>{isPropsSet ? `Bem vindo, ${name}` : "Crie uma nova conta"}</h1>
+                    <AlertWithMessage variant={alertVariant} show={show} setShow={setShow} message={createEditAccountBackendMessage} />
+                    <Form.Group className="mb-3" controlId="formCreateAccountEmail">
+                        <Form.Label>Email</Form.Label>
+                        {isPropsSet && (isEmailVerified ? <span className="verified-email">Email verificado &#x2705;</span> 
+                            : 
+                            <span className="resend-verification-email" onClick={sendVerificationEmail}>Reenviar email de verificação &rsaquo;</span>
+                        )}
+                        <Form.Control disabled={isPropsSet ? true : false} value={email} onChange={e => setEmail(e.target.value)} type="email" placeholder="gabriel@gmail.com" />
                     </Form.Group>
-                }
-                <Button 
-                    type="submit"
-                    variant="primary" 
-                    className="w-100"
-                    disabled={isWaitingResponse}
-                >
-                    {isWaitingResponse &&
-                        <>
-                            <Spinner
-                                as="span"
-                                animation="border"
-                                size="sm"
-                                role="status"
-                                aria-hidden="true"
-                            />
-                            <span className="visually-hidden">Aguarde...</span>
-                        </>
+                    <Form.Group className="mb-3" controlId="formCreateAccountFullName">
+                        <Form.Label>Nome completo</Form.Label>
+                        <Form.Control value={name} onChange={e => setName(e.target.value)} type="text" placeholder="Gabriel da Silva" />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formCreateAccountCommercialName">
+                        <Form.Label>Nome comercial</Form.Label>
+                        <Form.Control value={commercialName} onChange={e => setCommercialName(e.target.value)} type="text" placeholder="Ateliê do Gabriel" />
+                    </Form.Group>
+                    <PhoneNumberInput phoneNumber={phoneNumber} setPhoneNumber={setPhoneNumber} />
+                    {isPropsSet
+                        ?
+                        <Form.Group className="mb-3" controlId="formEditAccountPassword">
+                            <Form.Label>Senha</Form.Label>
+                            <Form.Control disabled={true} value={"password_placeholder_not_real"} type="password" placeholder="" />
+                            <Container className="forgot-password" onClick={handleShowModal}>
+                                Alterar senha
+                            </Container>
+                        </Form.Group>
+                        :
+                        <Form.Group className="mb-3" controlId="formCreateAccountPassword">
+                            <Form.Label>Senha</Form.Label>
+                            <Form.Control value={password} onChange={e => setPassword(e.target.value)} type="password" placeholder="" />
+                            <ol type="I">
+                                <li>Pelo menos 8 (oito) caracteres</li>
+                                <li>Pelo menos uma letra minúscula</li>
+                                <li>Pelo menos uma letra maiúscula</li>
+                                <li>Pelo menos um número</li>
+                            </ol>
+                        </Form.Group>
                     }
-                    {isWaitingResponse ? "Aguarde..." : (props ? "Atualizar perfil" : "Deletar")}
-                </Button>
-            </Form>
-        </Container>
+                    <Button 
+                        type="submit"
+                        variant="primary" 
+                        className="w-100"
+                        disabled={isWaitingResponse}
+                    >
+                        {isWaitingResponse &&
+                            <>
+                                <Spinner
+                                    as="span"
+                                    animation="border"
+                                    size="sm"
+                                    role="status"
+                                    aria-hidden="true"
+                                />
+                                <span className="visually-hidden">Aguarde...</span>
+                            </>
+                        }
+                        {isWaitingResponse ? "Aguarde..." : (isPropsSet ? "Atualizar perfil" : "Criar conta")}
+                    </Button>
+                </Form>
+            </Container>
+        </div>
     )
 }

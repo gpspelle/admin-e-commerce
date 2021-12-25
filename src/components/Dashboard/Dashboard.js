@@ -3,7 +3,7 @@ import axios from "axios"
 import { Container, Row, Col } from "react-bootstrap";
 import Product from "../Product/Product";
 import DeleteAlert from "../Alert/DeleteAlert";
-import { API, PRODUCTS_ENDPOINT } from "../../constants/constants";
+import { ACCESS_TOKEN_NAME, API, PRODUCTS_ENDPOINT } from "../../constants/constants";
 import useToken from "../../hooks/useToken";
 
 export default function Dashboard() {
@@ -21,7 +21,7 @@ export default function Dashboard() {
             const config = {
               headers: {
                 "Content-Type": "application/json",
-                "x-access-token": token,
+                [ACCESS_TOKEN_NAME]: token,
               }
             } 
       

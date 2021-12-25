@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { ACCOUNT_ENDPOINT, API } from "../../constants/constants";
+import { ACCESS_TOKEN_NAME, ACCOUNT_ENDPOINT, API } from "../../constants/constants";
 import useToken from "../../hooks/useToken";
 import axios from "axios";
 import AccountForm from "../AccountForm/AccountForm";
 
-export default function Home() {
+export default function Profile() {
     const { token } = useToken();
     const [email, setEmail] = useState();
     const [name, setName] = useState();
@@ -19,7 +19,7 @@ export default function Home() {
                 const config = {
                   headers: {
                     "Content-Type": "application/json",
-                    "x-access-token": token,
+                    [ACCESS_TOKEN_NAME]: token,
                   }
                 } 
           
