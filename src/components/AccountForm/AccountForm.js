@@ -213,9 +213,10 @@ export default function AccountForm(props) {
         }
     }
 
-    if (isPropsSet && (!email || !name || !commercialName || !phoneNumber)) {
+    if (!isPropsSet || !email || !name || !commercialName || !phoneNumber) {
         return <></>;
     }
+
     return (
         <div>
             {isPropsSet && 
