@@ -202,7 +202,7 @@ export default function ProductForm() {
               <span className="visually-hidden">Aguarde...</span>
             </>
             }
-            {isWaitingResponse ? "Aguarde..." : "Enviar"}
+            {isWaitingResponse ? " Aguarde..." : "Enviar"}
           </Button>
           <Form.Group className="mb-3 my-2" controlId="formBasicAlerts">
             {<MissingFieldsAlert show={showMissingFieldsAlert} setShow={setShowMissingFieldsAlert} name={name} description={description} price={price} images={images} />}

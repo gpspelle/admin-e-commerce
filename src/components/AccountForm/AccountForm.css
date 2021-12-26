@@ -1,29 +1,3 @@
-.forgot-password {
-    padding-top: 8px;
-    justify-content: right;
-    display: flex;
-    font-size: 16px; 
-    color: #039BE5;
-}
-
-.forgot-password:hover {
-    text-decoration: underline;
-    cursor: pointer;
-}
-
-.verified-email {
-    justify-content: right;
-    display: flex;
-    font-size: 13px;
-    color: #4BB543;
-}
-
-.resend-verification-email {
-    justify-content: right;
-    display: flex;
-    font-size: 13px;
-}
-
 .resend-verification-email:hover {
     text-decoration: underline;
     cursor: pointer;

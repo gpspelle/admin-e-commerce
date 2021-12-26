@@ -96,7 +96,7 @@ export default function Product({ setShowDeleteAlert, fetchData, setFetchData, s
               <span className="visually-hidden">Aguarde...</span>
             </>
           }
-          {isWaitingResponse ? "Aguarde..." : "Deletar"}
+          {isWaitingResponse ? " Aguarde..." : "Deletar"}
         </Button>
         <Card.Text className="notranslate" style={{ textAlign: "center" }}>
           R$ {price}

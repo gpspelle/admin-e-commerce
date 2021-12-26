@@ -201,11 +201,9 @@ export default function AccountForm(props) {
             setIsWaitingResponse(true);
             const response = await axios.post(`${HTTP_API}/${SEND_VERIFY_EMAIL_ENDPOINT}?${ACCESS_TOKEN_NAME}=${token}`, body, config);
             setAlertVariant("success");
-            console.log(response);
             setCreateEditAccountBackendMessage(response.data.body.message);
         } catch (error) {
             setAlertVariant("danger");
-            console.log(error);
             setCreateEditAccountBackendMessage(error.response.data.body.message);
         } finally {
             setShow(true);
@@ -263,9 +261,15 @@ export default function AccountForm(props) {
                     <AlertWithMessage variant={alertVariant} show={show} setShow={setShow} message={createEditAccountBackendMessage} />
                     <Form.Group className="mb-3" controlId="formCreateAccountEmail">
                         <Form.Label>Email</Form.Label>
-                        {isPropsSet && (isEmailVerified ? <span className="verified-email">Email verificado &#x2705;</span> 
+                        {isPropsSet && (isEmailVerified ? 
+                            <div>
+                                <span className="verified-email">&#x2705; Email verificado</span> 
+                            </div>
                             : 
-                            <span className="resend-verification-email" onClick={sendVerificationEmail}>Reenviar email de verificação &rsaquo;</span>
+                            <div>
+                                <span>&#x2757; Email não verificado,</span>
+                                <span className="resend-verification-email" onClick={sendVerificationEmail}> clique aqui para reenviar o email de verificação &rsaquo;</span>
+                            </div>
                         )}
                         <Form.Control disabled={isPropsSet ? true : false} value={email} onChange={e => setEmail(e.target.value)} type="email" placeholder="gabriel@gmail.com" />
                     </Form.Group>
@@ -283,9 +287,9 @@ export default function AccountForm(props) {
                         <Form.Group className="mb-3" controlId="formEditAccountPassword">
                             <Form.Label>Senha</Form.Label>
                             <Form.Control disabled={true} value={"password_placeholder_not_real"} type="password" placeholder="" />
-                            <Container className="forgot-password" onClick={handleShowModal}>
+                            <Button variant="outline-primary" className="w-100 my-2" onClick={handleShowModal}>
                                 Alterar senha
-                            </Container>
+                            </Button>
                         </Form.Group>
                         :
                         <Form.Group className="mb-3" controlId="formCreateAccountPassword">
@@ -317,7 +321,7 @@ export default function AccountForm(props) {
                                 <span className="visually-hidden">Aguarde...</span>
                             </>
                         }
-                        {isWaitingResponse ? "Aguarde..." : (isPropsSet ? "Atualizar perfil" : "Criar conta")}
+                        {isWaitingResponse ? " Aguarde..." : (isPropsSet ? "Atualizar perfil" : "Criar conta")}
                     </Button>
                 </Form>
             </Container>
