@@ -1,19 +1,19 @@
 import React from 'react';
+import Compress from 'compress.js';
 import { Form } from 'react-bootstrap';
- 
+
+const compress = new Compress();
+
 export default function ImageUploadPreview({ imageInput, imagePreview, setImagePreview, setImages, setImageNames }) {
-    const convertToBase64 = (file) => {
-        return new Promise((resolve, reject) => {
-          const fileReader = new FileReader();
-          fileReader.readAsDataURL(file);
-          fileReader.onload = () => {
-            resolve(fileReader.result);
-          };
-          fileReader.onerror = (error) => {
-            reject(error);
-          };
-        });
-    };
+
+    async function resizeImageFnAndConvertToBase64(file) {
+        const resizedImage = await compress.compress([file], {
+            quality: 0.5, // the quality of the image, max is 1,
+        })
+        const img = resizedImage[0];
+        const base64str = img.data
+        return base64str;
+    }
 
     const handleFileUpload = async (e) => {
         const filesAsArray = [...e.target.files];
@@ -21,7 +21,8 @@ export default function ImageUploadPreview({ imageInput, imagePreview, setImageP
         const base64Images = [];
         const imageNames = [];
         filesAsArray.forEach(async (file) => {
-            const base64File = await convertToBase64(file);
+            const base64File = await resizeImageFnAndConvertToBase64(file);
+            console.log(base64File);
             base64Images.push(base64File);
             imageNames.push(file.name);
         })
