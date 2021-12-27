@@ -4,8 +4,25 @@ import { Button, Card, Modal, Spinner } from "react-bootstrap"
 import axios from "axios"
 import { ACCESS_TOKEN_NAME, API, PRODUCT_ENDPOINT } from "../../constants/constants"
 import useToken from "../../hooks/useToken"
+import { productTypes } from "../ProductType/ProductType"
 
-export default function Product({ setShowDeleteAlert, fetchData, setFetchData, setDeleteStatus, setDeletedProductName, id, name, description, price, tags, images }) {
+export default function Product({ 
+  setShowDeleteAlert,
+  fetchData,
+  setFetchData,
+  setDeleteStatus,
+  setDeletedProductName,
+  id,
+  name,
+  description,
+  price,
+  tags,
+  images,
+  productType,
+  lightingDealDateISOString,
+  lightingDealDuration,
+  lightingDealPrice,
+}) {
   const { token } = useToken()
   const history = useHistory()
   const [showModal, setShowModal] = useState(false);
@@ -41,7 +58,31 @@ export default function Product({ setShowDeleteAlert, fetchData, setFetchData, s
   }
 
   const editProduct = async (e) => {
-    history.push({pathname: `/${id}/edit`, state: { id, name, description, price, tags, images }})
+    const state = { 
+      id, 
+      name, 
+      description, 
+      price, 
+      tags, 
+      images,
+      productType,
+    };
+
+    if (productType === productTypes.LIGHTING_DEAL.name) {
+      const date = new Date(lightingDealDateISOString);
+      const minutes = date.getMinutes();
+      const lightingDealTime = `${date.getHours()}:${minutes < 10 ? '0' : ''}${minutes}`;
+      state.lightingDealDate = date;
+      state.lightingDealTime = lightingDealTime;
+      state.lightingDealDuration = lightingDealDuration;
+      state.lightingDealPrice = lightingDealPrice;
+      state.lightingDealDateISOString = lightingDealDateISOString;
+    }
+
+    history.push({
+      pathname: `/${id}/edit`,
+      state
+    })
   }
 
   return (

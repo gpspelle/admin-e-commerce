@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Form, InputGroup, Col, Button } from "react-bootstrap";
+import { Form, Col, Button } from "react-bootstrap";
 import Tag from "../Tag/Tag";
 import TagDropdown from "../TagDropdown/TagDropdown";
 
@@ -21,9 +21,8 @@ export default function TagSelector({ createdTags, tags, setTags }) {
 
     return (
         <Form.Group className="mb-3 preview" controlId="formBasicTags">
-            <InputGroup>
-                <Button style={{width: "100%"}} variant="outline-primary" onClick={() => setShowTagMenu(!showTagMenu)}>Adicionar Tags</Button>
-            </InputGroup>
+            <Form.Label>Tags</Form.Label>
+            <Button style={{width: "100%"}} active={showTagMenu} variant="outline-secondary" onClick={() => setShowTagMenu(!showTagMenu)}>Adicionar Tags</Button>
             <TagDropdown showTagMenu={showTagMenu} createdTags={createdTags} selectedTags={[...tags]} onClick={addTag} />
             {[...tags].map((tag, i) =>
                 <Col

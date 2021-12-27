@@ -1,0 +1,51 @@
+import React from "react";
+import { ButtonGroup, Button, Form } from "react-bootstrap";
+import LightingDealProduct from "../LightingDealProduct/LightingDealProduct";
+
+export const productTypes = {
+    NORMAL: { name: "NORMAL", showName: "Normal" },
+    LIGHTING_DEAL: { name: "LIGHTING_DEAL", showName: "Oferta Relâmpago" },
+}
+
+export default function ProductType({ 
+    productType, 
+    setProductType,
+    lightingDealDuration,
+    setLightingDealDuration,
+    lightingDealTime, 
+    setLightingDealTime, 
+    lightingDealDate, 
+    setLightingDealDate,
+    lightingDealPrice,
+    setLightingDealPrice,
+}) {
+    return (
+        <Form.Group className="mb-3" controlId="formBasicPrice">
+            <Form.Label>Tipo do produto</Form.Label>
+            <ButtonGroup className="w-100" vertical aria-label="First group">
+                {Object.entries(productTypes).map((pt, i) =>
+                    <Button 
+                        active={pt[1].name === productType} 
+                        onClick={() => setProductType(pt[1].name)} 
+                        key={i} 
+                        className="my-2" 
+                        variant="outline-secondary">
+                            {pt[1].showName}
+                    </Button>
+                )}
+            </ButtonGroup>
+            {productType === productTypes.LIGHTING_DEAL.name &&
+                <LightingDealProduct
+                    price={lightingDealPrice}
+                    setPrice={setLightingDealPrice}
+                    selectedDuration={lightingDealDuration}
+                    setSelectedDuration={setLightingDealDuration}
+                    selectedTime={lightingDealTime}
+                    setSelectedTime={setLightingDealTime}
+                    selectedDate={lightingDealDate} 
+                    setSelectedDate={setLightingDealDate}
+                />
+            }
+        </Form.Group>
+    )
+}

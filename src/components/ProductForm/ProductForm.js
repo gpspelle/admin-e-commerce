@@ -10,6 +10,9 @@ import TagSelector from "../TagSelector/TagSelector";
 import { areArraysEqual } from "../../utils/compareTwoArrays";
 import MissingFieldsAlert from "../Alert/MissingFieldsAlert";
 import useToken from "../../hooks/useToken";
+import ProductType, { productTypes } from "../ProductType/ProductType";
+import { convertDateAndTimeToIsoString } from "../../utils/convertDateToIsoString";
+import { lightingDealDurations } from "../LightingDealProduct/LightingDealProduct";
 
 export default function ProductForm() {
   const { token } = useToken();
@@ -33,6 +36,18 @@ export default function ProductForm() {
   const [showEditAlert, setShowEditAlert] = useState(false);
   const [showCreateAlert, setShowCreateAlert] = useState(false);
   const [isWaitingResponse, setIsWaitingResponse] = useState(false);
+  const [productType, setProductType] = useState(productTypes.NORMAL.name);
+  const [lightingDealTime, setLightingDealTime] = useState("10:00");
+  const [lightingDealDate, setLightingDealDate] = useState(new Date());
+  const [lightingDealDuration, setLightingDealDuration] = useState(lightingDealDurations["12h"].name);
+  const [lightingDealPrice, setLightingDealPrice] = useState("");
+  const [lightingDealDateISOString, setLightingDealDateISOString] = useState();
+
+  useEffect(() => {
+    if (lightingDealTime && lightingDealDate) {
+      setLightingDealDateISOString(convertDateAndTimeToIsoString(lightingDealDate, lightingDealTime));
+    }
+  }, [lightingDealDate, lightingDealTime]);
 
   useEffect(() => {
     async function getTagsFromDatabase() {
@@ -54,15 +69,33 @@ export default function ProductForm() {
       setPrice(location.state.price);
       setTags(new Set(location.state.tags));
       setImagePreview(location.state.images);
+      setProductType(location.state.productType);
+      
+      if (location.state.productType === productTypes.LIGHTING_DEAL.name) {
+        setLightingDealPrice(location.state.lightingDealPrice);
+        setLightingDealDate(location.state.lightingDealDate);
+        setLightingDealTime(location.state.lightingDealTime);
+        setLightingDealDuration(location.state.lightingDealDuration);
+      }
     }
   }, [location]);
 
   const isCreateInputValid = () => {
-    return name !== "" &&
+    const isNormalCreateInput = name !== "" &&
       description !== "" &&
       price !== "" &&
       images &&
-      images.length > 0
+      images.length > 0;
+
+    if (productType === productTypes.LIGHTING_DEAL.name) {
+      const now = new Date();
+      return isNormalCreateInput &&
+        lightingDealTime.length === 5 &&
+        lightingDealPrice !== "" &&
+        lightingDealDate > now;
+    }
+
+    return isNormalCreateInput;
   }
 
   async function handleCreateSubmit(event) {
@@ -82,13 +115,20 @@ export default function ProductForm() {
       transformedImages.push({ name: imageNames[i], content: images[i]})
     }
 
-    const body = JSON.stringify({
+    const body = {
         name,
         description,
         price,
         tags: [...tags],
         images: transformedImages,
-    });
+        productType: productType
+    };
+
+    if (productType === productTypes.LIGHTING_DEAL.name) {
+      body.lightingDealStartTime = lightingDealDateISOString;
+      body.lightingDealDuration = lightingDealDuration;
+      body.lightingDealPrice = lightingDealPrice;
+    }
 
     const config = {
         headers: { 
@@ -99,7 +139,7 @@ export default function ProductForm() {
 
     try {
         setIsWaitingResponse(true);
-        const res = await axios.put(`${API}/${PRODUCT_ENDPOINT}`, body, config);
+        const res = await axios.put(`${API}/${PRODUCT_ENDPOINT}`, JSON.stringify(body), config);
         setCreateStatus(res.status);
 
         if (res.status === 200) {
@@ -110,6 +150,10 @@ export default function ProductForm() {
           setPrice("");
           setTags(new Set([]));
           setImagePreview();
+
+          if (productType === productTypes.LIGHTING_DEAL.name) {
+            setLightingDealPrice("");
+          }
         }
     } catch (error) {
         setCreateStatus(error.statusCode)
@@ -133,6 +177,26 @@ export default function ProductForm() {
     if (location.state.description !== description) body.PRODUCT_DESCRIPTION = description;
     if (location.state.price !== price) body.PRODUCT_PRICE = price;
     if (!areArraysEqual(location.state.tags, [...tags])) body.PRODUCT_TAGS = [...tags];
+    if (location.state.productType !== productType) body.PRODUCT_TYPE = productType;
+
+    if (productType === productTypes.LIGHTING_DEAL.name) {
+      if (location.state.lightingDealDuration !== lightingDealDuration) {
+        body.LIGHTING_DEAL_DURATION = lightingDealDuration;
+      }
+
+      if (location.state.lightingDealPrice !== lightingDealPrice) {
+        body.LIGHTING_DEAL_PRICE = lightingDealPrice;
+      }
+
+      if (location.state.lightingDealDateISOString !== lightingDealDateISOString) {
+        body.LIGHTING_DEAL_START_TIME = lightingDealDateISOString;
+      }
+    } else {
+      body.LIGHTING_DEAL_DURATION = "";
+      body.LIGHTING_DEAL_PRICE = "";
+      body.LIGHTING_DEAL_START_TIME = "";
+    }
+
 
     if (images) {
       const transformedImages = [];
@@ -163,7 +227,7 @@ export default function ProductForm() {
       setShowEditAlert(true);
     }
   }
-    
+
   return (
     <Container
       style={{
@@ -188,6 +252,18 @@ export default function ProductForm() {
             <Form.Control value={price} onChange={e => setPrice(e.target.value)} type="number" placeholder="" />
           </Form.Group>
           <TagSelector createdTags={createdTags} tags={tags} setTags={setTags} />
+          <ProductType 
+            lightingDealDuration={lightingDealDuration}
+            setLightingDealDuration={setLightingDealDuration}
+            lightingDealTime={lightingDealTime}
+            setLightingDealTime={setLightingDealTime}
+            lightingDealDate={lightingDealDate} 
+            setLightingDealDate={setLightingDealDate} 
+            productType={productType} 
+            setProductType={setProductType}
+            lightingDealPrice={lightingDealPrice}
+            setLightingDealPrice={setLightingDealPrice}
+          />
           <ImageUploadPreview imageInput={imageInput} imagePreview={imagePreview} setImagePreview={setImagePreview} setImages={setImages} setImageNames={setImageNames} />
           <Button variant="primary" type="submit" disabled={isWaitingResponse}>
             {isWaitingResponse &&
@@ -205,8 +281,35 @@ export default function ProductForm() {
             {isWaitingResponse ? " Aguarde..." : "Enviar"}
           </Button>
           <Form.Group className="mb-3 my-2" controlId="formBasicAlerts">
-            {<MissingFieldsAlert show={showMissingFieldsAlert} setShow={setShowMissingFieldsAlert} name={name} description={description} price={price} images={images} />}
-            {edit ? <EditAlert show={showEditAlert} setShow={setShowEditAlert} status={editStatus} editedProductName={location.state.name} newEditedProductName={name} /> : <CreateAlert show={showCreateAlert} setShow={setShowCreateAlert} status={createStatus} createdProductName={createdProductName} />}
+            {
+              <MissingFieldsAlert 
+                show={showMissingFieldsAlert} 
+                setShow={setShowMissingFieldsAlert} 
+                name={name} 
+                description={description} 
+                price={price} 
+                images={images} 
+                productType={productType}
+                lightingDealPrice={lightingDealPrice}
+                lightingDealStartTime={lightingDealDateISOString}
+              />
+            }
+            {edit ? 
+              <EditAlert 
+                show={showEditAlert} 
+                setShow={setShowEditAlert} 
+                status={editStatus} 
+                editedProductName={location.state.name} 
+                newEditedProductName={name} 
+              /> 
+              : 
+              <CreateAlert 
+                show={showCreateAlert} 
+                setShow={setShowCreateAlert} 
+                status={createStatus} 
+                createdProductName={createdProductName} 
+              />
+            }
           </Form.Group>
         </Form>
     </Container>

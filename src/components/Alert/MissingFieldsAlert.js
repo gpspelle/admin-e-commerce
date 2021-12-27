@@ -1,8 +1,9 @@
 import React from "react";
 import { Alert } from "react-bootstrap";
+import { productTypes } from "../ProductType/ProductType";
 
-const getMissingRequiredFields = (name, description, price, images) => {
-    let missingRequiredFields = '';
+const getMissingRequiredFields = (name, description, price, images, productType, lightingDealPrice, lightingDealStartTime) => {
+    let missingRequiredFields = "";
 
     if (name === "") {
         missingRequiredFields += "nome, ";
@@ -20,11 +21,32 @@ const getMissingRequiredFields = (name, description, price, images) => {
         missingRequiredFields += "ao menos uma imagem, ";
     }
 
+    if (productType === productTypes.LIGHTING_DEAL.name) {
+        if (lightingDealPrice === "") {
+            missingRequiredFields += "preço promocional (oferta relâmpago), "
+        }
+
+        const now = new Date()
+        if (now > new Date(lightingDealStartTime)) {
+            missingRequiredFields += "o início da oferta relâmpago não pode ser no passado, "
+        }
+    }
+
     return missingRequiredFields.substring(0, missingRequiredFields.length - 2);
 }
 
-export default function MissingFieldsAlert({ show, setShow, name, description, price, images }) {
-    const missingRequiredFields = getMissingRequiredFields(name, description, price, images);
+export default function MissingFieldsAlert({ 
+    show, 
+    setShow, 
+    name, 
+    description, 
+    price, 
+    images,
+    productType,
+    lightingDealPrice,
+    lightingDealStartTime,
+}) {
+    const missingRequiredFields = getMissingRequiredFields(name, description, price, images, productType, lightingDealPrice, lightingDealStartTime);
     if (missingRequiredFields.length === 0) {
         setShow(false);
     }

@@ -22,7 +22,6 @@ export default function ImageUploadPreview({ imageInput, imagePreview, setImageP
         const imageNames = [];
         filesAsArray.forEach(async (file) => {
             const base64File = await resizeImageFnAndConvertToBase64(file);
-            console.log(base64File);
             base64Images.push(base64File);
             imageNames.push(file.name);
         })

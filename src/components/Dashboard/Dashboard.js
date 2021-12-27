@@ -72,6 +72,10 @@ export default function Dashboard() {
                     price={item.PRODUCT_PRICE}
                     tags={item.PRODUCT_TAGS ? item.PRODUCT_TAGS : []}
                     images={item.PRODUCT_IMAGES}
+                    productType={item.PRODUCT_TYPE}
+                    lightingDealDateISOString={item.LIGHTING_DEAL_START_TIME}
+                    lightingDealPrice={item.LIGHTING_DEAL_PRICE}
+                    lightingDealDuration={item.LIGHTING_DEAL_DURATION}
                   />
                   </Col>
               )
