@@ -197,7 +197,6 @@ export default function ProductForm() {
       body.LIGHTING_DEAL_START_TIME = "";
     }
 
-
     if (images) {
       const transformedImages = [];
 

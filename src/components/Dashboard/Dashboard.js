@@ -8,6 +8,8 @@ import useToken from "../../hooks/useToken";
 
 export default function Dashboard() {
   const { token } = useToken();
+  const [paginationKey, setPaginationKey] = useState(undefined);
+  const [hasMoreDataToFetch, setHasMoreDataToFetch] = useState(true);
   const [products, setProducts] = useState();
   const [deleteStatus, setDeleteStatus] = useState();
   const [deletedProductName, setDeletedProductName] = useState();
@@ -16,9 +18,16 @@ export default function Dashboard() {
 
   useEffect(() => {  
     async function getProductsFromDatabase() {
-        if (token) {
+        if (token && hasMoreDataToFetch) {
           try {
+            const body = {
+              key: paginationKey
+            }
+
             const config = {
+              params: {
+                body
+              },
               headers: {
                 "Content-Type": "application/json",
                 [ACCESS_TOKEN_NAME]: token,
@@ -26,9 +35,11 @@ export default function Dashboard() {
             } 
       
             const res = await axios.get(`${API}/${PRODUCTS_ENDPOINT}`, config);
-            const { data } = res;
+            const { data, key } = res.data;
             data.sort((a, b) => (a.PRODUCT_NAME > b.PRODUCT_NAME ? 1 : -1));
             setProducts(data);
+            setPaginationKey(key);
+            setHasMoreDataToFetch(key ? true : false)
           } catch (error) {
             console.error(error);
           }
@@ -36,7 +47,7 @@ export default function Dashboard() {
     }
 
     getProductsFromDatabase();
-  }, [fetchData, token]);
+  }, [fetchData, token, paginationKey, hasMoreDataToFetch]);
 
   return (
     <Container>
