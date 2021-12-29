@@ -8,8 +8,7 @@ import useToken from "../../hooks/useToken";
 
 export default function Dashboard() {
   const { token } = useToken();
-  const [paginationKey, setPaginationKey] = useState(undefined);
-  const [hasMoreDataToFetch, setHasMoreDataToFetch] = useState(true);
+  const [pagination, setPagination] = useState({ key: undefined, fetch: true });
   const [products, setProducts] = useState();
   const [deleteStatus, setDeleteStatus] = useState();
   const [deletedProductName, setDeletedProductName] = useState();
@@ -18,10 +17,10 @@ export default function Dashboard() {
 
   useEffect(() => {  
     async function getProductsFromDatabase() {
-        if (token && hasMoreDataToFetch) {
+        if (token && pagination.fetch) {
           try {
             const body = {
-              key: paginationKey
+              key: pagination.key
             }
 
             const config = {
@@ -38,8 +37,7 @@ export default function Dashboard() {
             const { data, key } = res.data;
             data.sort((a, b) => (a.PRODUCT_NAME > b.PRODUCT_NAME ? 1 : -1));
             setProducts(data);
-            setPaginationKey(key);
-            setHasMoreDataToFetch(key ? true : false)
+            setPagination({ key, fetch: key ? true : false })
           } catch (error) {
             console.error(error);
           }
@@ -47,8 +45,12 @@ export default function Dashboard() {
     }
 
     getProductsFromDatabase();
-  }, [fetchData, token, paginationKey, hasMoreDataToFetch]);
+  }, [token, pagination]);
 
+  useEffect(() => {
+    setPagination({ key: undefined, fetch: true })
+  }, [fetchData]);
+  
   return (
     <Container>
         <DeleteAlert show={showDeleteAlert} setShow={setShowDeleteAlert} status={deleteStatus} deletedProductName={deletedProductName}/>
@@ -71,23 +73,23 @@ export default function Dashboard() {
                       padding: "30px",
                     }}
                   >
-                  <Product
-                    setShowDeleteAlert={setShowDeleteAlert}
-                    fetchData={fetchData}
-                    setFetchData={setFetchData}
-                    setDeleteStatus={setDeleteStatus}
-                    setDeletedProductName={setDeletedProductName}
-                    id={item.id}
-                    name={item.PRODUCT_NAME}
-                    description={item.PRODUCT_DESCRIPTION}
-                    price={item.PRODUCT_PRICE}
-                    tags={item.PRODUCT_TAGS ? item.PRODUCT_TAGS : []}
-                    images={item.PRODUCT_IMAGES}
-                    productType={item.PRODUCT_TYPE}
-                    lightingDealDateISOString={item.LIGHTING_DEAL_START_TIME}
-                    dealPrice={item.DEAL_PRICE}
-                    lightingDealDuration={item.LIGHTING_DEAL_DURATION}
-                  />
+                    <Product
+                      setShowDeleteAlert={setShowDeleteAlert}
+                      fetchData={fetchData}
+                      setFetchData={setFetchData}
+                      setDeleteStatus={setDeleteStatus}
+                      setDeletedProductName={setDeletedProductName}
+                      id={item.id}
+                      name={item.PRODUCT_NAME}
+                      description={item.PRODUCT_DESCRIPTION}
+                      price={item.PRODUCT_PRICE}
+                      tags={item.PRODUCT_TAGS ? item.PRODUCT_TAGS : []}
+                      images={item.PRODUCT_IMAGES}
+                      productType={item.PRODUCT_TYPE}
+                      lightingDealStartTime={item.LIGHTING_DEAL_START_TIME}
+                      dealPrice={item.DEAL_PRICE}
+                      lightingDealDuration={item.LIGHTING_DEAL_DURATION}
+                    />
                   </Col>
               )
             })}

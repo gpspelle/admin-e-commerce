@@ -13,6 +13,7 @@ import useToken from "../../hooks/useToken";
 import ProductType, { productTypes } from "../ProductType/ProductType";
 import { convertDateAndTimeToIsoString } from "../../utils/convertDateToIsoString";
 import { lightingDealDurations } from "../LightingDealProduct/LightingDealProduct";
+import { calculateLightingDealEndTime } from "../../utils/calculateLightingDealEndTime";
 
 export default function ProductForm() {
   const { token } = useToken();
@@ -41,11 +42,11 @@ export default function ProductForm() {
   const [lightingDealDate, setLightingDealDate] = useState(new Date());
   const [lightingDealDuration, setLightingDealDuration] = useState(lightingDealDurations["12h"].name);
   const [dealPrice, setDealPrice] = useState("");
-  const [lightingDealDateISOString, setLightingDealDateISOString] = useState();
+  const [lightingDealStartTime, setLightingDealStartTime] = useState();
 
   useEffect(() => {
     if (lightingDealTime && lightingDealDate) {
-      setLightingDealDateISOString(convertDateAndTimeToIsoString(lightingDealDate, lightingDealTime));
+      setLightingDealStartTime(convertDateAndTimeToIsoString(lightingDealDate, lightingDealTime));
     }
   }, [lightingDealDate, lightingDealTime]);
 
@@ -89,12 +90,13 @@ export default function ProductForm() {
       images &&
       images.length > 0;
 
-    if (productType === productTypes.LIGHTING_DEAL.name) {
-      const now = new Date();
+    if (productType === productTypes.DEAL.name) {
+      return isNormalCreateInput &&
+        dealPrice !== "";
+    } else if (productType === productTypes.LIGHTING_DEAL.name) {
       return isNormalCreateInput &&
         lightingDealTime.length === 5 &&
-        dealPrice !== "" &&
-        lightingDealDate > now;
+        dealPrice !== "";
     }
 
     return isNormalCreateInput;
@@ -129,17 +131,18 @@ export default function ProductForm() {
     if (productType === productTypes.DEAL.name) {
       body.dealPrice = dealPrice;
     } else if (productType === productTypes.LIGHTING_DEAL.name) {
-      body.lightingDealStartTime = lightingDealDateISOString;
+      body.lightingDealStartTime = lightingDealStartTime;
       body.lightingDealDuration = lightingDealDuration;
+      body.lightingDealEndTime = calculateLightingDealEndTime(lightingDealDuration, lightingDealStartTime)
       body.dealPrice = dealPrice;
     }
 
     const config = {
-        headers: { 
-          'Content-Type': 'application/json',
-          [ACCESS_TOKEN_NAME]: token,
-        },
-      };
+      headers: { 
+        'Content-Type': 'application/json',
+        [ACCESS_TOKEN_NAME]: token,
+      },
+    };
 
     try {
         setIsWaitingResponse(true);
@@ -194,17 +197,22 @@ export default function ProductForm() {
         body.LIGHTING_DEAL_DURATION = lightingDealDuration;
       }
 
-      if (location.state.dealPrice !== dealPrice) {
-        body.DEAL_PRICE = dealPrice;
+      if (location.state.lightingDealStartTime !== lightingDealStartTime) {
+        body.LIGHTING_DEAL_START_TIME = lightingDealStartTime;
+      }
+      
+      if (location.state.lightingDealDuration !== lightingDealDuration || location.state.lightingDealStartTime !== lightingDealStartTime) {
+        body.lightingDealEndTime = calculateLightingDealEndTime(lightingDealDuration, lightingDealStartTime)
       }
 
-      if (location.state.lightingDealDateISOString !== lightingDealDateISOString) {
-        body.LIGHTING_DEAL_START_TIME = lightingDealDateISOString;
+      if (location.state.dealPrice !== dealPrice) {
+        body.DEAL_PRICE = dealPrice;
       }
     } else {
       body.LIGHTING_DEAL_DURATION = "";
       body.DEAL_PRICE = "";
       body.LIGHTING_DEAL_START_TIME = "";
+      body.LIGHTING_DEAL_END_TIME = "";
     }
 
     if (images) {
@@ -300,7 +308,7 @@ export default function ProductForm() {
                 images={images} 
                 productType={productType}
                 dealPrice={dealPrice}
-                lightingDealStartTime={lightingDealDateISOString}
+                lightingDealStartTime={lightingDealStartTime}
               />
             }
             {edit ? 

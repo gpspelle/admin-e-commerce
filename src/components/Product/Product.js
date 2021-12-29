@@ -19,7 +19,7 @@ export default function Product({
   tags,
   images,
   productType,
-  lightingDealDateISOString,
+  lightingDealStartTime,
   lightingDealDuration,
   dealPrice,
 }) {
@@ -71,14 +71,14 @@ export default function Product({
     if (productType === productTypes.DEAL.name) {
       state.dealPrice = dealPrice;
     } else if (productType === productTypes.LIGHTING_DEAL.name) {
-      const date = new Date(lightingDealDateISOString);
+      const date = new Date(lightingDealStartTime);
       const minutes = date.getMinutes();
       const lightingDealTime = `${date.getHours()}:${minutes < 10 ? '0' : ''}${minutes}`;
       state.lightingDealDate = date;
       state.lightingDealTime = lightingDealTime;
       state.lightingDealDuration = lightingDealDuration;
       state.dealPrice = dealPrice;
-      state.lightingDealDateISOString = lightingDealDateISOString;
+      state.lightingDealStartTime = lightingDealStartTime;
     }
 
     history.push({
