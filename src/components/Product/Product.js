@@ -5,6 +5,10 @@ import axios from "axios"
 import { ACCESS_TOKEN_NAME, API, PRODUCT_ENDPOINT } from "../../constants/constants"
 import useToken from "../../hooks/useToken"
 import { productTypes } from "../ProductType/ProductType"
+import LightingDealWaterMark from "../LightingDealWaterMark/LightingDealWaterMark"
+import LightingDealDuration from "../LightingDealDuration/LightingDealDuration"
+import { getIsDeal } from "../../utils/DealUtils"
+import { getIsLightingDeal } from "../../utils/LightingDealUtils"
 
 export default function Product({ 
   setShowDeleteAlert,
@@ -30,6 +34,9 @@ export default function Product({
 
   const handleCloseModal = () => setShowModal(false);
   const handleShowModal = () => setShowModal(true);
+
+  const isDeal = getIsDeal(productType)
+  const isLightingDeal = getIsLightingDeal(productType)
 
   const deleteProduct = async () => {
     setShowDeleteAlert(false);
@@ -111,6 +118,7 @@ export default function Product({
         src={images[0]}
         alt={`256x256`}
       />
+      {isLightingDeal && <LightingDealWaterMark />}
       <Card.Body>
         <Card.Title className="notranslate">{name}</Card.Title>
         <Card.Text className="notranslate">{description}</Card.Text>
@@ -141,9 +149,33 @@ export default function Product({
           }
           {isWaitingResponse ? " Aguarde..." : "Deletar"}
         </Button>
-        <Card.Text className="notranslate" style={{ textAlign: "center" }}>
-          R$ {price}
+        <Card.Text style={{ display: "flex", justifyContent: "center" }}>
+          <div
+            className="notranslate"
+            style={{
+              textAlign: "center",
+              textDecoration: isDeal ? "line-through" : "none",
+              color: isDeal ? "lightgray" : "inherit",
+            }}
+          >
+            R$ {price}
+          </div>
+          {isDeal && (
+            <div
+              className="notranslate"
+              style={{
+                textAlign: "center",
+                paddingLeft: "6px",
+              }}
+            >
+              R$ {dealPrice}
+            </div>
+          )}
         </Card.Text>
+        <LightingDealDuration
+          lightingDealDuration={lightingDealDuration}
+          lightingDealStartTime={lightingDealStartTime}
+        />
       </Card.Body>
     </Card>
     </div>

@@ -13,7 +13,7 @@ import useToken from "../../hooks/useToken";
 import ProductType, { productTypes } from "../ProductType/ProductType";
 import { convertDateAndTimeToIsoString } from "../../utils/convertDateToIsoString";
 import { lightingDealDurations } from "../LightingDealProduct/LightingDealProduct";
-import { calculateLightingDealEndTime } from "../../utils/calculateLightingDealEndTime";
+import { calculateLightingDealEndTime } from "../../utils/LightingDealUtils";
 
 export default function ProductForm() {
   const { token } = useToken();
