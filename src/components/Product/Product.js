@@ -21,7 +21,7 @@ export default function Product({
   productType,
   lightingDealDateISOString,
   lightingDealDuration,
-  lightingDealPrice,
+  dealPrice,
 }) {
   const { token } = useToken()
   const history = useHistory()
@@ -68,14 +68,16 @@ export default function Product({
       productType,
     };
 
-    if (productType === productTypes.LIGHTING_DEAL.name) {
+    if (productType === productTypes.DEAL.name) {
+      state.dealPrice = dealPrice;
+    } else if (productType === productTypes.LIGHTING_DEAL.name) {
       const date = new Date(lightingDealDateISOString);
       const minutes = date.getMinutes();
       const lightingDealTime = `${date.getHours()}:${minutes < 10 ? '0' : ''}${minutes}`;
       state.lightingDealDate = date;
       state.lightingDealTime = lightingDealTime;
       state.lightingDealDuration = lightingDealDuration;
-      state.lightingDealPrice = lightingDealPrice;
+      state.dealPrice = dealPrice;
       state.lightingDealDateISOString = lightingDealDateISOString;
     }
 

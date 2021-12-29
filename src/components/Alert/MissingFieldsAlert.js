@@ -2,7 +2,7 @@ import React from "react";
 import { Alert } from "react-bootstrap";
 import { productTypes } from "../ProductType/ProductType";
 
-const getMissingRequiredFields = (name, description, price, images, productType, lightingDealPrice, lightingDealStartTime) => {
+const getMissingRequiredFields = (name, description, price, images, productType, dealPrice, lightingDealStartTime) => {
     let missingRequiredFields = "";
 
     if (name === "") {
@@ -21,8 +21,14 @@ const getMissingRequiredFields = (name, description, price, images, productType,
         missingRequiredFields += "ao menos uma imagem, ";
     }
 
+    if (productType === productTypes.DEAL.name) {
+        if (dealPrice === "") {
+            missingRequiredFields += "preço promocional, "
+        }
+    }
+
     if (productType === productTypes.LIGHTING_DEAL.name) {
-        if (lightingDealPrice === "") {
+        if (dealPrice === "") {
             missingRequiredFields += "preço promocional (oferta relâmpago), "
         }
 
@@ -43,10 +49,10 @@ export default function MissingFieldsAlert({
     price, 
     images,
     productType,
-    lightingDealPrice,
+    dealPrice,
     lightingDealStartTime,
 }) {
-    const missingRequiredFields = getMissingRequiredFields(name, description, price, images, productType, lightingDealPrice, lightingDealStartTime);
+    const missingRequiredFields = getMissingRequiredFields(name, description, price, images, productType, dealPrice, lightingDealStartTime);
     if (missingRequiredFields.length === 0) {
         setShow(false);
     }

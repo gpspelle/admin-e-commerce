@@ -85,7 +85,7 @@ export default function Dashboard() {
                     images={item.PRODUCT_IMAGES}
                     productType={item.PRODUCT_TYPE}
                     lightingDealDateISOString={item.LIGHTING_DEAL_START_TIME}
-                    lightingDealPrice={item.LIGHTING_DEAL_PRICE}
+                    dealPrice={item.DEAL_PRICE}
                     lightingDealDuration={item.LIGHTING_DEAL_DURATION}
                   />
                   </Col>

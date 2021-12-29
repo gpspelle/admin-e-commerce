@@ -1,9 +1,11 @@
 import React from "react";
 import { ButtonGroup, Button, Form } from "react-bootstrap";
+import DealProduct from "../DealProduct/DealProduct";
 import LightingDealProduct from "../LightingDealProduct/LightingDealProduct";
 
 export const productTypes = {
     NORMAL: { name: "NORMAL", showName: "Normal" },
+    DEAL: { name: "DEAL", showName: "Oferta"},
     LIGHTING_DEAL: { name: "LIGHTING_DEAL", showName: "Oferta Relâmpago" },
 }
 
@@ -16,8 +18,8 @@ export default function ProductType({
     setLightingDealTime, 
     lightingDealDate, 
     setLightingDealDate,
-    lightingDealPrice,
-    setLightingDealPrice,
+    dealPrice,
+    setDealPrice,
 }) {
     return (
         <Form.Group className="mb-3" controlId="formBasicPrice">
@@ -34,10 +36,16 @@ export default function ProductType({
                     </Button>
                 )}
             </ButtonGroup>
+            {productType === productTypes.DEAL.name && 
+                <DealProduct 
+                    price={dealPrice}
+                    setPrice={setDealPrice}
+                />
+            }
             {productType === productTypes.LIGHTING_DEAL.name &&
                 <LightingDealProduct
-                    price={lightingDealPrice}
-                    setPrice={setLightingDealPrice}
+                    price={dealPrice}
+                    setPrice={setDealPrice}
                     selectedDuration={lightingDealDuration}
                     setSelectedDuration={setLightingDealDuration}
                     selectedTime={lightingDealTime}

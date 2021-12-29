@@ -40,7 +40,7 @@ export default function ProductForm() {
   const [lightingDealTime, setLightingDealTime] = useState("10:00");
   const [lightingDealDate, setLightingDealDate] = useState(new Date());
   const [lightingDealDuration, setLightingDealDuration] = useState(lightingDealDurations["12h"].name);
-  const [lightingDealPrice, setLightingDealPrice] = useState("");
+  const [dealPrice, setDealPrice] = useState("");
   const [lightingDealDateISOString, setLightingDealDateISOString] = useState();
 
   useEffect(() => {
@@ -71,8 +71,10 @@ export default function ProductForm() {
       setImagePreview(location.state.images);
       setProductType(location.state.productType);
       
-      if (location.state.productType === productTypes.LIGHTING_DEAL.name) {
-        setLightingDealPrice(location.state.lightingDealPrice);
+      if (location.state.productType === productTypes.DEAL.name) {
+        setDealPrice(location.state.dealPrice);
+      } else if (location.state.productType === productTypes.LIGHTING_DEAL.name) {
+        setDealPrice(location.state.dealPrice);
         setLightingDealDate(location.state.lightingDealDate);
         setLightingDealTime(location.state.lightingDealTime);
         setLightingDealDuration(location.state.lightingDealDuration);
@@ -91,7 +93,7 @@ export default function ProductForm() {
       const now = new Date();
       return isNormalCreateInput &&
         lightingDealTime.length === 5 &&
-        lightingDealPrice !== "" &&
+        dealPrice !== "" &&
         lightingDealDate > now;
     }
 
@@ -124,10 +126,12 @@ export default function ProductForm() {
         productType: productType
     };
 
-    if (productType === productTypes.LIGHTING_DEAL.name) {
+    if (productType === productTypes.DEAL.name) {
+      body.dealPrice = dealPrice;
+    } else if (productType === productTypes.LIGHTING_DEAL.name) {
       body.lightingDealStartTime = lightingDealDateISOString;
       body.lightingDealDuration = lightingDealDuration;
-      body.lightingDealPrice = lightingDealPrice;
+      body.dealPrice = dealPrice;
     }
 
     const config = {
@@ -151,12 +155,14 @@ export default function ProductForm() {
           setTags(new Set([]));
           setImagePreview();
 
-          if (productType === productTypes.LIGHTING_DEAL.name) {
-            setLightingDealPrice("");
+          if (productType === productTypes.DEAL.name) {
+            setDealPrice("");
+          } else if (productType === productTypes.LIGHTING_DEAL.name) {
+            setDealPrice("");
           }
         }
     } catch (error) {
-        setCreateStatus(error.statusCode)
+      setCreateStatus(error.statusCode)
     } finally {
       setIsWaitingResponse(false);
       setShowCreateAlert(true);
@@ -179,13 +185,17 @@ export default function ProductForm() {
     if (!areArraysEqual(location.state.tags, [...tags])) body.PRODUCT_TAGS = [...tags];
     if (location.state.productType !== productType) body.PRODUCT_TYPE = productType;
 
-    if (productType === productTypes.LIGHTING_DEAL.name) {
+    if (ProductType === productTypes.DEAL.name) {
+      if (location.state.dealPrice !== dealPrice) {
+        body.DEAL_PRICE = dealPrice;
+      }
+    } else if (productType === productTypes.LIGHTING_DEAL.name) {
       if (location.state.lightingDealDuration !== lightingDealDuration) {
         body.LIGHTING_DEAL_DURATION = lightingDealDuration;
       }
 
-      if (location.state.lightingDealPrice !== lightingDealPrice) {
-        body.LIGHTING_DEAL_PRICE = lightingDealPrice;
+      if (location.state.dealPrice !== dealPrice) {
+        body.DEAL_PRICE = dealPrice;
       }
 
       if (location.state.lightingDealDateISOString !== lightingDealDateISOString) {
@@ -193,7 +203,7 @@ export default function ProductForm() {
       }
     } else {
       body.LIGHTING_DEAL_DURATION = "";
-      body.LIGHTING_DEAL_PRICE = "";
+      body.DEAL_PRICE = "";
       body.LIGHTING_DEAL_START_TIME = "";
     }
 
@@ -260,8 +270,8 @@ export default function ProductForm() {
             setLightingDealDate={setLightingDealDate} 
             productType={productType} 
             setProductType={setProductType}
-            lightingDealPrice={lightingDealPrice}
-            setLightingDealPrice={setLightingDealPrice}
+            dealPrice={dealPrice}
+            setDealPrice={setDealPrice}
           />
           <ImageUploadPreview imageInput={imageInput} imagePreview={imagePreview} setImagePreview={setImagePreview} setImages={setImages} setImageNames={setImageNames} />
           <Button variant="primary" type="submit" disabled={isWaitingResponse}>
@@ -289,7 +299,7 @@ export default function ProductForm() {
                 price={price} 
                 images={images} 
                 productType={productType}
-                lightingDealPrice={lightingDealPrice}
+                dealPrice={dealPrice}
                 lightingDealStartTime={lightingDealDateISOString}
               />
             }
