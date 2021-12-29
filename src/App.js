@@ -8,10 +8,11 @@ import Profile from './components/Profile/Profile';
 import Login from './components/Login/Login';
 import ProductForm from './components/ProductForm/ProductForm';
 import useToken from './hooks/useToken';
+import jwt from 'jwt-decode' // import dependency
 
 function App() {
   const { token, setToken } = useToken();
-    
+
   if (!token) {
     return (
       <BrowserRouter>
@@ -23,6 +24,13 @@ function App() {
         </Switch>
       </BrowserRouter>
     )
+  }
+
+  const { exp } = jwt(token);
+  const now = new Date().getTime()
+
+  if (exp >= now) {
+    setToken()
   }
 
   return (
