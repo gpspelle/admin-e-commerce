@@ -158,9 +158,7 @@ export default function ProductForm() {
           setTags(new Set([]));
           setImagePreview();
 
-          if (productType === productTypes.DEAL.name) {
-            setDealPrice("");
-          } else if (productType === productTypes.LIGHTING_DEAL.name) {
+          if (productType === productTypes.DEAL.name || productType === productTypes.LIGHTING_DEAL.name) {
             setDealPrice("");
           }
         }
@@ -188,9 +186,10 @@ export default function ProductForm() {
     if (!areArraysEqual(location.state.tags, [...tags])) body.PRODUCT_TAGS = [...tags];
     if (location.state.productType !== productType) body.PRODUCT_TYPE = productType;
 
-    if (ProductType === productTypes.DEAL.name) {
+    if (productType === productTypes.DEAL.name) {
       if (location.state.dealPrice !== dealPrice) {
         body.DEAL_PRICE = dealPrice;
+        body.removeAttributes = ["LIGHTING_DEAL_DURATION", "LIGHTING_DEAL_START_TIME", "LIGHTING_DEAL_END_TIME"]
       }
     } else if (productType === productTypes.LIGHTING_DEAL.name) {
       if (location.state.lightingDealDuration !== lightingDealDuration) {
@@ -202,17 +201,14 @@ export default function ProductForm() {
       }
       
       if (location.state.lightingDealDuration !== lightingDealDuration || location.state.lightingDealStartTime !== lightingDealStartTime) {
-        body.lightingDealEndTime = calculateLightingDealEndTime(lightingDealDuration, lightingDealStartTime)
+        body.LIGHTING_DEAL_END_TIME = calculateLightingDealEndTime(lightingDealDuration, lightingDealStartTime)
       }
 
       if (location.state.dealPrice !== dealPrice) {
         body.DEAL_PRICE = dealPrice;
       }
     } else {
-      body.LIGHTING_DEAL_DURATION = "";
-      body.DEAL_PRICE = "";
-      body.LIGHTING_DEAL_START_TIME = "";
-      body.LIGHTING_DEAL_END_TIME = "";
+      body.removeAttributes = ["LIGHTING_DEAL_DURATION", "DEAL_PRICE", "LIGHTING_DEAL_START_TIME", "LIGHTING_DEAL_END_TIME"]
     }
 
     if (images) {
@@ -242,6 +238,8 @@ export default function ProductForm() {
     } catch (error) {
       setEditStatus(error.statusCode);
       setShowEditAlert(true);
+    } finally {
+      setIsWaitingResponse(false);
     }
   }
 
