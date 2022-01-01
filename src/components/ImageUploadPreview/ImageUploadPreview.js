@@ -83,6 +83,7 @@ export default function ImageUploadPreview({
     return (
         <Form.Group className="mb-3 preview" controlId="formBasicImages">
             <Form.Control ref={imageInput} type="file" multiple={true} className="form-control" accept=".jpg, .jpeg, .png" onChange={(e) => handleFileUpload(e)} />
+            {imagePreview && imagePreview.length > 1 && <div style={{ marginTop: "10px" }}>Use as setinhas para ordenar as imagens</div>}
             <Container>
                 <Row>
                     {imagePreview && imagePreview.map((image, i) => {
