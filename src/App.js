@@ -8,7 +8,7 @@ import Profile from './components/Profile/Profile';
 import Login from './components/Login/Login';
 import ProductForm from './components/ProductForm/ProductForm';
 import useToken from './hooks/useToken';
-import jwt from 'jwt-decode' // import dependency
+import jwt from 'jwt-decode';
 
 function App() {
   const { token, setToken } = useToken();

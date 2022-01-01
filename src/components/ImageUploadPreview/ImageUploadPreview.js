@@ -33,7 +33,7 @@ export default function ImageUploadPreview({ imageInput, imagePreview, setImageP
     return (
         <Form.Group className="mb-3 preview" controlId="formBasicImages">
             {imagePreview && imagePreview.map((image) => 
-                <img key={image.name ? image.name : image} width={256} height={256} src={image.name ? URL.createObjectURL(image) : image} alt='' />
+                <img key={image.name ? image.name : image} width={319} height={256} src={image.name ? URL.createObjectURL(image) : image} alt='' />
             )}
             <Form.Control ref={imageInput} type="file" multiple={true} className="form-control" accept=".jpg, .jpeg, .png" onChange={(e) => handleFileUpload(e)} />
         </Form.Group>

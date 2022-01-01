@@ -112,11 +112,10 @@ export default function Product({
       </Modal>
       <Card style={{ width: "18rem" }}>
       <img
-        className="d-block w-100"
-        width="256px"
+        width="286px"
         height="256px"
         src={images[0]}
-        alt={`256x256`}
+        alt={`286x256`}
       />
       {isLightingDeal && <LightingDealWaterMark />}
       <Card.Body>
