@@ -11,6 +11,7 @@ import { areArraysEqual } from "../../utils/compareTwoArrays";
 import MissingFieldsAlert from "../Alert/MissingFieldsAlert";
 import useToken from "../../hooks/useToken";
 import ProductType, { productTypes } from "../ProductType/ProductType";
+import { isArraySorted } from "../../utils/isArraySorted";
 import { convertDateAndTimeToIsoString } from "../../utils/convertDateToIsoString";
 import { lightingDealDurations } from "../LightingDealProduct/LightingDealProduct";
 import { calculateLightingDealEndTime } from "../../utils/LightingDealUtils";
@@ -43,6 +44,7 @@ export default function ProductForm() {
   const [lightingDealDuration, setLightingDealDuration] = useState(lightingDealDurations["12h"].name);
   const [dealPrice, setDealPrice] = useState("");
   const [lightingDealStartTime, setLightingDealStartTime] = useState();
+  const [orderIndex, setOrderIndex] = useState([]);
 
   useEffect(() => {
     if (lightingDealTime && lightingDealDate) {
@@ -207,7 +209,7 @@ export default function ProductForm() {
       if (location.state.dealPrice !== dealPrice) {
         body.DEAL_PRICE = dealPrice;
       }
-    } else {
+    } else if (location.state.productType !== productTypes.NORMAL.name) {
       body.removeAttributes = ["LIGHTING_DEAL_DURATION", "DEAL_PRICE", "LIGHTING_DEAL_START_TIME", "LIGHTING_DEAL_END_TIME"]
     }
 
@@ -219,6 +221,10 @@ export default function ProductForm() {
       }
 
       body.PRODUCT_IMAGES = transformedImages;
+    }
+
+    if (!(imageNames.length > 0) && !images && !isArraySorted(orderIndex)) {
+      body.reorderImages = orderIndex
     }
 
     const config = {
@@ -242,7 +248,7 @@ export default function ProductForm() {
       setIsWaitingResponse(false);
     }
   }
-
+  
   return (
     <Container
       style={{
@@ -279,7 +285,17 @@ export default function ProductForm() {
             dealPrice={dealPrice}
             setDealPrice={setDealPrice}
           />
-          <ImageUploadPreview imageInput={imageInput} imagePreview={imagePreview} setImagePreview={setImagePreview} setImages={setImages} setImageNames={setImageNames} />
+          <ImageUploadPreview 
+            imageInput={imageInput} 
+            imagePreview={imagePreview} 
+            setImagePreview={setImagePreview} 
+            images={images} 
+            setImages={setImages} 
+            imageNames={imageNames} 
+            setImageNames={setImageNames}
+            orderIndex={orderIndex}
+            setOrderIndex={setOrderIndex}
+          />
           <Button variant="primary" type="submit" disabled={isWaitingResponse}>
             {isWaitingResponse &&
             <>

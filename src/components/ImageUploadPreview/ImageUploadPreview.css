@@ -1,0 +1,13 @@
+.golden-frame {
+    box-sizing: border-box;
+    border-width: 6px;
+    border-style: solid;
+    border-image: linear-gradient(to right, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
+    border-image-slice: 1;
+}
+
+.arrow-button {
+    font-size: 50px;
+    cursor: pointer;
+    position: absolute;
+}
