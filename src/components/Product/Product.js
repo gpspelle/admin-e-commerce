@@ -64,7 +64,7 @@ export default function Product({
     }
   }
 
-  const editProduct = async (e) => {
+  const editProduct = async () => {
     const state = { 
       id, 
       name, 
@@ -110,7 +110,7 @@ export default function Product({
           </Button>
         </Modal.Footer>
       </Modal>
-      <Card style={{ width: "18rem" }}>
+      <Card style={{ width: "18rem", cursor: "pointer" }} onClick={editProduct}>
       <img
         width="286px"
         height="256px"
@@ -120,18 +120,10 @@ export default function Product({
       {isLightingDeal && <LightingDealWaterMark />}
       <Card.Body>
         <Card.Title className="notranslate">{name}</Card.Title>
-        <Card.Text className="notranslate">{description}</Card.Text>
-        <Button 
-          variant="outline-secondary" 
-          style={{ width: "100%", marginBottom: "8%" }} 
-          onClick={(e) => editProduct(e)}
-        >
-          Editar
-        </Button>
         <Button 
           disabled={isWaitingResponse} 
           variant="danger" 
-          style={{ width: "100%", marginBottom: "8%" }}
+          style={{ width: "100%", marginBottom: "4%" }}
           onClick={handleShowModal}
         >
           {isWaitingResponse &&
