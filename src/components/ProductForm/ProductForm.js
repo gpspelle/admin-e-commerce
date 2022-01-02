@@ -186,13 +186,13 @@ export default function ProductForm() {
 
     if (location.state.name !== name) body.PRODUCT_NAME = name; 
     if (location.state.description !== description) body.PRODUCT_DESCRIPTION = description;
-    if (location.state.price !== price) body.PRODUCT_PRICE = price;
+    if (location.state.price !== price) body.PRODUCT_PRICE = parseInt(price, 10);
     if (!areArraysEqual(location.state.tags, [...tags])) body.PRODUCT_TAGS = [...tags];
     if (location.state.productType !== productType) body.PRODUCT_TYPE = productType;
 
     if (productType === productTypes.DEAL.name) {
       if (location.state.dealPrice !== dealPrice) {
-        body.DEAL_PRICE = dealPrice;
+        body.DEAL_PRICE = parseInt(dealPrice, 10);
         body.removeAttributes = ["LIGHTING_DEAL_DURATION", "LIGHTING_DEAL_START_TIME", "LIGHTING_DEAL_END_TIME"]
       }
     } else if (productType === productTypes.LIGHTING_DEAL.name) {
@@ -209,7 +209,7 @@ export default function ProductForm() {
       }
 
       if (location.state.dealPrice !== dealPrice) {
-        body.DEAL_PRICE = dealPrice;
+        body.DEAL_PRICE = parseInt(dealPrice, 10);
       }
     } else if (location.state.productType !== productTypes.NORMAL.name) {
       body.removeAttributes = ["LIGHTING_DEAL_DURATION", "DEAL_PRICE", "LIGHTING_DEAL_START_TIME", "LIGHTING_DEAL_END_TIME"]
@@ -227,8 +227,8 @@ export default function ProductForm() {
     }
 
     if (!(imageNames.length > 0) && !images && !isArraySorted(orderIndex)) {
-      body.reorderImages = orderIndex
-      body.PRODUCT_COVER_IMAGE = imagesResized[0]
+      body.reorderImages = orderIndex;
+      body.PRODUCT_COVER_IMAGE = imagesResized[0];
     }
 
     const config = {
