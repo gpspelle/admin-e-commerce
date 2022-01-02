@@ -1,4 +1,4 @@
-export const array_move = (arr, fromIndex, toIndex) => {
+export const arrayMove = (arr, fromIndex, toIndex) => {
     var element = arr[fromIndex];
     arr.splice(fromIndex, 1);
     arr.splice(toIndex, 0, element);

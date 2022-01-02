@@ -22,6 +22,7 @@ export default function Product({
   price,
   tags,
   images,
+  coverImage,
   productType,
   lightingDealStartTime,
   lightingDealDuration,
@@ -64,7 +65,8 @@ export default function Product({
     }
   }
 
-  const editProduct = async () => {
+  const editProduct = async (event) => {
+    if (event.target.type === "button") return
     const state = { 
       id, 
       name, 
@@ -114,7 +116,7 @@ export default function Product({
       <img
         width="286px"
         height="256px"
-        src={images[0]}
+        src={coverImage ? `data:image/jpeg;base64,${coverImage}` : images[0]}
         alt={`286x256`}
       />
       {isLightingDeal && <LightingDealWaterMark />}

@@ -30,6 +30,7 @@ export default function ProductForm() {
   const [price, setPrice] = useState("");
   const [tags, setTags] = useState(new Set([]));
   const [images, setImages] = useState(null);
+  const [imagesResized, setImagesResized] = useState(null);
   const [imageNames, setImageNames] = useState([]);
   const [imagePreview, setImagePreview] = useState();
   const [createStatus, setCreateStatus] = useState();
@@ -117,8 +118,8 @@ export default function ProductForm() {
 
     const transformedImages = [];
     
-    for (let i = 0; i < images.length; i+=1) {
-      transformedImages.push({ name: imageNames[i], content: images[i]})
+    for (let i = 0; i < images.length; i += 1) {
+      transformedImages.push({ name: imageNames[i], content: images[i], contentResized: imagesResized[i]})
     }
 
     const body = {
@@ -127,7 +128,8 @@ export default function ProductForm() {
         price,
         tags: [...tags],
         images: transformedImages,
-        productType: productType
+        productType: productType,
+        coverImage: imagesResized[0],
     };
 
     if (productType === productTypes.DEAL.name) {
@@ -213,18 +215,20 @@ export default function ProductForm() {
       body.removeAttributes = ["LIGHTING_DEAL_DURATION", "DEAL_PRICE", "LIGHTING_DEAL_START_TIME", "LIGHTING_DEAL_END_TIME"]
     }
 
-    if (images) {
+    if (images && imagesResized) {
       const transformedImages = [];
-
-      for (let i = 0; i < images.length; i+=1) {
-        transformedImages.push({ name: imageNames[i], content: images[i]})
+    
+      for (let i = 0; i < images.length; i += 1) {
+        transformedImages.push({ name: imageNames[i], content: images[i], contentResized: imagesResized[i]})
       }
 
       body.PRODUCT_IMAGES = transformedImages;
+      body.PRODUCT_COVER_IMAGE = imagesResized[0];
     }
 
     if (!(imageNames.length > 0) && !images && !isArraySorted(orderIndex)) {
       body.reorderImages = orderIndex
+      body.PRODUCT_COVER_IMAGE = imagesResized[0]
     }
 
     const config = {
@@ -285,13 +289,15 @@ export default function ProductForm() {
             dealPrice={dealPrice}
             setDealPrice={setDealPrice}
           />
-          <ImageUploadPreview 
-            imageInput={imageInput} 
-            imagePreview={imagePreview} 
-            setImagePreview={setImagePreview} 
-            images={images} 
-            setImages={setImages} 
-            imageNames={imageNames} 
+          <ImageUploadPreview
+            imageInput={imageInput}
+            imagePreview={imagePreview}
+            setImagePreview={setImagePreview}
+            images={images}
+            setImages={setImages}
+            imagesResized={imagesResized}
+            setImagesResized={setImagesResized}
+            imageNames={imageNames}
             setImageNames={setImageNames}
             orderIndex={orderIndex}
             setOrderIndex={setOrderIndex}

@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Compress from 'compress.js';
 import { Card, Form, Row, Container, Col } from 'react-bootstrap';
 import  { IoArrowDownCircleSharp, IoArrowUpCircleSharp } from "react-icons/io5"
 import "./ImageUploadPreview.css"
-import { array_move } from '../../utils/arrayMove';
+import { arrayMove } from '../../utils/arrayMove';
+import axios from 'axios';
 
 const compress = new Compress();
 
@@ -13,6 +14,8 @@ export default function ImageUploadPreview({
     setImagePreview,
     images,
     setImages,
+    imagesResized,
+    setImagesResized,
     imageNames,
     setImageNames,
     orderIndex,
@@ -23,33 +26,74 @@ export default function ImageUploadPreview({
         if (orderIndex.length === 0 && imagePreview && imagePreview.length) {
             setOrderIndex([...Array(imagePreview.length).keys()])
         }
-    }, [imagePreview, orderIndex])
+    }, [imagePreview, orderIndex, setOrderIndex])
 
-    async function resizeImageFnAndConvertToBase64(file) {
-        const resizedImage = await compress.compress([file], {
-            quality: 0.5, // the quality of the image, max is 1,
+    useEffect(() => {
+        async function resizeImages() {
+            const promises = [];
+
+            if (imagePreview) {
+                imagePreview.forEach((image) => {
+                    const compressed = compressBase64AndResize(image);
+                    promises.push(compressed);
+                })
+            } 
+
+            const result = await Promise.all(promises);
+            setImagesResized(result);
+        }
+      
+        if (!imagesResized) {
+            resizeImages();
+        }
+    }, [imagePreview, setImagesResized, imagesResized])
+
+    async function compressImageAndConvertToBase64(file, params) {
+        const compressedImage = await compress.compress([file], params)
+        const img = compressedImage[0];
+        console.log(img.endSizeInMb, params)
+        const base64str = img.data
+        return base64str;
+    }
+
+    async function compressBase64AndResize(base64URL) {
+        async function getBase64(url) {
+            return axios
+                .get(url, {
+                    responseType: 'arraybuffer'
+                })
+                .then(response => Buffer.from(response.data, 'binary').toString('base64'))
+        }
+        const compressedAndResizedImage = await compress.compress([Compress.convertBase64ToFile(await getBase64(base64URL))], {
+            size: 0.2
         })
-        const img = resizedImage[0];
+        const img = compressedAndResizedImage[0];
         const base64str = img.data
         return base64str;
     }
 
     const handleFileUpload = async (e) => {
         const filesAsArray = [...e.target.files];
-        setImagePreview(filesAsArray);
         const imageNames = [];
         const order = [];
         const promises = [];
+        const promisesResized = [];
 
         filesAsArray.forEach((file, i) => {
-            const base64FilePromise = resizeImageFnAndConvertToBase64(file);
+            const base64FilePromise = compressImageAndConvertToBase64(file, { size: 0.8 });
+            const base64FileResizedPromise = compressImageAndConvertToBase64(file, { size: 0.2});
             promises.push(base64FilePromise);
+            promisesResized.push(base64FileResizedPromise);
             order.push(i);
             imageNames.push(file.name);
         })
 
         const result = await Promise.all(promises);
+        const resultResized = await Promise.all(promisesResized);
+
         setImages(result);
+        setImagePreview(filesAsArray);
+        setImagesResized(resultResized);
         setImageNames(imageNames);
         setOrderIndex(order);
     };
@@ -57,26 +101,28 @@ export default function ImageUploadPreview({
     const moveUpImage = (i) => {
         const moveUp = (i, array, setFunc) => {
             const copy = [...array];
-            array_move(copy, i, i-1);
+            arrayMove(copy, i, i-1);
             setFunc(copy);
         }
 
         moveUp(i, imagePreview, setImagePreview);
         moveUp(i, orderIndex, setOrderIndex);
         if (images) moveUp(i, images, setImages);
+        if (imagesResized) moveUp(i, imagesResized, setImagesResized);
         if (imageNames.length > 0) moveUp(i, imageNames, setImageNames);
     }
 
     const moveDownImage = (i) => {
         const moveDown = (i, array, setFunc) => {
             const copy = [...array];
-            array_move(copy, i, i+1);
+            arrayMove(copy, i, i+1);
             setFunc(copy);
         }
 
         moveDown(i, imagePreview, setImagePreview);
         moveDown(i, orderIndex, setOrderIndex);
         if (images) moveDown(i, images, setImages);
+        if (imagesResized) moveDown(i, imagesResized, setImagesResized);
         if (imageNames.length > 0) moveDown(i, imageNames, setImageNames);
     }
 
