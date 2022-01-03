@@ -9,6 +9,7 @@ import LightingDealWaterMark from "../LightingDealWaterMark/LightingDealWaterMar
 import LightingDealDuration from "../LightingDealDuration/LightingDealDuration"
 import { getIsDeal } from "../../utils/DealUtils"
 import { getIsLightingDeal } from "../../utils/LightingDealUtils"
+import ProgressiveBlurryImageLoad from "../ProgressiveBlurryImageLoad.js/ProgressiveBlurryImageLoad"
 
 export default function Product({ 
   setShowDeleteAlert,
@@ -113,12 +114,16 @@ export default function Product({
         </Modal.Footer>
       </Modal>
       <Card style={{ width: "18rem", cursor: "pointer" }} onClick={editProduct}>
-      <img
-        width="286px"
-        height="256px"
-        src={coverImage ? `data:image/jpeg;base64,${coverImage}` : images[0]}
-        alt={`286x256`}
-      />
+      {coverImage ? (
+        <ProgressiveBlurryImageLoad
+          width={286}
+          height={256}
+          small={`data:image/jpeg;base64,${coverImage}`}
+          large={images[0]}
+        />
+      ) : (
+        <img style={{ width: 286, height: 256 }} src={images[0]} alt={`286x256`} />
+      )}
       {isLightingDeal && <LightingDealWaterMark />}
       <Card.Body>
         <Card.Title className="notranslate">{name}</Card.Title>

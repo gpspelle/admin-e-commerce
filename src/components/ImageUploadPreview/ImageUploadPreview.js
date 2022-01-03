@@ -65,7 +65,7 @@ export default function ImageUploadPreview({
                 .then(response => Buffer.from(response.data, 'binary').toString('base64'))
         }
         const compressedAndResizedImage = await compress.compress([Compress.convertBase64ToFile(await getBase64(base64URL))], {
-            size: 0.2
+            maxWidth: 64, maxHeight: 64
         })
         const img = compressedAndResizedImage[0];
         const base64str = img.data
@@ -81,7 +81,7 @@ export default function ImageUploadPreview({
 
         filesAsArray.forEach((file, i) => {
             const base64FilePromise = compressImageAndConvertToBase64(file, { size: 0.8 });
-            const base64FileResizedPromise = compressImageAndConvertToBase64(file, { size: 0.2});
+            const base64FileResizedPromise = compressImageAndConvertToBase64(file, { maxWidth: 64, maxHeight: 64 });
             promises.push(base64FilePromise);
             promisesResized.push(base64FileResizedPromise);
             order.push(i);
