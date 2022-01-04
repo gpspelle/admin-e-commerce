@@ -1,7 +1,5 @@
 import React from 'react';
-import { Container, Nav, Navbar } from 'react-bootstrap';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import './App.css';
 import AccountForm from './components/AccountForm/AccountForm';
 import Dashboard from './components/Dashboard/Dashboard';
 import Profile from './components/Profile/Profile';
@@ -9,6 +7,8 @@ import Login from './components/Login/Login';
 import ProductForm from './components/ProductForm/ProductForm';
 import useToken from './hooks/useToken';
 import jwt from 'jwt-decode';
+import NavigationBar from './components/NavigationBar/NavigationBar';
+import Home from './components/Home/Home';
 
 function App() {
   const { token, setToken } = useToken();
@@ -34,18 +34,9 @@ function App() {
   }
 
   return (
-    <div className="wrapper">
-      <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-        <Container>
-          <Navbar.Brand href="/">Página Principal</Navbar.Brand>
-          <Nav className="me-auto">
-            <Nav.Link href="/adicionar-produto">Adicionar Produto</Nav.Link>
-            <Nav.Link href="/gerenciar-produtos">Gerenciar Produtos</Nav.Link>
-            <Nav.Link href="/minha-conta">Minha Conta</Nav.Link>
-          </Nav>
-        </Container>
-      </Navbar>
+    <div style={{ paddingTop: "30px" }}>
       <BrowserRouter>
+        <NavigationBar />
         <Switch>
           <Route path="/adicionar-produto">
             <ProductForm />
@@ -60,6 +51,7 @@ function App() {
             <ProductForm />
           </Route>
           <Route path="/">
+            <Home />
           </Route>
         </Switch>
       </BrowserRouter>
