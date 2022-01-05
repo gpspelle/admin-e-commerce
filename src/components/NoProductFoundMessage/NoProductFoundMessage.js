@@ -16,7 +16,6 @@ export default function NoProductFoundMessage({
     })
   }
 
-  console.log(hasMoreDataToFetch)
   return (
     <Col
       style={{

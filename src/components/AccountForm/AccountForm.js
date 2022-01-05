@@ -205,8 +205,6 @@ export default function AccountForm(props) {
         }
     }
 
-    console.log(userData)
-
     return (
         <div>
             {isPropsSet && 
