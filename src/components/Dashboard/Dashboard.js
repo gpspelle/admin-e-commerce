@@ -57,11 +57,10 @@ export default function Dashboard() {
   }, [fetchData]);
   
 
-  console.log(pagination)
   return (
     <Container>
         <DeleteAlert show={showDeleteAlert} setShow={setShowDeleteAlert} status={deleteStatus} deletedProductName={deletedProductName}/>
-        <Row>
+        <Row style={{ paddingTop: "12px" }}>
             {products && products.length > 0 ? products.map((item, i) => {
               if (item.PRODUCT_TAGS) {
                 var index = item.PRODUCT_TAGS.indexOf("!@#$no-tag%^&*");
@@ -77,7 +76,7 @@ export default function Dashboard() {
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
-                      padding: "30px",
+                      paddingTop: "20px",
                     }}
                   >
                     <Product
