@@ -11,9 +11,8 @@ export default function ProgressiveBlurryImageLoad({ small, large, height, width
         height,
         width,
         filter: blur ? "blur(5px)" : "none",
-        transition: blur ? "none" : "filter 0.3s ease-out",
       }}
-      alt={`286x256`}
+      alt={`${width}x${height}`}
     />
   )
 }

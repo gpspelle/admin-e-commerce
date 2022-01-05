@@ -55,7 +55,6 @@ export default function Dashboard() {
   useEffect(() => {
     setPagination({ key: undefined, fetch: true })
   }, [fetchData]);
-  
 
   return (
     <Container>
