@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import AccountForm from './components/AccountForm/AccountForm';
 import Dashboard from './components/Dashboard/Dashboard';
 import Profile from './components/Profile/Profile';
@@ -16,14 +16,12 @@ function App() {
 
   if (!token) {
     return (
-      <BrowserRouter>
         <Switch>
           <Route path={`/${CREATE_ACCOUNT}`}>
             <AccountForm />
           </Route>
           <Login setToken={setToken} />
         </Switch>
-      </BrowserRouter>
     )
   }
 
@@ -36,7 +34,6 @@ function App() {
 
   return (
     <div style={{ paddingTop: "30px" }}>
-      <BrowserRouter>
         <NavigationBar />
         <Switch>
           <Route path={`/${ADD_PRODUCT}`}>
@@ -55,7 +52,6 @@ function App() {
             <Home />
           </Route>
         </Switch>
-      </BrowserRouter>
     </div>
   );
 }
