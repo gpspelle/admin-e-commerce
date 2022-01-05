@@ -1,13 +1,14 @@
 import React from "react";
-import { CloseButton, Button } from "react-bootstrap";
+import { Button } from "react-bootstrap";
+import { AiOutlineClose } from "react-icons/ai";
 
 export default function Tag({ tag, onDelete }) {
     return (
         <Button variant="outline-secondary" style={{ display: "flex" }}>
             <div>
-                {tag}
+                {tag}&nbsp;
             </div>
-            <CloseButton onClick={(e) => onDelete(tag)} aria-label="hide" />
+            <AiOutlineClose style={{ fontSize: "24px" }} onClick={(e) => onDelete(tag)} aria-label="hide" />
         </Button>
     )
 }
