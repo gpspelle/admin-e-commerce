@@ -147,33 +147,25 @@ export default function Product({
           }
           {isWaitingResponse ? " Aguarde..." : "Deletar"}
         </Button>
-        <Card.Text style={{ display: "flex", justifyContent: "center" }}>
-          <div
+        <div style={{ justifyContent: "center", display: "flex" }}>
+          <Card.Text
             className="notranslate"
             style={{
-              textAlign: "center",
               textDecoration: isDeal ? "line-through" : "none",
               color: isDeal ? "lightgray" : "inherit",
+              marginBottom: isDeal ? "0" : "",
             }}
           >
             R$ {price}
-          </div>
+          </Card.Text>
           {isDeal && (
-            <div
-              className="notranslate"
-              style={{
-                textAlign: "center",
-                paddingLeft: "6px",
-              }}
-            >
-              R$ {dealPrice}
-            </div>
+            <Card.Text className="notranslate">&nbsp;R$ {dealPrice}</Card.Text>
           )}
-        </Card.Text>
-        <LightingDealDuration
-          lightingDealDuration={lightingDealDuration}
-          lightingDealStartTime={lightingDealStartTime}
-        />
+          <LightingDealDuration
+            lightingDealDuration={lightingDealDuration}
+            lightingDealStartTime={lightingDealStartTime}
+          />
+        </div>
       </Card.Body>
     </Card>
     </div>
