@@ -5,6 +5,8 @@ import Product from "../Product/Product";
 import DeleteAlert from "../Alert/DeleteAlert";
 import { ACCESS_TOKEN_NAME, API, PRODUCTS_ENDPOINT } from "../../constants/constants";
 import useToken from "../../hooks/useToken";
+import NoProductFoundMessage from "../NoProductFoundMessage/NoProductFoundMessage";
+import useWindowDimensions from "../../hooks/useWindowDimensions";
 
 export default function Dashboard() {
   const { token } = useToken();
@@ -14,6 +16,7 @@ export default function Dashboard() {
   const [deletedProductName, setDeletedProductName] = useState();
   const [fetchData, setFetchData] = useState(0);
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
+  const { width } = useWindowDimensions()
 
   useEffect(() => {  
     async function getProductsFromDatabase() {
@@ -44,18 +47,22 @@ export default function Dashboard() {
         }
     }
 
-    getProductsFromDatabase();
+    if (pagination.fetch) {
+      getProductsFromDatabase();
+    }
   }, [token, pagination]);
 
   useEffect(() => {
     setPagination({ key: undefined, fetch: true })
   }, [fetchData]);
   
+
+  console.log(pagination)
   return (
     <Container>
         <DeleteAlert show={showDeleteAlert} setShow={setShowDeleteAlert} status={deleteStatus} deletedProductName={deletedProductName}/>
         <Row>
-            {products?.map((item, i) => {
+            {products && products.length > 0 ? products.map((item, i) => {
               if (item.PRODUCT_TAGS) {
                 var index = item.PRODUCT_TAGS.indexOf("!@#$no-tag%^&*");
                 if (index !== -1) {
@@ -93,7 +100,9 @@ export default function Dashboard() {
                     />
                   </Col>
               )
-            })}
+            }) :
+            <NoProductFoundMessage screenWidth={width} hasMoreDataToFetch={pagination.fetch} />
+            }
         </Row>
     </Container>
   )

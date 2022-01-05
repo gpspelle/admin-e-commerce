@@ -15,11 +15,7 @@ const isValidPhoneNumber = (phoneNumber) => String(phoneNumber).match(/^\+?[1-9]
 export default function AccountForm(props) {
     const { token } = useToken();
     const history = useHistory();
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [isEmailVerified, setIsEmailVerified] = useState(false);
-    const [commercialName, setCommercialName] = useState("");
-    const [phoneNumber, setPhoneNumber] = useState("");
+    const [userData, setUserData] = useState(props)
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [password, setPassword] = useState("");
@@ -32,14 +28,12 @@ export default function AccountForm(props) {
     const handleCloseModal = () => setShowModal(false);
     const handleShowModal = () => setShowModal(true);
 
+
+    const { email, name, commercialName, phoneNumber, isEmailVerified } = userData
     useEffect(() => {
         if (Object.keys(props).length > 0) {
             setIsPropsSet(true);
-            setName(props.name)
-            setIsEmailVerified(props.isEmailVerified)
-            setEmail(props.email)
-            setCommercialName(props.commercialName)
-            setPhoneNumber(props.phoneNumber)
+            setUserData(props)
         }
     }, [props])
 
@@ -211,9 +205,7 @@ export default function AccountForm(props) {
         }
     }
 
-    if (!isPropsSet || !email || !name || !commercialName || !phoneNumber) {
-        return <></>;
-    }
+    console.log(userData)
 
     return (
         <div>
@@ -257,7 +249,7 @@ export default function AccountForm(props) {
                 }}
             >
                 <Form onSubmit={isPropsSet ? handleEditAccount : handleCreateAccount}>
-                    <h1>{isPropsSet ? `Bem vindo, ${name}` : "Crie uma nova conta"}</h1>
+                    <h1>{isPropsSet ? `Bem vindo, ${props.name}` : "Crie uma nova conta"}</h1>
                     <AlertWithMessage variant={alertVariant} show={show} setShow={setShow} message={createEditAccountBackendMessage} />
                     <Form.Group className="mb-3" controlId="formCreateAccountEmail">
                         <Form.Label>Email</Form.Label>
@@ -271,17 +263,17 @@ export default function AccountForm(props) {
                                 <span className="resend-verification-email" onClick={sendVerificationEmail}> clique aqui para reenviar o email de verificação &rsaquo;</span>
                             </div>
                         )}
-                        <Form.Control disabled={isPropsSet ? true : false} value={email} onChange={e => setEmail(e.target.value)} type="email" placeholder="gabriel@gmail.com" />
+                        <Form.Control disabled={isPropsSet ? true : false} value={email} onChange={e => setUserData({...userData, email: e.target.value })} type="email" placeholder="gabriel@gmail.com" />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formCreateAccountFullName">
                         <Form.Label>Nome completo</Form.Label>
-                        <Form.Control value={name} onChange={e => setName(e.target.value)} type="text" placeholder="Gabriel da Silva" />
+                        <Form.Control value={name} onChange={e => setUserData({...userData, name: e.target.value })} type="text" placeholder="Gabriel da Silva" />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formCreateAccountCommercialName">
                         <Form.Label>Nome comercial</Form.Label>
-                        <Form.Control value={commercialName} onChange={e => setCommercialName(e.target.value)} type="text" placeholder="Ateliê do Gabriel" />
+                        <Form.Control value={commercialName} onChange={e => setUserData({...userData, commercialName: e.target.value })} type="text" placeholder="Ateliê do Gabriel" />
                     </Form.Group>
-                    <PhoneNumberInput phoneNumber={phoneNumber} setPhoneNumber={setPhoneNumber} />
+                    <PhoneNumberInput phoneNumber={phoneNumber} userData={userData} setUserData={setUserData} />
                     {isPropsSet
                         ?
                         <Form.Group className="mb-3" controlId="formEditAccountPassword">

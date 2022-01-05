@@ -4,7 +4,7 @@ import axios from 'axios';
 import ImageUploadPreview from "../ImageUploadPreview/ImageUploadPreview";
 import CreateAlert from "../Alert/CreateAlert";
 import EditAlert from "../Alert/EditAlert";
-import { ACCESS_TOKEN_NAME, API, PRODUCT_ENDPOINT, TAGS_ENDPOINT } from "../../constants/constants";
+import { ACCESS_TOKEN_NAME, API, MANAGE_PRODUCTS, PRODUCT_ENDPOINT, TAGS_ENDPOINT } from "../../constants/constants";
 import { Form, Container, Button, Spinner } from "react-bootstrap";
 import TagSelector from "../TagSelector/TagSelector";
 import { areArraysEqual } from "../../utils/compareTwoArrays";
@@ -243,7 +243,7 @@ export default function ProductForm() {
       const res = await axios.patch(`${API}/${PRODUCT_ENDPOINT}`, JSON.stringify(body), config);
       
       if (res.status === 200) {
-        history.push('/gerenciar-produtos')
+        history.push(`/${MANAGE_PRODUCTS}`)
       }
     } catch (error) {
       setEditStatus(error.statusCode);

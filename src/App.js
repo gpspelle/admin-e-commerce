@@ -9,6 +9,7 @@ import useToken from './hooks/useToken';
 import jwt from 'jwt-decode';
 import NavigationBar from './components/NavigationBar/NavigationBar';
 import Home from './components/Home/Home';
+import { ADD_PRODUCT, CREATE_ACCOUNT, MANAGE_PRODUCTS, MY_ACCOUNT } from './constants/constants';
 
 function App() {
   const { token, setToken } = useToken();
@@ -17,7 +18,7 @@ function App() {
     return (
       <BrowserRouter>
         <Switch>
-          <Route path="/create-account">
+          <Route path={`/${CREATE_ACCOUNT}`}>
             <AccountForm />
           </Route>
           <Login setToken={setToken} />
@@ -38,13 +39,13 @@ function App() {
       <BrowserRouter>
         <NavigationBar />
         <Switch>
-          <Route path="/adicionar-produto">
+          <Route path={`/${ADD_PRODUCT}`}>
             <ProductForm />
           </Route>
-          <Route path="/gerenciar-produtos">
+          <Route path={`/${MANAGE_PRODUCTS}`}>
             <Dashboard />
           </Route>
-          <Route path="/minha-conta">
+          <Route path={`/${MY_ACCOUNT}`}>
             <Profile />
           </Route>
           <Route path="/:id/edit">

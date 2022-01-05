@@ -6,11 +6,7 @@ import AccountForm from "../AccountForm/AccountForm";
 
 export default function Profile() {
     const { token } = useToken();
-    const [email, setEmail] = useState();
-    const [name, setName] = useState();
-    const [commercialName, setCommercialName] = useState();
-    const [phoneNumber, setPhoneNumber] = useState();
-    const [isEmailVerified, setIsEmailVerified] = useState();
+    const [userData, setUserData] = useState({})
 
     useEffect(() => {
         async function getAccountFromDatabase() {
@@ -25,11 +21,8 @@ export default function Profile() {
           
                 const res = await axios.get(`${API}/${ACCOUNT_ENDPOINT}`, config);
                 const { data } = res;
-                setEmail(data[0].email);
-                setName(data[0].name);
-                setCommercialName(data[0].commercial_name);
-                setPhoneNumber(data[0].phone_number);
-                setIsEmailVerified(data[0].is_email_verified);
+                const { email, name, commercial_name, phone_number, is_email_verified } = data[0] 
+                setUserData({ email, name, commercialName: commercial_name, phoneNumber: phone_number, isEmailVerified: is_email_verified })
               } catch (error) {
                 console.error(error);
               }
@@ -39,13 +32,14 @@ export default function Profile() {
         getAccountFromDatabase();
     }, [token]);
 
-    return (
-        <AccountForm
-            email={email} 
-            name={name} 
-            commercialName={commercialName} 
-            phoneNumber={phoneNumber} 
-            isEmailVerified={isEmailVerified} 
-        />
-    );
+
+    if (Object.keys(userData).length > 0) {
+        return (
+          <AccountForm
+            {...userData }
+          />
+      );
+    }
+
+    return <></>
 }
