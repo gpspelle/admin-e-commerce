@@ -51,7 +51,6 @@ export default function ImageUploadPreview({
     async function compressImageAndConvertToBase64(file, params) {
         const compressedImage = await compress.compress([file], params)
         const img = compressedImage[0];
-        console.log(img.endSizeInMb, params)
         const base64str = img.data
         return base64str;
     }
