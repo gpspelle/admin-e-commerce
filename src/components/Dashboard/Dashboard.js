@@ -75,6 +75,7 @@ export default function Dashboard() {
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
+                      paddingTop: "20px",
                     }}
                   >
                     <Product
