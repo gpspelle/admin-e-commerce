@@ -60,7 +60,7 @@ export default function Dashboard() {
     <Container>
         <Row style={{ paddingTop: "42px" }}>
             <DeleteAlert show={showDeleteAlert} setShow={setShowDeleteAlert} status={deleteStatus} deletedProductName={deletedProductName}/>
-            {products && products.length > 0 ? products.map((item, i) => {
+            {!pagination.fetch && products && products.length > 0 ? products.map((item, i) => {
               if (item.PRODUCT_TAGS) {
                 var index = item.PRODUCT_TAGS.indexOf("!@#$no-tag%^&*");
                 if (index !== -1) {
