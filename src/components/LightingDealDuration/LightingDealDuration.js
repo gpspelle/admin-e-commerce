@@ -31,7 +31,7 @@ export default function LightingDealDuration({
   if (!lightingDealDuration || !lightingDealStartTime) {
     return <></>
   }
-  
+
   const { miliseconds, hoursDuration } = processLightingDealInformation({
     now,
     lightingDealDuration,

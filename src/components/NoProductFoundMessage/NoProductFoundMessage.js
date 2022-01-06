@@ -3,10 +3,7 @@ import { Card, Button, Col, Spinner } from "react-bootstrap"
 import { useHistory } from "react-router"
 import { ADD_PRODUCT } from "../../constants/constants"
 
-export default function NoProductFoundMessage({
-  screenWidth,
-  hasMoreDataToFetch,
-}) {
+export default function NoProductFoundMessage({ screenWidth, hasMoreDataToFetch }) {
   const history = useHistory()
 
   const handleClick = (e) => {
@@ -43,7 +40,8 @@ export default function NoProductFoundMessage({
           />
           <Card.Body>
             <Card.Text style={{ textAlign: "center" }}>
-              Você ainda não tem nenhum produto cadastrado na sua loja. Clique aqui para criar o seu primeiro produto
+              Você ainda não tem nenhum produto cadastrado na sua loja. Clique aqui
+              para criar o seu primeiro produto
             </Card.Text>
             <Button
               onClick={handleClick}

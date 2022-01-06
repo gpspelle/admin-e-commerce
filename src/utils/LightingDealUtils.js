@@ -1,16 +1,19 @@
-import { productTypes } from "../components/ProductType/ProductType";
+import { productTypes } from "../components/ProductType/ProductType"
 
 export const getIsLightingDeal = (productType) =>
   productType === productTypes.LIGHTING_DEAL.name
 
-export const calculateLightingDealEndTime = (lightingDealDuration, lightingDealStartTime) => {
-    const hoursDuration = lightingDealDuration.substring(0, 2)
-    var endLightingDealTime = new Date(lightingDealStartTime)
-    endLightingDealTime.setHours(
-      endLightingDealTime.getHours() + parseInt(hoursDuration)
-    )
-  
-    return endLightingDealTime.toISOString()
+export const calculateLightingDealEndTime = (
+  lightingDealDuration,
+  lightingDealStartTime
+) => {
+  const hoursDuration = lightingDealDuration.substring(0, 2)
+  var endLightingDealTime = new Date(lightingDealStartTime)
+  endLightingDealTime.setHours(
+    endLightingDealTime.getHours() + parseInt(hoursDuration)
+  )
+
+  return endLightingDealTime.toISOString()
 }
 
 export const processLightingDealInformation = ({
