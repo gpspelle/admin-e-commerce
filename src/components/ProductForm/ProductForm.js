@@ -15,6 +15,7 @@ import { isArraySorted } from "../../utils/isArraySorted";
 import { convertDateAndTimeToIsoString } from "../../utils/convertDateToIsoString";
 import { lightingDealDurations } from "../LightingDealProduct/LightingDealProduct";
 import { calculateLightingDealEndTime } from "../../utils/LightingDealUtils";
+import scrollToTop from "../../utils/scrollToTop";
 
 export default function ProductForm() {
   const { token } = useToken();
@@ -29,10 +30,7 @@ export default function ProductForm() {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [tags, setTags] = useState(new Set([]));
-  const [images, setImages] = useState(null);
-  const [imagesResized, setImagesResized] = useState(null);
-  const [imageNames, setImageNames] = useState([]);
-  const [imagePreview, setImagePreview] = useState();
+  const [imageData, setImageData] = useState({ images: [], imageNames: [], imagePreview: [], imagesResized: [] });
   const [createStatus, setCreateStatus] = useState();
   const [editStatus, setEditStatus] = useState();
   const [showMissingFieldsAlert, setShowMissingFieldsAlert] = useState(false);
@@ -46,6 +44,8 @@ export default function ProductForm() {
   const [dealPrice, setDealPrice] = useState("");
   const [lightingDealStartTime, setLightingDealStartTime] = useState();
   const [orderIndex, setOrderIndex] = useState([]);
+
+  const { images, imageNames, imagesResized } = imageData;
 
   useEffect(() => {
     if (lightingDealTime && lightingDealDate) {
@@ -72,7 +72,7 @@ export default function ProductForm() {
       setDescription(location.state.description);
       setPrice(location.state.price);
       setTags(new Set(location.state.tags));
-      setImagePreview(location.state.images);
+      setImageData({...imageData, imagePreview: location.state.images })
       setProductType(location.state.productType);
       
       if (location.state.productType === productTypes.DEAL.name) {
@@ -90,7 +90,6 @@ export default function ProductForm() {
     const isNormalCreateInput = name !== "" &&
       description !== "" &&
       price !== "" &&
-      images &&
       images.length > 0;
 
     if (productType === productTypes.DEAL.name) {
@@ -113,6 +112,7 @@ export default function ProductForm() {
   
     if (!isCreateInputValid()) {
       setShowMissingFieldsAlert(true);
+      scrollToTop()
       return; 
     }
 
@@ -160,7 +160,7 @@ export default function ProductForm() {
           setDescription("");
           setPrice("");
           setTags(new Set([]));
-          setImagePreview();
+          setImageData({ images: [], imagesResized: [], imageNames: [], imagePreview: []});
 
           if (productType === productTypes.DEAL.name || productType === productTypes.LIGHTING_DEAL.name) {
             setDealPrice("");
@@ -171,6 +171,7 @@ export default function ProductForm() {
     } finally {
       setIsWaitingResponse(false);
       setShowCreateAlert(true);
+      scrollToTop()
     }
 }
 
@@ -215,7 +216,7 @@ export default function ProductForm() {
       body.removeAttributes = ["LIGHTING_DEAL_DURATION", "DEAL_PRICE", "LIGHTING_DEAL_START_TIME", "LIGHTING_DEAL_END_TIME"]
     }
 
-    if (images && imagesResized) {
+    if (images.length > 0 && imagesResized.length > 0) {
       const transformedImages = [];
     
       for (let i = 0; i < images.length; i += 1) {
@@ -226,7 +227,7 @@ export default function ProductForm() {
       body.PRODUCT_COVER_IMAGE = imagesResized[0];
     }
 
-    if (!(imageNames.length > 0) && !images && !isArraySorted(orderIndex)) {
+    if (imageNames.length === 0 && images.length === 0 && !isArraySorted(orderIndex)) {
       body.reorderImages = orderIndex;
       body.PRODUCT_COVER_IMAGE = imagesResized[0];
     }
@@ -248,6 +249,7 @@ export default function ProductForm() {
     } catch (error) {
       setEditStatus(error.statusCode);
       setShowEditAlert(true);
+      scrollToTop()
     } finally {
       setIsWaitingResponse(false);
     }
@@ -263,6 +265,33 @@ export default function ProductForm() {
       }}
     >
         <Form onSubmit={edit ? handleEditSubmit : handleCreateSubmit}>
+          {edit ? 
+            <EditAlert 
+              show={showEditAlert} 
+              setShow={setShowEditAlert} 
+              status={editStatus} 
+              editedProductName={location.state.name} 
+              newEditedProductName={name} 
+            /> 
+            : 
+            <CreateAlert 
+              show={showCreateAlert} 
+              setShow={setShowCreateAlert} 
+              status={createStatus} 
+              createdProductName={createdProductName} 
+            />
+          }
+          <MissingFieldsAlert 
+            show={showMissingFieldsAlert} 
+            setShow={setShowMissingFieldsAlert} 
+            name={name} 
+            description={description} 
+            price={price} 
+            images={images} 
+            productType={productType}
+            dealPrice={dealPrice}
+            lightingDealStartTime={lightingDealStartTime}
+          />
           <h1>{edit ? 'Edite o produto' : 'Crie um novo produto'}</h1>
           <Form.Group className="mb-3" controlId="formBasicProductName">
             <Form.Label>Nome</Form.Label>
@@ -291,14 +320,8 @@ export default function ProductForm() {
           />
           <ImageUploadPreview
             imageInput={imageInput}
-            imagePreview={imagePreview}
-            setImagePreview={setImagePreview}
-            images={images}
-            setImages={setImages}
-            imagesResized={imagesResized}
-            setImagesResized={setImagesResized}
-            imageNames={imageNames}
-            setImageNames={setImageNames}
+            imageData={imageData}
+            setImageData={setImageData}
             orderIndex={orderIndex}
             setOrderIndex={setOrderIndex}
           />
@@ -317,37 +340,6 @@ export default function ProductForm() {
             }
             {isWaitingResponse ? " Aguarde..." : "Enviar"}
           </Button>
-          <Form.Group className="mb-3 my-2" controlId="formBasicAlerts">
-            {
-              <MissingFieldsAlert 
-                show={showMissingFieldsAlert} 
-                setShow={setShowMissingFieldsAlert} 
-                name={name} 
-                description={description} 
-                price={price} 
-                images={images} 
-                productType={productType}
-                dealPrice={dealPrice}
-                lightingDealStartTime={lightingDealStartTime}
-              />
-            }
-            {edit ? 
-              <EditAlert 
-                show={showEditAlert} 
-                setShow={setShowEditAlert} 
-                status={editStatus} 
-                editedProductName={location.state.name} 
-                newEditedProductName={name} 
-              /> 
-              : 
-              <CreateAlert 
-                show={showCreateAlert} 
-                setShow={setShowCreateAlert} 
-                status={createStatus} 
-                createdProductName={createdProductName} 
-              />
-            }
-          </Form.Group>
         </Form>
     </Container>
   )

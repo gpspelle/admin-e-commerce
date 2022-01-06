@@ -10,43 +10,35 @@ const compress = new Compress();
 
 export default function ImageUploadPreview({ 
     imageInput,
-    imagePreview,
-    setImagePreview,
-    images,
-    setImages,
-    imagesResized,
-    setImagesResized,
-    imageNames,
-    setImageNames,
+    imageData,
+    setImageData,
     orderIndex,
     setOrderIndex,
 }) {
 
     useEffect(() => {
-        if (orderIndex.length === 0 && imagePreview && imagePreview.length) {
-            setOrderIndex([...Array(imagePreview.length).keys()])
+        if (orderIndex.length === 0 && imageData.imagePreview.length > 0) {
+            setOrderIndex([...Array(imageData.imagePreview.length).keys()])
         }
-    }, [imagePreview, orderIndex, setOrderIndex])
+    }, [imageData, orderIndex, setOrderIndex])
 
     useEffect(() => {
         async function resizeImages() {
             const promises = [];
 
-            if (imagePreview) {
-                imagePreview.forEach((image) => {
-                    const compressed = compressBase64AndResize(image);
-                    promises.push(compressed);
-                })
-            } 
+            imageData.imagePreview.forEach((image) => {
+                const compressed = compressBase64AndResize(image);
+                promises.push(compressed);
+            })
 
             const result = await Promise.all(promises);
-            setImagesResized(result);
+            setImageData({...imageData, imagesResized: result })
         }
       
-        if (!imagesResized) {
+        if (imageData.imagesResized.length === 0 && imageData.imagePreview.length > 0) {
             resizeImages();
         }
-    }, [imagePreview, setImagesResized, imagesResized])
+    }, [imageData, setImageData])
 
     async function compressImageAndConvertToBase64(file, params) {
         const compressedImage = await compress.compress([file], params)
@@ -90,48 +82,51 @@ export default function ImageUploadPreview({
         const result = await Promise.all(promises);
         const resultResized = await Promise.all(promisesResized);
 
-        setImages(result);
-        setImagePreview(filesAsArray);
-        setImagesResized(resultResized);
-        setImageNames(imageNames);
+        setImageData({ 
+            images: result, 
+            imagePreview: filesAsArray, 
+            imagesResized: resultResized, 
+            imageNames 
+        })
+
         setOrderIndex(order);
     };
 
-    const moveUpImage = (i) => {
-        const moveUp = (i, array, setFunc) => {
-            const copy = [...array];
-            arrayMove(copy, i, i-1);
-            setFunc(copy);
-        }
-
-        moveUp(i, imagePreview, setImagePreview);
-        moveUp(i, orderIndex, setOrderIndex);
-        if (images) moveUp(i, images, setImages);
-        if (imagesResized) moveUp(i, imagesResized, setImagesResized);
-        if (imageNames.length > 0) moveUp(i, imageNames, setImageNames);
+    const moveUp = (i, array) => {
+        const copy = [...array];
+        arrayMove(copy, i, i-1);
+        return copy;
     }
 
-    const moveDownImage = (i) => {
-        const moveDown = (i, array, setFunc) => {
-            const copy = [...array];
-            arrayMove(copy, i, i+1);
-            setFunc(copy);
-        }
-
-        moveDown(i, imagePreview, setImagePreview);
-        moveDown(i, orderIndex, setOrderIndex);
-        if (images) moveDown(i, images, setImages);
-        if (imagesResized) moveDown(i, imagesResized, setImagesResized);
-        if (imageNames.length > 0) moveDown(i, imageNames, setImageNames);
+    const moveDown = (i, array) => {
+        const copy = [...array];
+        arrayMove(copy, i, i+1);
+        return copy;
     }
 
+    const moveImage = (i, move) => {
+        setOrderIndex(move(i, orderIndex));
+
+        const newImageData = {}
+        Object.keys(imageData).forEach((data) => {
+            if (imageData[data].length > 0) {
+                newImageData[data] = move(i, imageData[data])
+            }
+        })
+
+        setImageData({ 
+            ...imageData,
+            ...newImageData,
+        })
+    }
+    
     return (
         <Form.Group className="mb-3 preview" controlId="formBasicImages">
             <Form.Control ref={imageInput} type="file" multiple={true} className="form-control" accept=".jpg, .jpeg, .png" onChange={(e) => handleFileUpload(e)} />
-            {imagePreview && imagePreview.length > 1 && <div style={{ marginTop: "10px" }}>Use as setinhas para ordenar as imagens</div>}
+            {imageData.imagePreview.length > 1 && <div style={{ marginTop: "10px" }}>Use as setinhas para ordenar as imagens</div>}
             <Container>
                 <Row>
-                    {imagePreview && imagePreview.map((image, i) => {
+                    {imageData.imagePreview.length > 0 && imageData.imagePreview.map((image, i) => {
                         return (
                             <Col
                                 key={i}
@@ -145,9 +140,9 @@ export default function ImageUploadPreview({
                                 <Card style={{ width: "18rem", border: "none" }} className="my-2">
                                     <img className={i === 0 ? "golden-frame" : ""} key={image.name ? image.name : image} width={286} height={256} src={image.name ? URL.createObjectURL(image) : image} alt={`${i}`} />
                                     <div style={{ display: "flex", justifyContent: "center", marginTop: "8px", height: "44px" }}>
-                                        {i !== 0 && <IoArrowUpCircleSharp className="arrow-button" style={{ left: "8px" }} onClick={() => moveUpImage(i)} />}
+                                        {i !== 0 && <IoArrowUpCircleSharp className="arrow-button" style={{ left: "8px" }} onClick={() => moveImage(i, moveUp)} />}
                                         <Card.Text style={{ textAlign: "center", marginTop: "0.75rem" }}>{i === 0 ? "Foto de capa" : `Foto ${i}`}</Card.Text>
-                                        {i < imagePreview.length -1 && <IoArrowDownCircleSharp className="arrow-button" style={{ right: "8px" }} onClick={() => moveDownImage(i)} />}
+                                        {i < imageData.imagePreview.length -1 && <IoArrowDownCircleSharp className="arrow-button" style={{ right: "8px" }} onClick={() => moveImage(i, moveDown)} />}
                                     </div>
                                 </Card>
                             </Col>
