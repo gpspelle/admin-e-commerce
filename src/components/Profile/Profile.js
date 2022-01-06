@@ -3,6 +3,7 @@ import { ACCESS_TOKEN_NAME, ACCOUNT_ENDPOINT, API } from "../../constants/consta
 import useToken from "../../hooks/useToken";
 import axios from "axios";
 import AccountForm from "../AccountForm/AccountForm";
+import { Col, Spinner } from "react-bootstrap";
 
 export default function Profile() {
     const { token } = useToken();
@@ -41,5 +42,21 @@ export default function Profile() {
       );
     }
 
-    return <></>
+    return (
+      <Col
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Spinner
+          animation="border"
+          role="status"
+          style={{ position: "absolute", top: "50%" }}
+        >
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+      </Col>
+    )
 }
