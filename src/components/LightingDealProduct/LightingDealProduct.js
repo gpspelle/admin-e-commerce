@@ -41,6 +41,7 @@ export default function LightingDealProduct({
                                 key={i} 
                                 className="my-1" 
                                 variant="outline-secondary"
+                                style={{ zIndex: 0 }}
                             >
                                 {duration[1].showName}
                             </Button>
