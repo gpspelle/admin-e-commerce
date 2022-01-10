@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom"
 import {
   ACCESS_TOKEN_NAME,
   ACCOUNT_ENDPOINT,
-  API,
+  REST_API,
   HTTP_API,
   SEND_VERIFY_EMAIL_ENDPOINT,
 } from "../../constants/constants"
@@ -96,11 +96,11 @@ export default function AccountForm(props) {
     }
 
     try {
-      await axios.put(`${API}/${ACCOUNT_ENDPOINT}`, body, config)
+      await axios.put(`${REST_API}/${ACCOUNT_ENDPOINT}`, body, config)
       history.push({ pathname: "/", state: { email: email } })
     } catch (error) {
       setAlertVariant("danger")
-      setCreateEditAccountBackendMessage(error.response.data.message)
+      setCreateEditAccountBackendMessage(error?.response?.data?.message)
       setShow(true)
     }
   }
@@ -139,7 +139,7 @@ export default function AccountForm(props) {
     try {
       setIsWaitingResponse(true)
       const response = await axios.patch(
-        `${API}/${ACCOUNT_ENDPOINT}`,
+        `${REST_API}/${ACCOUNT_ENDPOINT}`,
         JSON.stringify(body),
         config
       )
@@ -184,7 +184,7 @@ export default function AccountForm(props) {
       setIsWaitingResponse(true)
       handleCloseModal()
       const response = await axios.patch(
-        `${API}/${ACCOUNT_ENDPOINT}`,
+        `${REST_API}/${ACCOUNT_ENDPOINT}`,
         JSON.stringify(body),
         config
       )

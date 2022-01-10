@@ -1,5 +1,9 @@
-export const REST_API = process.env.REACT_APP_REST_API
-export const HTTP_API = process.env.REACT_APP_HTTP_API
+export const REST_API =
+  process.env.REACT_APP_REST_API ||
+  "https://nlv53clpuf.execute-api.us-east-1.amazonaws.com/dev"
+export const HTTP_API =
+  process.env.REACT_APP_HTTP_API ||
+  "https://oftg6ghwa0.execute-api.us-east-1.amazonaws.com"
 
 export const PRODUCT_ENDPOINT = "product"
 export const PRODUCTS_ENDPOINT = "products"

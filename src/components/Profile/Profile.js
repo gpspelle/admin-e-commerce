@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react"
-import { ACCESS_TOKEN_NAME, ACCOUNT_ENDPOINT, API } from "../../constants/constants"
+import {
+  ACCESS_TOKEN_NAME,
+  ACCOUNT_ENDPOINT,
+  REST_API,
+} from "../../constants/constants"
 import useToken from "../../hooks/useToken"
 import axios from "axios"
 import AccountForm from "../AccountForm/AccountForm"
@@ -20,7 +24,7 @@ export default function Profile() {
             },
           }
 
-          const res = await axios.get(`${API}/${ACCOUNT_ENDPOINT}`, config)
+          const res = await axios.get(`${REST_API}/${ACCOUNT_ENDPOINT}`, config)
           const { data } = res
           const { email, name, commercial_name, phone_number, is_email_verified } =
             data[0]

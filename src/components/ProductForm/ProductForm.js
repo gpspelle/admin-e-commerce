@@ -6,7 +6,7 @@ import CreateAlert from "../Alert/CreateAlert"
 import EditAlert from "../Alert/EditAlert"
 import {
   ACCESS_TOKEN_NAME,
-  API,
+  REST_API,
   MANAGE_PRODUCTS,
   PRODUCT_ENDPOINT,
   TAGS_ENDPOINT,
@@ -70,7 +70,7 @@ export default function ProductForm() {
 
   useEffect(() => {
     async function getTagsFromDatabase() {
-      const data = await fetch(`${API}/${TAGS_ENDPOINT}`)
+      const data = await fetch(`${REST_API}/${TAGS_ENDPOINT}`)
       const json = await data.json()
 
       setCreatedTags(json)
@@ -168,7 +168,7 @@ export default function ProductForm() {
     try {
       setIsWaitingResponse(true)
       const res = await axios.put(
-        `${API}/${PRODUCT_ENDPOINT}`,
+        `${REST_API}/${PRODUCT_ENDPOINT}`,
         JSON.stringify(body),
         config
       )
@@ -296,7 +296,7 @@ export default function ProductForm() {
     try {
       setIsWaitingResponse(true)
       const res = await axios.patch(
-        `${API}/${PRODUCT_ENDPOINT}`,
+        `${REST_API}/${PRODUCT_ENDPOINT}`,
         JSON.stringify(body),
         config
       )

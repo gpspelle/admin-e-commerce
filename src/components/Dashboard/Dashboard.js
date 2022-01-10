@@ -3,7 +3,11 @@ import axios from "axios"
 import { Container, Row, Col } from "react-bootstrap"
 import Product from "../Product/Product"
 import DeleteAlert from "../Alert/DeleteAlert"
-import { ACCESS_TOKEN_NAME, API, PRODUCTS_ENDPOINT } from "../../constants/constants"
+import {
+  ACCESS_TOKEN_NAME,
+  REST_API,
+  PRODUCTS_ENDPOINT,
+} from "../../constants/constants"
 import useToken from "../../hooks/useToken"
 import NoProductFoundMessage from "../NoProductFoundMessage/NoProductFoundMessage"
 import useWindowDimensions from "../../hooks/useWindowDimensions"
@@ -36,7 +40,7 @@ export default function Dashboard() {
             },
           }
 
-          const res = await axios.get(`${API}/${PRODUCTS_ENDPOINT}`, config)
+          const res = await axios.get(`${REST_API}/${PRODUCTS_ENDPOINT}`, config)
           const { data, key } = res.data
           data.sort((a, b) => (a.PRODUCT_NAME > b.PRODUCT_NAME ? 1 : -1))
           setProducts(data)

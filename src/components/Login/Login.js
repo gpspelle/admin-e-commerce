@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import PropTypes from "prop-types"
 import axios from "axios"
 import { useHistory, useLocation } from "react-router-dom"
-import { API, CREATE_ACCOUNT, LOGIN_ENDPOINT } from "../../constants/constants"
+import { REST_API, CREATE_ACCOUNT, LOGIN_ENDPOINT } from "../../constants/constants"
 import { Form, Button, Container } from "react-bootstrap"
 import AlertWithMessage from "../Alert/AlertWithMessage"
 
@@ -36,7 +36,7 @@ export default function Login({ setToken }) {
         password,
       })
 
-      const res = await axios.post(`${API}/${LOGIN_ENDPOINT}`, body, config)
+      const res = await axios.post(`${REST_API}/${LOGIN_ENDPOINT}`, body, config)
       setToken(res.data)
     } catch (error) {
       setLoginStatusMessage(error.response.data)

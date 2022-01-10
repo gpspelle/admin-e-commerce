@@ -2,7 +2,11 @@ import React, { useState } from "react"
 import { useHistory } from "react-router-dom"
 import { Button, Card, Modal, Spinner } from "react-bootstrap"
 import axios from "axios"
-import { ACCESS_TOKEN_NAME, API, PRODUCT_ENDPOINT } from "../../constants/constants"
+import {
+  ACCESS_TOKEN_NAME,
+  REST_API,
+  PRODUCT_ENDPOINT,
+} from "../../constants/constants"
 import useToken from "../../hooks/useToken"
 import { productTypes } from "../ProductType/ProductType"
 import LightingDealWaterMark from "../LightingDealWaterMark/LightingDealWaterMark"
@@ -55,7 +59,7 @@ export default function Product({
     try {
       setDeletedProductName(name)
       setIsWaitingResponse(true)
-      const res = await axios.delete(`${API}/${PRODUCT_ENDPOINT}`, {
+      const res = await axios.delete(`${REST_API}/${PRODUCT_ENDPOINT}`, {
         data: body,
         headers,
       })
