@@ -35,7 +35,7 @@ export default function NoProductFoundMessage({ screenWidth, hasMoreDataToFetch 
         >
           <Card.Img
             variant="top"
-            src="not-found-dog.png"
+            src="/not-found-dog.png"
             style={{ height: "35vh" }}
           />
           <Card.Body>
