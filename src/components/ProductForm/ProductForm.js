@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef } from "react"
 import { useHistory, useLocation } from "react-router-dom"
 import axios from "axios"
 import ImageUploadPreview from "../ImageUploadPreview/ImageUploadPreview"
-import CreateAlert from "../Alert/CreateAlert"
-import EditAlert from "../Alert/EditAlert"
 import {
   ACCESS_TOKEN_NAME,
   REST_API,
@@ -22,6 +20,7 @@ import { convertDateAndTimeToIsoString } from "../../utils/convertDateToIsoStrin
 import { lightingDealDurations } from "../LightingDealProduct/LightingDealProduct"
 import { calculateLightingDealEndTime } from "../../utils/LightingDealUtils"
 import scrollToTop from "../../utils/scrollToTop"
+import AlertWithMessage from "../Alert/AlertWithMessage"
 
 export default function ProductForm() {
   const { token } = useToken()
@@ -42,11 +41,13 @@ export default function ProductForm() {
     imagePreview: [],
     imagesResized: [],
   })
-  const [createStatus, setCreateStatus] = useState()
-  const [editStatus, setEditStatus] = useState()
+  const [operationStatus, setOperationStatus] = useState({
+    status: undefined,
+    show: false,
+    message: undefined,
+    variant: undefined,
+  })
   const [showMissingFieldsAlert, setShowMissingFieldsAlert] = useState(false)
-  const [showEditAlert, setShowEditAlert] = useState(false)
-  const [showCreateAlert, setShowCreateAlert] = useState(false)
   const [isWaitingResponse, setIsWaitingResponse] = useState(false)
   const [productType, setProductType] = useState(productTypes.NORMAL.name)
   const [lightingDealTime, setLightingDealTime] = useState("10:00")
@@ -77,7 +78,7 @@ export default function ProductForm() {
     }
 
     getTagsFromDatabase()
-  }, [createStatus, editStatus])
+  }, [operationStatus.status])
 
   useEffect(() => {
     if (location.state) {
@@ -117,8 +118,7 @@ export default function ProductForm() {
   async function handleCreateSubmit(event) {
     event.preventDefault()
     setShowMissingFieldsAlert(false)
-    setShowCreateAlert(false)
-    setShowEditAlert(false)
+    setOperationStatus({ ...operationStatus, show: false })
 
     if (!isCreateInputValid()) {
       setShowMissingFieldsAlert(true)
@@ -172,7 +172,6 @@ export default function ProductForm() {
         JSON.stringify(body),
         config
       )
-      setCreateStatus(res.status)
 
       if (res.status === 200) {
         imageInput.current.value = null
@@ -195,11 +194,24 @@ export default function ProductForm() {
           setDealPrice("")
         }
       }
+
+      setOperationStatus({
+        status: res.status,
+        show: true,
+        message: `O produto ${name} foi criado com sucesso.`,
+        variant: "success",
+      })
     } catch (error) {
-      setCreateStatus(error.statusCode)
+      setOperationStatus({
+        message:
+          error?.response?.data?.message ||
+          `O produto ${name} não foi criado corretamente, tente novamente.`,
+        status: error.statusCode,
+        show: true,
+        variant: "danger",
+      })
     } finally {
       setIsWaitingResponse(false)
-      setShowCreateAlert(true)
       scrollToTop()
     }
   }
@@ -207,8 +219,7 @@ export default function ProductForm() {
   async function handleEditSubmit(event) {
     event.preventDefault()
     setShowMissingFieldsAlert(false)
-    setShowCreateAlert(false)
-    setShowEditAlert(false)
+    setOperationStatus({ ...operationStatus, show: false })
 
     const body = {
       id,
@@ -304,9 +315,22 @@ export default function ProductForm() {
       if (res.status === 200) {
         history.push(`/${MANAGE_PRODUCTS}`)
       }
+
+      setOperationStatus({
+        status: undefined,
+        show: false,
+        message: undefined,
+        variant: undefined,
+      })
     } catch (error) {
-      setEditStatus(error.statusCode)
-      setShowEditAlert(true)
+      setOperationStatus({
+        message:
+          error?.response?.data?.message ||
+          `O produto ${name} não foi deletado corretamente, tente novamente.`,
+        status: error.statusCode,
+        show: true,
+        variant: "danger",
+      })
       scrollToTop()
     } finally {
       setIsWaitingResponse(false)
@@ -323,22 +347,14 @@ export default function ProductForm() {
       }}
     >
       <Form onSubmit={edit ? handleEditSubmit : handleCreateSubmit}>
-        {edit ? (
-          <EditAlert
-            show={showEditAlert}
-            setShow={setShowEditAlert}
-            status={editStatus}
-            editedProductName={location.state.name}
-            newEditedProductName={name}
-          />
-        ) : (
-          <CreateAlert
-            show={showCreateAlert}
-            setShow={setShowCreateAlert}
-            status={createStatus}
-            createdProductName={createdProductName}
-          />
-        )}
+        <AlertWithMessage
+          variant={operationStatus.variant}
+          show={operationStatus.show}
+          setShow={(value) =>
+            setOperationStatus({ ...operationStatus, show: value })
+          }
+          message={operationStatus.message}
+        />
         <MissingFieldsAlert
           show={showMissingFieldsAlert}
           setShow={setShowMissingFieldsAlert}

@@ -9,7 +9,7 @@ export default function DeleteAlert({ show, setShow, status, deletedProductName 
     alertMessageAndType.Heading = `O produto ${deletedProductName} foi deletado com sucesso.`
   } else {
     alertMessageAndType.variant = "danger"
-    alertMessageAndType.Heading = `O produto ${deletedProductName} não foi deletado corretamente, tente novamente.`
+    alertMessageAndType.Heading = ``
   }
 
   if (show) {
