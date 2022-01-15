@@ -12,12 +12,8 @@ import { Form, Container, Button, Spinner, Modal } from "react-bootstrap"
 import PhoneNumberInput from "../PhoneNumberInput/PhoneNumberInput"
 import useToken from "../../hooks/useToken"
 import AlertWithMessage from "../Alert/AlertWithMessage"
+import PasswordRequirements from "../PasswordRequirements/PasswordRequirements"
 import "./AccountForm.css"
-
-var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})")
-const isValidPassword = (password) => strongRegex.test(password)
-const isValidPhoneNumber = (phoneNumber) =>
-  String(phoneNumber).match(/^\+?[1-9]\d{1,14}$/)
 
 export default function AccountForm(props) {
   const { token } = useToken()
@@ -26,17 +22,19 @@ export default function AccountForm(props) {
   const [oldPassword, setOldPassword] = useState("")
   const [newPassword, setNewPassword] = useState("")
   const [password, setPassword] = useState("")
-  const [show, setShow] = useState(false)
-  const [createEditAccountBackendMessage, setCreateEditAccountBackendMessage] =
-    useState()
   const [isWaitingResponse, setIsWaitingResponse] = useState(false)
-  const [alertVariant, setAlertVariant] = useState()
   const [showModal, setShowModal] = useState(false)
   const [isPropsSet, setIsPropsSet] = useState(false)
+  const [operationStatus, setOperationStatus] = useState({
+    show: false,
+    message: undefined,
+    variant: undefined,
+  })
   const handleCloseModal = () => setShowModal(false)
   const handleShowModal = () => setShowModal(true)
 
   const { email, name, commercialName, phoneNumber, isEmailVerified } = userData
+
   useEffect(() => {
     if (Object.keys(props).length > 0) {
       setIsPropsSet(true)
@@ -44,44 +42,8 @@ export default function AccountForm(props) {
     }
   }, [props])
 
-  const isCreateInputValid = () => {
-    return (
-      email !== "" &&
-      name !== "" &&
-      commercialName !== "" &&
-      phoneNumber !== "" &&
-      isValidPhoneNumber(phoneNumber) &&
-      password !== "" &&
-      isValidPassword(password)
-    )
-  }
-
-  const isEditInputValid = () => {
-    return (
-      email !== "" &&
-      name !== "" &&
-      commercialName !== "" &&
-      phoneNumber !== "" &&
-      isValidPhoneNumber(phoneNumber)
-    )
-  }
-
-  const isEditPasswordInputValid = () => {
-    return (
-      email !== "" &&
-      newPassword !== "" &&
-      isValidPassword(newPassword) &&
-      oldPassword !== "" &&
-      isValidPassword(oldPassword)
-    )
-  }
-
   async function handleCreateAccount(event) {
     event.preventDefault()
-    setShow(false)
-    if (!isCreateInputValid()) {
-      return
-    }
 
     const body = JSON.stringify({
       email,
@@ -96,21 +58,22 @@ export default function AccountForm(props) {
     }
 
     try {
+      setIsWaitingResponse(true)
       await axios.put(`${REST_API}/${ACCOUNT_ENDPOINT}`, body, config)
       history.push({ pathname: "/", state: { email: email } })
     } catch (error) {
-      setAlertVariant("danger")
-      setCreateEditAccountBackendMessage(error?.response?.data?.message)
-      setShow(true)
+      setOperationStatus({
+        variant: "danger",
+        message: error?.response?.data?.message,
+        show: true,
+      })
+    } finally {
+      setIsWaitingResponse(false)
     }
   }
 
   async function handleEditAccount(event) {
     event.preventDefault()
-    setShow(false)
-    if (!isEditInputValid()) {
-      return
-    }
 
     if (props.email !== email) {
       // we still do not allow change of email as it is
@@ -143,23 +106,25 @@ export default function AccountForm(props) {
         JSON.stringify(body),
         config
       )
-      setAlertVariant("success")
-      setCreateEditAccountBackendMessage(response.data.message)
+
+      setOperationStatus({
+        variant: "success",
+        message: response?.data?.message,
+        show: true,
+      })
     } catch (error) {
-      setAlertVariant("danger")
-      setCreateEditAccountBackendMessage(error.response.data.message)
+      setOperationStatus({
+        variant: "danger",
+        message: error?.response?.data?.message,
+        show: true,
+      })
     } finally {
-      setShow(true)
       setIsWaitingResponse(false)
     }
   }
 
   async function handleEditPasswordAccount(event) {
     event.preventDefault()
-    setShow(false)
-    if (!isEditPasswordInputValid()) {
-      return
-    }
 
     if (props.email !== email) {
       // we still do not allow change of email as it is
@@ -172,6 +137,11 @@ export default function AccountForm(props) {
       oldPassword,
       newPassword,
     }
+
+    if (props.name !== name) body.name = name
+    if (props.commercialName !== commercialName)
+      body.commercial_name = commercialName
+    if (props.phoneNumber !== phoneNumber) body.phone_number = phoneNumber
 
     var config = {
       headers: {
@@ -188,16 +158,23 @@ export default function AccountForm(props) {
         JSON.stringify(body),
         config
       )
-      setAlertVariant("success")
-      setCreateEditAccountBackendMessage(response.data.message)
-    } catch (error) {
-      setAlertVariant("danger")
-      setCreateEditAccountBackendMessage(error.response.data.message)
-    } finally {
-      setShow(true)
-      setIsWaitingResponse(false)
+
+      setOperationStatus({
+        variant: "success",
+        message: response?.data?.message,
+        show: true,
+      })
+
       setOldPassword("")
       setNewPassword("")
+    } catch (error) {
+      setOperationStatus({
+        variant: "danger",
+        message: error?.response?.data?.message,
+        show: true,
+      })
+    } finally {
+      setIsWaitingResponse(false)
     }
   }
 
@@ -220,13 +197,27 @@ export default function AccountForm(props) {
         body,
         config
       )
-      setAlertVariant("success")
-      setCreateEditAccountBackendMessage(response.data.body.message)
+
+      if (response.statusCode <= 300 && response.statusCode >= 200) {
+        setOperationStatus({
+          variant: "success",
+          message: response?.data?.body?.message,
+          show: true,
+        })
+      } else {
+        setOperationStatus({
+          variant: "danger",
+          message: response?.data?.body?.message,
+          show: true,
+        })
+      }
     } catch (error) {
-      setAlertVariant("danger")
-      setCreateEditAccountBackendMessage(error.response.data.body.message)
+      setOperationStatus({
+        variant: "danger",
+        message: error?.response?.data?.body?.message,
+        show: true,
+      })
     } finally {
-      setShow(true)
       setIsWaitingResponse(false)
     }
   }
@@ -256,12 +247,7 @@ export default function AccountForm(props) {
                 type="password"
                 placeholder=""
               />
-              <ol type="I">
-                <li>Pelo menos 8 (oito) caracteres</li>
-                <li>Pelo menos uma letra minúscula</li>
-                <li>Pelo menos uma letra maiúscula</li>
-                <li>Pelo menos um número</li>
-              </ol>
+              <PasswordRequirements password={newPassword} />
             </Form.Group>
           </Modal.Body>
           <Modal.Footer>
@@ -285,10 +271,10 @@ export default function AccountForm(props) {
         <Form onSubmit={isPropsSet ? handleEditAccount : handleCreateAccount}>
           <h1>{isPropsSet ? `Bem vindo, ${props.name}` : "Crie uma nova conta"}</h1>
           <AlertWithMessage
-            variant={alertVariant}
-            show={show}
-            setShow={setShow}
-            message={createEditAccountBackendMessage}
+            {...operationStatus}
+            setShow={(value) =>
+              setOperationStatus({ ...operationStatus, show: value })
+            }
           />
           <Form.Group className="mb-3" controlId="formCreateAccountEmail">
             <Form.Label>Email</Form.Label>
@@ -352,7 +338,7 @@ export default function AccountForm(props) {
                 placeholder=""
               />
               <Button
-                variant="outline-primary"
+                variant="primary"
                 className="w-100 my-2"
                 onClick={handleShowModal}
               >
@@ -368,17 +354,12 @@ export default function AccountForm(props) {
                 type="password"
                 placeholder=""
               />
-              <ol type="I">
-                <li>Pelo menos 8 (oito) caracteres</li>
-                <li>Pelo menos uma letra minúscula</li>
-                <li>Pelo menos uma letra maiúscula</li>
-                <li>Pelo menos um número</li>
-              </ol>
+              <PasswordRequirements password={password} />
             </Form.Group>
           )}
           <Button
             type="submit"
-            variant="primary"
+            variant="success"
             className="w-100"
             disabled={isWaitingResponse}
           >

@@ -63,10 +63,10 @@ export default function Login({ setToken }) {
         />
         <Button
           onClick={() => history.push(`/${CREATE_ACCOUNT}`)}
-          className="w-100 my-2"
-          variant="outline-success"
+          className="w-100 my-5"
+          variant="success"
         >
-          Criar nova conta
+          Ainda não tem conta? Clique aqui!
         </Button>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Email</Form.Label>
@@ -87,7 +87,7 @@ export default function Login({ setToken }) {
         </Form.Group>
         <div style={{ justifyContent: "right", display: "flex" }}>
           <Button variant="primary" type="submit">
-            Enviar
+            Fazer login
           </Button>
         </div>
       </Form>
