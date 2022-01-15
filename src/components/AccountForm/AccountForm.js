@@ -32,6 +32,7 @@ export default function AccountForm(props) {
   })
   const handleCloseModal = () => setShowModal(false)
   const handleShowModal = () => setShowModal(true)
+  const [passwordShown, setPasswordShown] = useState(false)
 
   const { email, name, commercialName, phoneNumber, isEmailVerified } = userData
 
@@ -41,6 +42,10 @@ export default function AccountForm(props) {
       setUserData(props)
     }
   }, [props])
+
+  const togglePassword = () => {
+    setPasswordShown(!passwordShown)
+  }
 
   async function handleCreateAccount(event) {
     event.preventDefault()
@@ -244,8 +249,14 @@ export default function AccountForm(props) {
               <Form.Control
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                type="password"
+                type={passwordShown ? "text" : "password"}
                 placeholder=""
+              />
+              <Form.Check
+                className="my-2"
+                type="checkbox"
+                label="Mostrar senha"
+                onChange={togglePassword}
               />
               <PasswordRequirements password={newPassword} />
             </Form.Group>
@@ -351,8 +362,14 @@ export default function AccountForm(props) {
               <Form.Control
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                type="password"
+                type={passwordShown ? "text" : "password"}
                 placeholder=""
+              />
+              <Form.Check
+                className="my-2"
+                type="checkbox"
+                label="Mostrar senha"
+                onChange={togglePassword}
               />
               <PasswordRequirements password={password} />
             </Form.Group>
