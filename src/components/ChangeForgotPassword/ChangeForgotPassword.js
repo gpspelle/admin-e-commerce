@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { Container, Form, Button, Spinner } from "react-bootstrap"
 import AlertWithMessage from "../Alert/AlertWithMessage"
+import { useHistory } from "react-router-dom"
 import axios from "axios"
 import {
   REST_API,
@@ -10,8 +11,11 @@ import {
 import useQuery from "../../hooks/useQuery"
 import PasswordRequirements from "../PasswordRequirements/PasswordRequirements"
 
+const successMessage = "Senha alterada com sucesso."
+
 export default function ChangeForgotPassword() {
   const query = useQuery()
+  const history = useHistory()
   const [password, setPassword] = useState()
   const [passwordShown, setPasswordShown] = useState(false)
   const [operationStatus, setOperationStatus] = useState({
@@ -50,7 +54,7 @@ export default function ChangeForgotPassword() {
       setOperationStatus({
         variant: "success",
         show: true,
-        message: "Senha alterada com sucesso.",
+        message: successMessage,
       })
     } catch (error) {
       setOperationStatus({
@@ -80,39 +84,47 @@ export default function ChangeForgotPassword() {
             setOperationStatus({ ...operationStatus, show: value })
           }
         />
-        <Form.Group className="mb-3" controlId="formBasicPassword">
-          <Form.Label>Nova senha</Form.Label>
-          <Form.Control
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            type={passwordShown ? "text" : "password"}
-            placeholder=""
-          />
-          <Form.Check
-            className="my-2"
-            type="checkbox"
-            label="Mostrar senha"
-            onChange={togglePassword}
-          />
-          <PasswordRequirements password={password} />
-        </Form.Group>
-        <div style={{ justifyContent: "right", display: "flex" }}>
-          <Button type="submit" variant="primary" disabled={isWaitingResponse}>
-            {isWaitingResponse && (
-              <>
-                <Spinner
-                  as="span"
-                  animation="border"
-                  size="sm"
-                  role="status"
-                  aria-hidden="true"
-                />
-                <span className="visually-hidden">Aguarde...</span>
-              </>
-            )}
-            {isWaitingResponse ? " Aguarde..." : "Alterar senha"}
+        {operationStatus.message === successMessage ? (
+          <Button className="w-100" onClick={() => history.push("/")}>
+            Voltar para a tela inicial
           </Button>
-        </div>
+        ) : (
+          <div>
+            <Form.Group className="mb-3" controlId="formBasicPassword">
+              <Form.Label>Nova senha</Form.Label>
+              <Form.Control
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                type={passwordShown ? "text" : "password"}
+                placeholder=""
+              />
+              <Form.Check
+                className="my-2"
+                type="checkbox"
+                label="Mostrar senha"
+                onChange={togglePassword}
+              />
+              <PasswordRequirements password={password} />
+            </Form.Group>
+            <div style={{ justifyContent: "right", display: "flex" }}>
+              <Button type="submit" variant="primary" disabled={isWaitingResponse}>
+                {isWaitingResponse && (
+                  <>
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                    />
+                    <span className="visually-hidden">Aguarde...</span>
+                  </>
+                )}
+                {isWaitingResponse ? " Aguarde..." : "Alterar senha"}
+              </Button>
+            </div>
+          </div>
+        )}
       </Form>
     </Container>
   )
