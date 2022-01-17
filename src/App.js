@@ -12,9 +12,13 @@ import Home from "./components/Home/Home"
 import {
   ADD_PRODUCT,
   CREATE_ACCOUNT,
+  FORGOT_PASSWORD,
   MANAGE_PRODUCTS,
   MY_ACCOUNT,
+  CHANGE_FORGOT_PASSWORD,
 } from "./constants/constants"
+import ForgotPassword from "./components/ForgotPassword/ForgotPassword"
+import ChangeForgotPassword from "./components/ChangeForgotPassword/ChangeForgotPassword"
 
 function App() {
   const { token, setToken } = useToken()
@@ -24,6 +28,12 @@ function App() {
       <Switch>
         <Route path={`/${CREATE_ACCOUNT}`}>
           <AccountForm />
+        </Route>
+        <Route path={`/${FORGOT_PASSWORD}`}>
+          <ForgotPassword />
+        </Route>
+        <Route path={`/${CHANGE_FORGOT_PASSWORD}`}>
+          <ChangeForgotPassword />
         </Route>
         <Login setToken={setToken} />
       </Switch>

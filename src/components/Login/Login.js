@@ -2,7 +2,12 @@ import React, { useState, useEffect } from "react"
 import PropTypes from "prop-types"
 import axios from "axios"
 import { useHistory, useLocation } from "react-router-dom"
-import { REST_API, CREATE_ACCOUNT, LOGIN_ENDPOINT } from "../../constants/constants"
+import {
+  REST_API,
+  CREATE_ACCOUNT,
+  LOGIN_ENDPOINT,
+  FORGOT_PASSWORD,
+} from "../../constants/constants"
 import { Form, Button, Container } from "react-bootstrap"
 import AlertWithMessage from "../Alert/AlertWithMessage"
 
@@ -89,6 +94,26 @@ export default function Login({ setToken }) {
           <Button variant="primary" type="submit">
             Fazer login
           </Button>
+        </div>
+        <hr
+          style={{
+            color: "gray",
+            backgroundColor: "gray",
+            height: 1,
+          }}
+        />
+        <div
+          onClick={() => history.push(`/${FORGOT_PASSWORD}`)}
+          style={{
+            justifyContent: "center",
+            display: "flex",
+            cursor: "pointer",
+            marginTop: "22px",
+            color: "#0b5ed7",
+            fontWeight: "bold",
+          }}
+        >
+          Esqueceu a senha?
         </div>
       </Form>
     </Container>

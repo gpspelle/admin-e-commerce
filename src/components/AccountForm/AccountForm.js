@@ -97,7 +97,7 @@ export default function AccountForm(props) {
       return
     }
 
-    var config = {
+    const config = {
       headers: {
         "Content-Type": "application/json",
         [ACCESS_TOKEN_NAME]: token,
@@ -148,7 +148,7 @@ export default function AccountForm(props) {
       body.commercial_name = commercialName
     if (props.phoneNumber !== phoneNumber) body.phone_number = phoneNumber
 
-    var config = {
+    const config = {
       headers: {
         "Content-Type": "application/json",
         [ACCESS_TOKEN_NAME]: token,
@@ -184,7 +184,7 @@ export default function AccountForm(props) {
   }
 
   async function sendVerificationEmail() {
-    var config = {
+    const config = {
       headers: {
         "Content-Type": "application/json",
       },

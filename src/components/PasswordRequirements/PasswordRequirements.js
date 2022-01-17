@@ -11,10 +11,10 @@ function hasDigit(password) {
 
 export default function PasswordRequirements({ password }) {
   const conditions = {
-    atLeastEigthChars: hasAtLeastEigthChars(password),
-    lowercase: hasLowercase(password),
-    uppercase: hasUppercase(password),
-    digit: hasDigit(password),
+    atLeastEigthChars: password !== undefined && hasAtLeastEigthChars(password),
+    lowercase: password !== undefined && hasLowercase(password),
+    uppercase: password !== undefined && hasUppercase(password),
+    digit: password !== undefined && hasDigit(password),
   }
 
   return (
