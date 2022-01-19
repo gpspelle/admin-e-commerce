@@ -203,7 +203,7 @@ export default function AccountForm(props) {
         config
       )
 
-      if (response.statusCode <= 300 && response.statusCode >= 200) {
+      if (response.status <= 300 && response.status >= 200) {
         setOperationStatus({
           variant: "success",
           message: response?.data?.body?.message,
