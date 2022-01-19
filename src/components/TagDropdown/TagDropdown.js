@@ -31,6 +31,7 @@ const TagMenu = React.forwardRef(
           value={value}
         />
         <ul
+          className="tag-dropdown"
           style={{
             paddingLeft: "0px",
             maxHeight: "100px",

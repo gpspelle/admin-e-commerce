@@ -1,7 +1,7 @@
 import React from "react"
 import { Route, Switch } from "react-router-dom"
 import AccountForm from "./components/AccountForm/AccountForm"
-import Dashboard from "./components/Dashboard/Dashboard"
+import MemoizedProductContainer from "./components/ProductContainer/ProductContainer"
 import Profile from "./components/Profile/Profile"
 import Login from "./components/Login/Login"
 import ProductForm from "./components/ProductForm/ProductForm"
@@ -55,7 +55,7 @@ function App() {
           <ProductForm />
         </Route>
         <Route path={`/${MANAGE_PRODUCTS}`}>
-          <Dashboard />
+          <MemoizedProductContainer />
         </Route>
         <Route path={`/${MY_ACCOUNT}`}>
           <Profile />

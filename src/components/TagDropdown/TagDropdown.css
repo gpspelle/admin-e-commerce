@@ -1,10 +1,10 @@
-ul {
+.tag-dropdown {
     list-style-type: none;
     padding: 0;
     border: 1px solid #ddd;
 }
 
-ul:empty {
+.tag-dropdown:empty {
     list-style-type: none;
     padding: 0;
     border: none;
