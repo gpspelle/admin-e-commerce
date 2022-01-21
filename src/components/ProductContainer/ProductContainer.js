@@ -5,6 +5,7 @@ import {
   ACCESS_TOKEN_NAME,
   REST_API,
   PRODUCTS_ENDPOINT,
+  NO_TAGS_STRING,
 } from "../../constants/constants"
 import DeleteAlert from "../Alert/DeleteAlert"
 import Product from "../Product/Product"
@@ -70,7 +71,7 @@ const ProductContainer = () => {
 
   const items = displayProducts.map((item) => {
     if (item.PRODUCT_TAGS) {
-      var index = item.PRODUCT_TAGS.SS.indexOf("!@#$no-tag%^&*")
+      var index = item.PRODUCT_TAGS.SS.indexOf(NO_TAGS_STRING)
       if (index !== -1) {
         item.PRODUCT_TAGS.SS.splice(index, 1)
       }
