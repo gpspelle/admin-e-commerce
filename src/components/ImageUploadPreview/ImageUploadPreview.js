@@ -155,14 +155,18 @@ export default function ImageUploadPreview({
                     padding: "12px",
                   }}
                 >
-                  <Card style={{ width: "18rem", border: "none" }} className="my-2">
+                  <Card style={{ border: "none" }} className="my-2">
                     <img
                       className={i === 0 ? "golden-frame" : ""}
                       key={image.name ? image.name : image}
-                      width={286}
+                      width={256}
                       height={256}
                       src={image.name ? URL.createObjectURL(image) : image}
                       alt={`${i}`}
+                      style={{
+                        objectFit: "contain",
+                        backgroundColor: "#F4F4F4",
+                      }}
                     />
                     <div
                       style={{
