@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react"
-import { ProgressBar } from "react-bootstrap"
 import {
   msToTime,
   processLightingDealInformation,
 } from "../../utils/LightingDealUtils"
+import { AiOutlineClockCircle } from "react-icons/ai"
 
 export default function LightingDealDuration({
   lightingDealDuration,
@@ -32,22 +32,18 @@ export default function LightingDealDuration({
     return <></>
   }
 
-  const { miliseconds, hoursDuration } = processLightingDealInformation({
+  const { miliseconds } = processLightingDealInformation({
     now,
     lightingDealDuration,
     lightingDealStartTime,
   })
-  const totalDuration = hoursDuration * 3600000
   const displayLeftDuration = msToTime(miliseconds)
 
-  const percentageLeft = miliseconds / totalDuration
   return (
-    <div style={{ textAlign: "left", fontSize: "14px", color: "gray" }}>
+    <div style={{ textAlign: "left", fontSize: "12px", color: "green" }}>
+      <AiOutlineClockCircle />
+      &nbsp;Oferta acaba em&nbsp;
       {displayLeftDuration}
-      <ProgressBar
-        variant={getProgressBarVariant(percentageLeft)}
-        now={percentageLeft * 100}
-      ></ProgressBar>
     </div>
   )
 }

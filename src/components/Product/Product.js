@@ -106,6 +106,8 @@ export default function Product({
     })
   }
 
+  var productContainerSize = "260px"
+  var productImageSize = "258px"
   return (
     <div>
       <Modal show={showModal} onHide={handleCloseModal}>
@@ -122,19 +124,31 @@ export default function Product({
           </Button>
         </Modal.Footer>
       </Modal>
-      <Card style={{ width: "18rem", cursor: "pointer" }} onClick={editProduct}>
+      <Card
+        style={{ maxWidth: productContainerSize, cursor: "pointer" }}
+        onClick={editProduct}
+      >
         {coverImage ? (
           <ProgressiveBlurryImageLoad
-            width={286}
-            height={256}
+            width={productImageSize}
+            height={productImageSize}
             small={`data:image/jpeg;base64,${coverImage}`}
             large={images[0]}
           />
         ) : (
-          <img style={{ width: 286, height: 256 }} src={images[0]} alt={`286x256`} />
+          <img
+            style={{
+              width: productImageSize,
+              height: productImageSize,
+              objectFit: "contain",
+              backgroundColor: "#F4F4F4",
+            }}
+            src={images[0]}
+            alt={`286x256`}
+          />
         )}
         {isLightingDeal && <LightingDealWaterMark />}
-        <Card.Body>
+        <Card.Body style={{ width: productContainerSize }}>
           <Card.Title className="notranslate">{name}</Card.Title>
           <Button
             disabled={isWaitingResponse}

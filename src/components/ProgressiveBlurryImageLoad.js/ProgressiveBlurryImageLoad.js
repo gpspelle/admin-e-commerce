@@ -11,6 +11,8 @@ export default function ProgressiveBlurryImageLoad({ small, large, height, width
         height,
         width,
         filter: blur ? "blur(5px)" : "none",
+        objectFit: "contain",
+        backgroundColor: "#F4F4F4",
       }}
       alt={`${width}x${height}`}
     />
