@@ -76,6 +76,7 @@ const ProductContainer = () => {
         item.PRODUCT_TAGS.SS.splice(index, 1)
       }
     }
+
     return (
       <Col
         key={item.id.S}
@@ -105,6 +106,7 @@ const ProductContainer = () => {
           lightingDealDuration={item.LIGHTING_DEAL_DURATION?.S}
           lightingDealStartTime={item.LIGHTING_DEAL_START_TIME?.S}
           hasMoreDataToFetch={pagination.fetch}
+          productStock={item.PRODUCT_STOCK?.N || 1}
         />
       </Col>
     )

@@ -21,6 +21,10 @@ import { lightingDealDurations } from "../LightingDealProduct/LightingDealProduc
 import { calculateLightingDealEndTime } from "../../utils/LightingDealUtils"
 import scrollToTop from "../../utils/scrollToTop"
 import AlertWithMessage from "../Alert/AlertWithMessage"
+import ProductStockSlider, {
+  PRODUCT_ORDER,
+  PRODUCT_STOCK,
+} from "../ProductStockSlider/ProductStockSlider"
 
 export default function ProductForm() {
   const { token } = useToken()
@@ -58,7 +62,8 @@ export default function ProductForm() {
   const [dealPrice, setDealPrice] = useState("")
   const [lightingDealStartTime, setLightingDealStartTime] = useState()
   const [orderIndex, setOrderIndex] = useState([])
-
+  const [productStockOrOrder, setProductStockOrOrder] = useState(PRODUCT_STOCK)
+  const [productStock, setProductStock] = useState("1")
   const { images, imageNames, imagesResized } = imageData
 
   useEffect(() => {
@@ -90,7 +95,12 @@ export default function ProductForm() {
       setTags(new Set(location.state.tags))
       setImageData({ ...imageData, imagePreview: location.state.images })
       setProductType(location.state.productType)
-
+      setProductStock(location.state.productStock)
+      if (parseInt(location.state.productStock) > 0) {
+        setProductStockOrOrder(PRODUCT_STOCK)
+      } else {
+        setProductStockOrOrder(PRODUCT_ORDER)
+      }
       if (location.state.productType === productTypes.DEAL.name) {
         setDealPrice(location.state.dealPrice)
       } else if (location.state.productType === productTypes.LIGHTING_DEAL.name) {
@@ -144,6 +154,7 @@ export default function ProductForm() {
       images: transformedImages,
       productType: productType,
       coverImage: imagesResized[0],
+      productStock, // if it's an order, productStock is 0
     }
 
     if (productType === productTypes.DEAL.name) {
@@ -180,6 +191,8 @@ export default function ProductForm() {
         setDescription("")
         setPrice("")
         setTags(new Set([]))
+        setProductStock("1")
+        setProductStockOrOrder(PRODUCT_STOCK)
         setImageData({
           images: [],
           imagesResized: [],
@@ -232,6 +245,8 @@ export default function ProductForm() {
     if (!areArraysEqual(location.state.tags, [...tags]))
       body.PRODUCT_TAGS = [...tags]
     if (location.state.productType !== productType) body.PRODUCT_TYPE = productType
+    if (location.state.productStock !== productStock)
+      body.PRODUCT_STOCK = productStock
 
     if (productType === productTypes.DEAL.name) {
       if (location.state.dealPrice !== dealPrice) {
@@ -394,6 +409,12 @@ export default function ProductForm() {
             placeholder=""
           />
         </Form.Group>
+        <ProductStockSlider
+          productStock={productStock}
+          setProductStock={setProductStock}
+          productStockOrOrder={productStockOrOrder}
+          setProductStockOrOrder={setProductStockOrOrder}
+        />
         <TagSelector createdTags={createdTags} tags={tags} setTags={setTags} />
         <ProductType
           lightingDealDuration={lightingDealDuration}

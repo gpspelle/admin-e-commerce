@@ -32,6 +32,7 @@ export default function Product({
   lightingDealStartTime,
   lightingDealDuration,
   dealPrice,
+  productStock,
 }) {
   const { token } = useToken()
   const history = useHistory()
@@ -83,6 +84,7 @@ export default function Product({
       tags,
       images,
       productType,
+      productStock,
     }
 
     if (productType === productTypes.DEAL.name) {
