@@ -18,6 +18,11 @@ export default function Login({ setToken }) {
   const [password, setPassword] = useState()
   const [show, setShow] = useState()
   const [loginStatusMessage, setLoginStatusMessage] = useState(false)
+  const [passwordShown, setPasswordShown] = useState(false)
+
+  const togglePassword = () => {
+    setPasswordShown(!passwordShown)
+  }
 
   useEffect(() => {
     if (location.state) {
@@ -85,9 +90,16 @@ export default function Login({ setToken }) {
         <Form.Group className="mb-3" controlId="formBasicPassword">
           <Form.Label>Senha</Form.Label>
           <Form.Control
+            value={password}
             onChange={(e) => setPassword(e.target.value)}
-            type="password"
+            type={passwordShown ? "text" : "password"}
             placeholder=""
+          />
+          <Form.Check
+            className="my-2"
+            type="checkbox"
+            label="Mostrar senha"
+            onChange={togglePassword}
           />
         </Form.Group>
         <div style={{ justifyContent: "right", display: "flex" }}>
