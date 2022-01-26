@@ -7,6 +7,7 @@ import {
   REST_API,
   HTTP_API,
   SEND_VERIFY_EMAIL_ENDPOINT,
+  SAME_ORIGINAL_PROFILE_PHOTO_STRING,
 } from "../../constants/constants"
 import { Form, Container, Button, Spinner, Modal } from "react-bootstrap"
 import PhoneNumberInput from "../PhoneNumberInput/PhoneNumberInput"
@@ -14,11 +15,22 @@ import useToken from "../../hooks/useToken"
 import AlertWithMessage from "../Alert/AlertWithMessage"
 import PasswordRequirements from "../PasswordRequirements/PasswordRequirements"
 import "./AccountForm.css"
+import ProfilePhoto, { rotateMin, zoomMin } from "../ProfilePhoto/ProfilePhoto"
+import Compress from "compress.js"
 
+const compress = new Compress()
 export default function AccountForm(props) {
   const { token } = useToken()
   const history = useHistory()
-  const [userData, setUserData] = useState(props)
+  var avatarImageEditor = null
+  const setAvatarImageEditorRef = (editor) => (avatarImageEditor = editor)
+  const [userData, setUserData] = useState({
+    email: props.email,
+    name: props.name,
+    commercialName: props.commercialName,
+    phoneNumber: props.phoneNumber,
+    isEmailVerified: props.isEmailVerified,
+  })
   const [oldPassword, setOldPassword] = useState("")
   const [newPassword, setNewPassword] = useState("")
   const [password, setPassword] = useState("")
@@ -33,6 +45,10 @@ export default function AccountForm(props) {
   const handleCloseModal = () => setShowModal(false)
   const handleShowModal = () => setShowModal(true)
   const [passwordShown, setPasswordShown] = useState(false)
+  const [imagePreview, setImagePreview] = useState(props.originalProfilePhoto)
+  const [imagePosition, setImagePosition] = useState(props.imagePosition)
+  const [zoom, setZoom] = useState(props.imageZoom || zoomMin)
+  const [rotate, setRotate] = useState(props.imageRotate || rotateMin)
 
   const { email, name, commercialName, phoneNumber, isEmailVerified } = userData
 
@@ -77,6 +93,25 @@ export default function AccountForm(props) {
     }
   }
 
+  async function compressImageAndConvertToBase64(file, params) {
+    const compressedImage = await compress.compress([file], params)
+    const img = compressedImage[0]
+    const base64str = img.data
+    return base64str
+  }
+
+  const dataURLtoFile = (dataurl, fileName) => {
+    var arr = dataurl.split(","),
+      mime = arr[0].match(/:(.*?);/)[1],
+      bstr = atob(arr[1]),
+      n = bstr.length,
+      u8arr = new Uint8Array(n)
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n)
+    }
+    return new File([u8arr], fileName, { type: mime })
+  }
+
   async function handleEditAccount(event) {
     event.preventDefault()
 
@@ -88,10 +123,39 @@ export default function AccountForm(props) {
 
     const body = { email: props.email }
 
+    if (avatarImageEditor !== null) {
+      const profilePhotoCropData = avatarImageEditor
+        .getImageScaledToCanvas()
+        .toDataURL()
+      const base64ProfilePhotoCropData = await compressImageAndConvertToBase64(
+        dataURLtoFile(profilePhotoCropData),
+        { size: 0.4 }
+      )
+
+      body.profilePhotoCropData = base64ProfilePhotoCropData
+
+      if (typeof imagePreview === "string") {
+        body.originalProfilePhoto = SAME_ORIGINAL_PROFILE_PHOTO_STRING
+      } else {
+        body.originalProfilePhoto = await compressImageAndConvertToBase64(
+          imagePreview,
+          { size: 0.4 }
+        )
+      }
+    }
+
     if (props.name !== name) body.name = name
     if (props.commercialName !== commercialName)
       body.commercial_name = commercialName
     if (props.phoneNumber !== phoneNumber) body.phone_number = phoneNumber
+    if (props.imageZoom !== zoom) body.image_zoom = zoom
+    if (props.imageRotate !== rotate) body.image_rotate = rotate
+    if (
+      props.imagePosition.x !== imagePosition.x ||
+      props.imagePosition.y !== imagePosition.y
+    ) {
+      body.image_position = JSON.stringify(imagePosition)
+    }
 
     if (Object.keys(body).length === 1) {
       return
@@ -141,6 +205,21 @@ export default function AccountForm(props) {
       email: props.email,
       oldPassword,
       newPassword,
+    }
+
+    if (avatarImageEditor !== null) {
+      const profilePhotoCropData = avatarImageEditor.getImage().toDataURL()
+      const base64ProfilePhotoCropData = await compressImageAndConvertToBase64(
+        dataURLtoFile(profilePhotoCropData),
+        { size: 0.4 }
+      )
+      const base64OriginalProfilePhoto = await compressImageAndConvertToBase64(
+        imagePreview,
+        { size: 0.4 }
+      )
+
+      body.profilePhotoCropData = base64ProfilePhotoCropData
+      body.originalProfilePhoto = base64OriginalProfilePhoto
     }
 
     if (props.name !== name) body.name = name
@@ -355,6 +434,17 @@ export default function AccountForm(props) {
               >
                 Alterar senha
               </Button>
+              <ProfilePhoto
+                position={imagePosition}
+                setPosition={setImagePosition}
+                zoom={zoom}
+                setZoom={setZoom}
+                rotate={rotate}
+                setRotate={setRotate}
+                imagePreview={imagePreview}
+                setImagePreview={setImagePreview}
+                setAvatarImageEditorRef={setAvatarImageEditorRef}
+              />
             </Form.Group>
           ) : (
             <Form.Group className="mb-3" controlId="formCreateAccountPassword">

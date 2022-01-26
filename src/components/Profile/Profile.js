@@ -8,6 +8,7 @@ import useToken from "../../hooks/useToken"
 import axios from "axios"
 import AccountForm from "../AccountForm/AccountForm"
 import { Col, Spinner } from "react-bootstrap"
+import { defaultPosition } from "../ProfilePhoto/ProfilePhoto"
 
 export default function Profile() {
   const { token } = useToken()
@@ -26,14 +27,31 @@ export default function Profile() {
 
           const res = await axios.get(`${REST_API}/${ACCOUNT_ENDPOINT}`, config)
           const { data } = res
-          const { email, name, commercial_name, phone_number, is_email_verified } =
-            data[0]
+          const {
+            email,
+            name,
+            commercial_name,
+            phone_number,
+            is_email_verified,
+            original_profile_photo,
+            image_position,
+            image_zoom,
+            image_rotate,
+          } = data[0]
+
           setUserData({
             email,
             name,
             commercialName: commercial_name,
             phoneNumber: phone_number,
             isEmailVerified: is_email_verified,
+            originalProfilePhoto: original_profile_photo,
+            imagePosition:
+              image_position !== undefined
+                ? JSON.parse(image_position)
+                : defaultPosition,
+            imageZoom: image_zoom,
+            imageRotate: image_rotate,
           })
         } catch (error) {
           console.error(error)
@@ -45,7 +63,19 @@ export default function Profile() {
   }, [token])
 
   if (Object.keys(userData).length > 0) {
-    return <AccountForm {...userData} />
+    return (
+      <AccountForm
+        email={userData.email}
+        name={userData.name}
+        commercialName={userData.commercialName}
+        phoneNumber={userData.phoneNumber}
+        isEmailVerified={userData.isEmailVerified}
+        originalProfilePhoto={userData.originalProfilePhoto}
+        imagePosition={userData.imagePosition}
+        imageZoom={userData.imageZoom}
+        imageRotate={userData.imageRotate}
+      />
+    )
   }
 
   return (
