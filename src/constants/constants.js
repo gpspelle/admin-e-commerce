@@ -6,7 +6,8 @@ export const HTTP_API =
   "https://oftg6ghwa0.execute-api.us-east-1.amazonaws.com"
 export const ACCESS_TOKEN_NAME = process.env.ACCESS_TOKEN_NAME || "x-access-token"
 export const NO_TAGS_STRING = process.env.NO_TAGS_STRING || "!@#$no-tag%^&*"
-export const SAME_ORIGINAL_PROFILE_PHOTO_STRING = "SAME"
+export const SAME_ORIGINAL_PROFILE_PHOTO_STRING =
+  process.env.SAME_ORIGINAL_PROFILE_PHOTO_STRING || "SAME"
 
 export const PRODUCT_ENDPOINT = "product"
 export const PRODUCTS_ENDPOINT = "products"
