@@ -37,6 +37,8 @@ export default function Profile() {
             image_position,
             image_zoom,
             image_rotate,
+            about_me,
+            about_products,
           } = data[0]
 
           setUserData({
@@ -52,6 +54,8 @@ export default function Profile() {
                 : defaultPosition,
             imageZoom: image_zoom,
             imageRotate: image_rotate,
+            aboutMe: about_me,
+            aboutProducts: about_products,
           })
         } catch (error) {
           console.error(error)
@@ -69,6 +73,8 @@ export default function Profile() {
         name={userData.name}
         commercialName={userData.commercialName}
         phoneNumber={userData.phoneNumber}
+        aboutMe={userData.aboutMe}
+        aboutProducts={userData.aboutProducts}
         isEmailVerified={userData.isEmailVerified}
         originalProfilePhoto={userData.originalProfilePhoto}
         imagePosition={userData.imagePosition}

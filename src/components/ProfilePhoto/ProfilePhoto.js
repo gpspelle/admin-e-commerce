@@ -71,7 +71,7 @@ export default function ProfilePhoto({
       setPosition={setPosition}
       setZoom={setZoom}
       setRotate={setRotate}
-      imagePreview={imagePreview}
+      image={imagePreview}
       position={position}
       zoom={zoom}
       rotate={rotate}

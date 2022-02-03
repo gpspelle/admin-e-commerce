@@ -30,6 +30,8 @@ export default function AccountForm(props) {
     commercialName: props.commercialName,
     phoneNumber: props.phoneNumber,
     isEmailVerified: props.isEmailVerified,
+    aboutMe: props.aboutMe,
+    aboutProducts: props.aboutProducts,
   })
   const [oldPassword, setOldPassword] = useState("")
   const [newPassword, setNewPassword] = useState("")
@@ -50,7 +52,15 @@ export default function AccountForm(props) {
   const [zoom, setZoom] = useState(props.imageZoom || zoomMin)
   const [rotate, setRotate] = useState(props.imageRotate || rotateMin)
 
-  const { email, name, commercialName, phoneNumber, isEmailVerified } = userData
+  const {
+    email,
+    name,
+    commercialName,
+    phoneNumber,
+    aboutMe,
+    aboutProducts,
+    isEmailVerified,
+  } = userData
 
   useEffect(() => {
     if (Object.keys(props).length > 0) {
@@ -148,6 +158,8 @@ export default function AccountForm(props) {
     if (props.commercialName !== commercialName)
       body.commercial_name = commercialName
     if (props.phoneNumber !== phoneNumber) body.phone_number = phoneNumber
+    if (props.aboutMe !== aboutMe) body.about_me = aboutMe
+    if (props.aboutProducts !== aboutProducts) body.about_products = aboutProducts
     if (props.imageZoom !== zoom) body.image_zoom = zoom
     if (props.imageRotate !== rotate) body.image_rotate = rotate
     if (
@@ -419,33 +431,61 @@ export default function AccountForm(props) {
             setUserData={setUserData}
           />
           {isPropsSet ? (
-            <Form.Group className="mb-3" controlId="formEditAccountPassword">
-              <Form.Label>Senha</Form.Label>
-              <Form.Control
-                disabled={true}
-                value={"password_placeholder_not_real"}
-                type="password"
-                placeholder=""
-              />
-              <Button
-                variant="primary"
-                className="w-100 my-2"
-                onClick={handleShowModal}
-              >
-                Alterar senha
-              </Button>
-              <ProfilePhoto
-                position={imagePosition}
-                setPosition={setImagePosition}
-                zoom={zoom}
-                setZoom={setZoom}
-                rotate={rotate}
-                setRotate={setRotate}
-                imagePreview={imagePreview}
-                setImagePreview={setImagePreview}
-                setAvatarImageEditorRef={setAvatarImageEditorRef}
-              />
-            </Form.Group>
+            <>
+              <Form.Group className="mb-3" controlId="formEditAccountAboutMe">
+                <Form.Label>Sobre mim</Form.Label>
+                <Form.Control
+                  value={aboutMe}
+                  onChange={(e) =>
+                    setUserData({ ...userData, aboutMe: e.target.value })
+                  }
+                  as="textarea"
+                  rows={5}
+                  placeholder="Esse é um espaço para você contar sobre a sua vida pessoal, profissão, família, curiosidades, hobbies, onde mora, cidade natal, etc. Fique a vontade para adicionar o que você quiser!"
+                />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="formEditAccountAboutProducts">
+                <Form.Label>Sobre os meus produtos</Form.Label>
+                <Form.Control
+                  value={aboutProducts}
+                  onChange={(e) =>
+                    setUserData({ ...userData, aboutProducts: e.target.value })
+                  }
+                  as="textarea"
+                  rows={7}
+                  placeholder="Esse é um espaço para você contar contar mais sobre os produtos que você faz, há quanto tempo você produz esse tipo de produto, como você começou, quais são os materiais que você mais gosta de utilizar, etc. Fique a vontade para adicionar o que você quiser!"
+                />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="formEditAccountPassword">
+                <Form.Label>Senha</Form.Label>
+                <Form.Control
+                  disabled={true}
+                  value={"password_placeholder_not_real"}
+                  type="password"
+                  placeholder=""
+                />
+                <Button
+                  variant="primary"
+                  className="w-100 my-2"
+                  onClick={handleShowModal}
+                >
+                  Alterar senha
+                </Button>
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="formEditAccountProfilePhoto">
+                <ProfilePhoto
+                  position={imagePosition}
+                  setPosition={setImagePosition}
+                  zoom={zoom}
+                  setZoom={setZoom}
+                  rotate={rotate}
+                  setRotate={setRotate}
+                  imagePreview={imagePreview}
+                  setImagePreview={setImagePreview}
+                  setAvatarImageEditorRef={setAvatarImageEditorRef}
+                />
+              </Form.Group>
+            </>
           ) : (
             <Form.Group className="mb-3" controlId="formCreateAccountPassword">
               <Form.Label>Senha</Form.Label>

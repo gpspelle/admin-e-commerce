@@ -22,12 +22,13 @@ export default function ProfilePhotoDetails({
   rotate,
   setAvatarImageEditorRef,
 }) {
+  console.log(isProfilePhotoSet, image, position, zoom, rotate)
   return (
     <div>
       {isProfilePhotoSet ? (
-        <p>Ainda não tem foto de perfil? Adicione uma</p>
-      ) : (
         <p className="my-2">Foto de Perfil</p>
+      ) : (
+        <p>Ainda não tem foto de perfil? Adicione uma</p>
       )}
       <Form.Control
         type="file"
