@@ -22,7 +22,6 @@ export default function ProfilePhotoDetails({
   rotate,
   setAvatarImageEditorRef,
 }) {
-  console.log(isProfilePhotoSet, image, position, zoom, rotate)
   return (
     <div>
       {isProfilePhotoSet ? (
