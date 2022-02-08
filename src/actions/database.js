@@ -46,8 +46,8 @@ export const getAccountFromDatabase = async ({
 export const putAccountOnDatabase = async ({
   email,
   name,
-  commercialName,
-  phoneNumber,
+  commercial_name,
+  phone_number,
   password,
   setIsWaitingResponse,
   setOperationStatus,
@@ -56,11 +56,12 @@ export const putAccountOnDatabase = async ({
   const body = JSON.stringify({
     email,
     name,
-    commercialName,
-    phoneNumber,
+    commercial_name,
+    phone_number,
     password,
   })
 
+  console.log(body)
   var config = {
     headers: { "Content-Type": "application/json" },
   }

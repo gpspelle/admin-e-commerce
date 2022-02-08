@@ -380,7 +380,7 @@ export default function AccountForm(props) {
             />
           </Form.Group>
           <PhoneNumberInput
-            phoneNumber={phone_number}
+            phone_number={phone_number}
             userData={userData}
             setUserData={setUserData}
           />
