@@ -1,69 +1,38 @@
 import React, { useState, useEffect, memo } from "react"
-import axios from "axios"
 import { Container, Row, Col } from "react-bootstrap"
-import {
-  ACCESS_TOKEN_NAME,
-  REST_API,
-  PRODUCTS_ENDPOINT,
-  NO_TAGS_STRING,
-} from "../../constants/constants"
-import DeleteAlert from "../Alert/DeleteAlert"
+import { NO_TAGS_STRING } from "../../constants/constants"
 import Product from "../Product/Product"
 import useWindowDimensions from "../../hooks/useWindowDimensions"
 import NoProductFoundMessage from "../NoProductFoundMessage/NoProductFoundMessage"
 import MemoizedProductPagination from "../ProductPagination/ProductPagination"
 import useToken from "../../hooks/useToken"
+import AlertWithMessage from "../Alert/AlertWithMessage"
+import { getProductsFromDatabase } from "../../actions/database"
 
 const ProductContainer = () => {
   const [productData, setProductData] = useState({
     products: [],
     pagination: { key: undefined, fetch: true },
   })
-  const [deleteStatus, setDeleteStatus] = useState()
-  const [deletedProductName, setDeletedProductName] = useState()
-  const [fetchData, setFetchData] = useState(0)
-  const [showDeleteAlert, setShowDeleteAlert] = useState(false)
+  const [operationStatus, setOperationStatus] = useState({
+    variant: undefined,
+    message: undefined,
+    show: undefined,
+  })
   const { token } = useToken()
   const { width } = useWindowDimensions()
 
   const { products, pagination } = productData
 
   useEffect(() => {
-    if (fetchData > 0 && !pagination.fetch) {
+    if (!pagination.fetch) {
       setProductData({ products: [], pagination: { key: undefined, fetch: true } })
     }
-  }, [fetchData])
+  }, [operationStatus])
 
   useEffect(() => {
-    async function getProductsFromDatabase() {
-      const body = {
-        key: pagination.key,
-      }
-
-      const config = {
-        params: {
-          body,
-        },
-        headers: {
-          "Content-Type": "application/json",
-          [ACCESS_TOKEN_NAME]: token,
-        },
-      }
-
-      const res = await axios.get(`${REST_API}/${PRODUCTS_ENDPOINT}`, config)
-      const { data, key } = res.data
-      const concatProducts = products.length > 0 ? products.concat(data) : data
-
-      concatProducts.sort((a, b) => (a.PRODUCT_NAME.S > b.PRODUCT_NAME.S ? 1 : -1))
-
-      setProductData({
-        products: concatProducts,
-        pagination: { key, fetch: key ? true : false },
-      })
-    }
-
     if (pagination.fetch) {
-      getProductsFromDatabase()
+      getProductsFromDatabase({ token, pagination, setProductData, products })
     }
   }, [pagination])
 
@@ -88,11 +57,7 @@ const ProductContainer = () => {
         }}
       >
         <Product
-          setShowDeleteAlert={setShowDeleteAlert}
-          fetchData={fetchData}
-          setFetchData={setFetchData}
-          setDeleteStatus={setDeleteStatus}
-          setDeletedProductName={setDeletedProductName}
+          setOperationStatus={setOperationStatus}
           id={item.id.S}
           name={item.PRODUCT_NAME.S}
           description={item.PRODUCT_DESCRIPTION.S}
@@ -116,11 +81,11 @@ const ProductContainer = () => {
     <div>
       <Container>
         <Row style={{ paddingTop: "42px" }}>
-          <DeleteAlert
-            show={showDeleteAlert}
-            setShow={setShowDeleteAlert}
-            status={deleteStatus}
-            deletedProductName={deletedProductName}
+          <AlertWithMessage
+            {...operationStatus}
+            setShow={(value) =>
+              setOperationStatus({ ...operationStatus, show: value })
+            }
           />
           {items && items.length > 0 ? (
             <MemoizedProductPagination products={items} screenWidth={width} />

@@ -1,40 +1,19 @@
 import React, { useState, useEffect } from "react"
-import {
-  ACCESS_TOKEN_NAME,
-  ACCOUNT_ENDPOINT,
-  REST_API,
-} from "../../constants/constants"
 import useToken from "../../hooks/useToken"
-import axios from "axios"
 import { Container } from "react-bootstrap"
+import { getAccountFromDatabase } from "../../actions/database"
 
 export default function Home() {
   const { token } = useToken()
-  const [name, setName] = useState()
+  const [userData, setUserData] = useState({
+    name: undefined,
+  })
 
   useEffect(() => {
-    async function getAccountFromDatabase() {
-      if (token) {
-        try {
-          const config = {
-            headers: {
-              "Content-Type": "application/json",
-              [ACCESS_TOKEN_NAME]: token,
-            },
-          }
-
-          const res = await axios.get(`${REST_API}/${ACCOUNT_ENDPOINT}`, config)
-          const { data } = res
-          setName(data[0].name)
-        } catch (error) {
-          console.error(error)
-        }
-      }
-    }
-
-    getAccountFromDatabase()
+    getAccountFromDatabase({ token, setUserData, attributesFromAccount: ["name"] })
   }, [token])
 
+  const { name } = userData
   return (
     <Container
       style={{

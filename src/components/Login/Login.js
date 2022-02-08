@@ -1,15 +1,10 @@
 import React, { useState, useEffect } from "react"
 import PropTypes from "prop-types"
-import axios from "axios"
 import { useHistory, useLocation } from "react-router-dom"
-import {
-  REST_API,
-  CREATE_ACCOUNT,
-  LOGIN_ENDPOINT,
-  FORGOT_PASSWORD,
-} from "../../constants/constants"
+import { CREATE_ACCOUNT, FORGOT_PASSWORD } from "../../constants/constants"
 import { Form, Button, Container } from "react-bootstrap"
 import AlertWithMessage from "../Alert/AlertWithMessage"
+import { postLogin } from "../../actions/database"
 
 export default function Login({ setToken }) {
   const history = useHistory()
@@ -30,28 +25,15 @@ export default function Login({ setToken }) {
     }
   }, [location])
 
-  const handleSubmit = async (e) => {
+  const handleLoginSubmit = async (e) => {
     e.preventDefault()
-    setShow(false)
-
-    try {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-
-      const body = JSON.stringify({
-        email,
-        password,
-      })
-
-      const res = await axios.post(`${REST_API}/${LOGIN_ENDPOINT}`, body, config)
-      setToken(res.data)
-    } catch (error) {
-      setLoginStatusMessage(error.response.data)
-      setShow(true)
-    }
+    postLogin({
+      email,
+      password,
+      setToken,
+      setLoginStatusMessage,
+      setShow,
+    })
   }
 
   return (
@@ -63,7 +45,7 @@ export default function Login({ setToken }) {
         padding: "30px",
       }}
     >
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleLoginSubmit}>
         <h1>Bem vindo</h1>
         <AlertWithMessage
           variant="danger"

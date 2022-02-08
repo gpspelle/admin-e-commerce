@@ -1,12 +1,6 @@
 import React, { useState } from "react"
 import { useHistory } from "react-router-dom"
 import { Button, Card, Modal, Spinner } from "react-bootstrap"
-import axios from "axios"
-import {
-  ACCESS_TOKEN_NAME,
-  REST_API,
-  PRODUCT_ENDPOINT,
-} from "../../constants/constants"
 import useToken from "../../hooks/useToken"
 import { productTypes } from "../ProductType/ProductType"
 import LightingDealWaterMark from "../LightingDealWaterMark/LightingDealWaterMark"
@@ -14,13 +8,10 @@ import LightingDealDuration from "../LightingDealDuration/LightingDealDuration"
 import { getIsDeal } from "../../utils/DealUtils"
 import { getIsLightingDeal } from "../../utils/LightingDealUtils"
 import ProgressiveBlurryImageLoad from "../ProgressiveBlurryImageLoad.js/ProgressiveBlurryImageLoad"
+import { deleteProductOnDatabase } from "../../actions/database"
 
 export default function Product({
-  setShowDeleteAlert,
-  fetchData,
-  setFetchData,
-  setDeleteStatus,
-  setDeletedProductName,
+  setOperationStatus,
   id,
   name,
   description,
@@ -45,36 +36,18 @@ export default function Product({
   const isDeal = getIsDeal(productType)
   const isLightingDeal = getIsLightingDeal(productType)
 
-  const deleteProduct = async () => {
-    setShowDeleteAlert(false)
-    handleCloseModal()
-    const body = {
+  const handleDeleteProduct = async () => {
+    deleteProductOnDatabase({
+      token,
+      setIsWaitingResponse,
+      setOperationStatus,
+      handleCloseModal,
       id,
-    }
-
-    const headers = {
-      "Content-Type": "text/plain",
-      [ACCESS_TOKEN_NAME]: token,
-    }
-
-    try {
-      setDeletedProductName(name)
-      setIsWaitingResponse(true)
-      const res = await axios.delete(`${REST_API}/${PRODUCT_ENDPOINT}`, {
-        data: body,
-        headers,
-      })
-      setDeleteStatus(res.status)
-      setFetchData(fetchData + 1)
-    } catch (error) {
-      setDeleteStatus(error.statusCode)
-    } finally {
-      setIsWaitingResponse(false)
-      setShowDeleteAlert(true)
-    }
+      name,
+    })
   }
 
-  const editProduct = async (event) => {
+  const handleEditProduct = async (event) => {
     if (event.target.type === "button") return
     const state = {
       id,
@@ -121,14 +94,14 @@ export default function Product({
           <Button variant="secondary" onClick={handleCloseModal}>
             Não
           </Button>
-          <Button variant="primary" onClick={() => deleteProduct()}>
+          <Button variant="primary" onClick={() => handleDeleteProduct()}>
             Sim
           </Button>
         </Modal.Footer>
       </Modal>
       <Card
         style={{ maxWidth: productContainerSize, cursor: "pointer" }}
-        onClick={editProduct}
+        onClick={handleEditProduct}
       >
         {coverImage ? (
           <ProgressiveBlurryImageLoad

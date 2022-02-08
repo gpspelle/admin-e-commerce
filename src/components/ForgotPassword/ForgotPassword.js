@@ -1,11 +1,7 @@
 import React, { useState } from "react"
 import { Container, Form, Button, Spinner } from "react-bootstrap"
+import { postForgotPasswordEmail } from "../../actions/database"
 import AlertWithMessage from "../Alert/AlertWithMessage"
-import axios from "axios"
-import {
-  HTTP_API,
-  SEND_FORGOT_PASSWORD_EMAIL_ENDPOINT,
-} from "../../constants/constants"
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState()
@@ -16,41 +12,14 @@ export default function ForgotPassword() {
   })
   const [isWaitingResponse, setIsWaitingResponse] = useState(false)
 
-  const handleSubmit = async (e) => {
+  const handleChangePassword = async (e) => {
     e.preventDefault()
 
-    try {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-
-      const body = JSON.stringify({
-        email,
-      })
-
-      setIsWaitingResponse(true)
-      await axios.post(
-        `${HTTP_API}/${SEND_FORGOT_PASSWORD_EMAIL_ENDPOINT}`,
-        body,
-        config
-      )
-
-      setOperationStatus({
-        variant: "success",
-        show: true,
-        message: "Email de recuperação de senha enviado, verifique a caixa de spam.",
-      })
-    } catch (error) {
-      setOperationStatus({
-        variant: "danger",
-        show: true,
-        message: error?.response?.data?.message,
-      })
-    } finally {
-      setIsWaitingResponse(false)
-    }
+    postForgotPasswordEmail({
+      setIsWaitingResponse,
+      setOperationStatus,
+      email,
+    })
   }
 
   return (
@@ -62,7 +31,7 @@ export default function ForgotPassword() {
         padding: "30px",
       }}
     >
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleChangePassword}>
         <h1>Recuperação de senha</h1>
         <AlertWithMessage
           {...operationStatus}

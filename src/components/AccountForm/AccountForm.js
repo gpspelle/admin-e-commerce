@@ -5,8 +5,6 @@ import {
   ACCESS_TOKEN_NAME,
   ACCOUNT_ENDPOINT,
   REST_API,
-  HTTP_API,
-  SEND_VERIFY_EMAIL_ENDPOINT,
   SAME_ORIGINAL_PROFILE_PHOTO_STRING,
 } from "../../constants/constants"
 import { Form, Container, Button, Spinner, Modal } from "react-bootstrap"
@@ -17,6 +15,7 @@ import PasswordRequirements from "../PasswordRequirements/PasswordRequirements"
 import "./AccountForm.css"
 import ProfilePhoto, { rotateMin, zoomMin } from "../ProfilePhoto/ProfilePhoto"
 import Compress from "compress.js"
+import { postVerificationEmail, putAccountOnDatabase } from "../../actions/database"
 
 const compress = new Compress()
 export default function AccountForm(props) {
@@ -27,11 +26,11 @@ export default function AccountForm(props) {
   const [userData, setUserData] = useState({
     email: props.email,
     name: props.name,
-    commercialName: props.commercialName,
-    phoneNumber: props.phoneNumber,
-    isEmailVerified: props.isEmailVerified,
-    aboutMe: props.aboutMe,
-    aboutProducts: props.aboutProducts,
+    commercial_name: props.commercial_name,
+    phone_number: props.phone_number,
+    is_email_verified: props.is_email_verified,
+    about_me: props.about_me,
+    about_products: props.about_products,
   })
   const [oldPassword, setOldPassword] = useState("")
   const [newPassword, setNewPassword] = useState("")
@@ -47,19 +46,19 @@ export default function AccountForm(props) {
   const handleCloseModal = () => setShowModal(false)
   const handleShowModal = () => setShowModal(true)
   const [passwordShown, setPasswordShown] = useState(false)
-  const [imagePreview, setImagePreview] = useState(props.originalProfilePhoto)
-  const [imagePosition, setImagePosition] = useState(props.imagePosition)
-  const [zoom, setZoom] = useState(props.imageZoom || zoomMin)
-  const [rotate, setRotate] = useState(props.imageRotate || rotateMin)
+  const [imagePreview, setImagePreview] = useState(props.original_profile_photo)
+  const [image_position, setImagePosition] = useState(props.image_position)
+  const [zoom, setZoom] = useState(props.image_zoom || zoomMin)
+  const [rotate, setRotate] = useState(props.image_rotate || rotateMin)
 
   const {
     email,
     name,
-    commercialName,
-    phoneNumber,
-    aboutMe,
-    aboutProducts,
-    isEmailVerified,
+    commercial_name,
+    phone_number,
+    about_me,
+    about_products,
+    is_email_verified,
   } = userData
 
   useEffect(() => {
@@ -76,31 +75,16 @@ export default function AccountForm(props) {
   async function handleCreateAccount(event) {
     event.preventDefault()
 
-    const body = JSON.stringify({
+    putAccountOnDatabase({
       email,
       name,
-      commercialName,
-      phoneNumber,
+      commercial_name,
+      phone_number,
       password,
+      setIsWaitingResponse,
+      setOperationStatus,
+      history,
     })
-
-    var config = {
-      headers: { "Content-Type": "application/json" },
-    }
-
-    try {
-      setIsWaitingResponse(true)
-      await axios.put(`${REST_API}/${ACCOUNT_ENDPOINT}`, body, config)
-      history.push({ pathname: "/", state: { email: email } })
-    } catch (error) {
-      setOperationStatus({
-        variant: "danger",
-        message: error?.response?.data?.message,
-        show: true,
-      })
-    } finally {
-      setIsWaitingResponse(false)
-    }
   }
 
   async function compressImageAndConvertToBase64(file, params) {
@@ -155,18 +139,18 @@ export default function AccountForm(props) {
     }
 
     if (props.name !== name) body.name = name
-    if (props.commercialName !== commercialName)
-      body.commercial_name = commercialName
-    if (props.phoneNumber !== phoneNumber) body.phone_number = phoneNumber
-    if (props.aboutMe !== aboutMe) body.about_me = aboutMe
-    if (props.aboutProducts !== aboutProducts) body.about_products = aboutProducts
-    if (props.imageZoom !== zoom) body.image_zoom = zoom
-    if (props.imageRotate !== rotate) body.image_rotate = rotate
+    if (props.commercial_name !== commercial_name)
+      body.commercial_name = commercial_name
+    if (props.phone_number !== phone_number) body.phone_number = phone_number
+    if (props.about_me !== about_me) body.about_me = about_me
+    if (props.about_products !== about_products) body.about_products = about_products
+    if (props.image_zoom !== zoom) body.image_zoom = zoom
+    if (props.image_rotate !== rotate) body.image_rotate = rotate
     if (
-      props.imagePosition.x !== imagePosition.x ||
-      props.imagePosition.y !== imagePosition.y
+      props.image_position.x !== image_position.x ||
+      props.image_position.y !== image_position.y
     ) {
-      body.image_position = JSON.stringify(imagePosition)
+      body.image_position = JSON.stringify(image_position)
     }
 
     if (Object.keys(body).length === 1) {
@@ -225,19 +209,23 @@ export default function AccountForm(props) {
         dataURLtoFile(profilePhotoCropData),
         { size: 0.4 }
       )
-      const base64OriginalProfilePhoto = await compressImageAndConvertToBase64(
-        imagePreview,
-        { size: 0.4 }
-      )
 
       body.profilePhotoCropData = base64ProfilePhotoCropData
-      body.originalProfilePhoto = base64OriginalProfilePhoto
+
+      if (typeof imagePreview === "string") {
+        body.originalProfilePhoto = SAME_ORIGINAL_PROFILE_PHOTO_STRING
+      } else {
+        body.originalProfilePhoto = await compressImageAndConvertToBase64(
+          imagePreview,
+          { size: 0.4 }
+        )
+      }
     }
 
     if (props.name !== name) body.name = name
-    if (props.commercialName !== commercialName)
-      body.commercial_name = commercialName
-    if (props.phoneNumber !== phoneNumber) body.phone_number = phoneNumber
+    if (props.commercial_name !== commercial_name)
+      body.commercial_name = commercial_name
+    if (props.phone_number !== phone_number) body.phone_number = phone_number
 
     const config = {
       headers: {
@@ -275,47 +263,13 @@ export default function AccountForm(props) {
   }
 
   async function sendVerificationEmail() {
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-
-    const body = JSON.stringify({
+    postVerificationEmail({
+      token,
+      setIsWaitingResponse,
+      setOperationStatus,
       email,
       name,
     })
-
-    try {
-      setIsWaitingResponse(true)
-      const response = await axios.post(
-        `${HTTP_API}/${SEND_VERIFY_EMAIL_ENDPOINT}?${ACCESS_TOKEN_NAME}=${token}`,
-        body,
-        config
-      )
-
-      if (response.status <= 300 && response.status >= 200) {
-        setOperationStatus({
-          variant: "success",
-          message: response?.data?.body?.message,
-          show: true,
-        })
-      } else {
-        setOperationStatus({
-          variant: "danger",
-          message: response?.data?.body?.message,
-          show: true,
-        })
-      }
-    } catch (error) {
-      setOperationStatus({
-        variant: "danger",
-        message: error?.response?.data?.body?.message,
-        show: true,
-      })
-    } finally {
-      setIsWaitingResponse(false)
-    }
   }
 
   return (
@@ -381,7 +335,7 @@ export default function AccountForm(props) {
           <Form.Group className="mb-3" controlId="formCreateAccountEmail">
             <Form.Label>Email</Form.Label>
             {isPropsSet &&
-              (isEmailVerified ? (
+              (is_email_verified ? (
                 <div>
                   <span className="verified-email">&#x2705; Email verificado</span>
                 </div>
@@ -417,16 +371,16 @@ export default function AccountForm(props) {
           <Form.Group className="mb-3" controlId="formCreateAccountCommercialName">
             <Form.Label>Nome comercial</Form.Label>
             <Form.Control
-              value={commercialName}
+              value={commercial_name}
               onChange={(e) =>
-                setUserData({ ...userData, commercialName: e.target.value })
+                setUserData({ ...userData, commercial_name: e.target.value })
               }
               type="text"
               placeholder="Ateliê do Gabriel"
             />
           </Form.Group>
           <PhoneNumberInput
-            phoneNumber={phoneNumber}
+            phoneNumber={phone_number}
             userData={userData}
             setUserData={setUserData}
           />
@@ -435,9 +389,9 @@ export default function AccountForm(props) {
               <Form.Group className="mb-3" controlId="formEditAccountAboutMe">
                 <Form.Label>Sobre mim</Form.Label>
                 <Form.Control
-                  value={aboutMe}
+                  value={about_me}
                   onChange={(e) =>
-                    setUserData({ ...userData, aboutMe: e.target.value })
+                    setUserData({ ...userData, about_me: e.target.value })
                   }
                   as="textarea"
                   rows={5}
@@ -447,9 +401,9 @@ export default function AccountForm(props) {
               <Form.Group className="mb-3" controlId="formEditAccountAboutProducts">
                 <Form.Label>Sobre os meus produtos</Form.Label>
                 <Form.Control
-                  value={aboutProducts}
+                  value={about_products}
                   onChange={(e) =>
-                    setUserData({ ...userData, aboutProducts: e.target.value })
+                    setUserData({ ...userData, about_products: e.target.value })
                   }
                   as="textarea"
                   rows={7}
@@ -460,7 +414,7 @@ export default function AccountForm(props) {
                 <Form.Label>Senha</Form.Label>
                 <Form.Control
                   disabled={true}
-                  value={"password_placeholder_not_real"}
+                  value={"12345678"}
                   type="password"
                   placeholder=""
                 />
@@ -474,7 +428,7 @@ export default function AccountForm(props) {
               </Form.Group>
               <Form.Group className="mb-3" controlId="formEditAccountProfilePhoto">
                 <ProfilePhoto
-                  position={imagePosition}
+                  position={image_position}
                   setPosition={setImagePosition}
                   zoom={zoom}
                   setZoom={setZoom}

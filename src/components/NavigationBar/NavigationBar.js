@@ -1,6 +1,12 @@
 import React from "react"
 import "./NavigationBar.css"
 import { Container, Nav, Navbar, Offcanvas } from "react-bootstrap"
+import {
+  ACTIVATION_STATUS,
+  ADD_PRODUCT,
+  MANAGE_PRODUCTS,
+  MY_ACCOUNT,
+} from "../../constants/constants"
 
 export default function NavigationBar() {
   return (
@@ -17,14 +23,17 @@ export default function NavigationBar() {
           </Offcanvas.Header>
           <Offcanvas.Body>
             <Nav>
-              <Nav.Link className="navigation-link" href="/adicionar-produto">
-                &nbsp;Adicionar Produto
+              <Nav.Link className="navigation-link" href={`/${ADD_PRODUCT}`}>
+                &nbsp;Adicionar produto
               </Nav.Link>
-              <Nav.Link className="navigation-link" href="/gerenciar-produtos">
-                &nbsp;Gerenciar Produtos
+              <Nav.Link className="navigation-link" href={`/${MANAGE_PRODUCTS}`}>
+                &nbsp;Gerenciar produtos
               </Nav.Link>
-              <Nav.Link className="navigation-link" href="/minha-conta">
-                &nbsp;Minha Conta
+              <Nav.Link className="navigation-link" href={`/${MY_ACCOUNT}`}>
+                &nbsp;Minha conta
+              </Nav.Link>
+              <Nav.Link className="navigation-link" href={`/${ACTIVATION_STATUS}`}>
+                &nbsp;Ativar/Desativar conta
               </Nav.Link>
             </Nav>
           </Offcanvas.Body>

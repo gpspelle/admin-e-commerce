@@ -16,9 +16,11 @@ import {
   MANAGE_PRODUCTS,
   MY_ACCOUNT,
   CHANGE_FORGOT_PASSWORD,
+  ACTIVATION_STATUS,
 } from "./constants/constants"
 import ForgotPassword from "./components/ForgotPassword/ForgotPassword"
 import ChangeForgotPassword from "./components/ChangeForgotPassword/ChangeForgotPassword"
+import AccountActivationStatusForm from "./components/AccountActivationStatusForm/AccountActivationStatusForm"
 
 function App() {
   const { token, setToken } = useToken()
@@ -62,6 +64,9 @@ function App() {
         </Route>
         <Route path="/:id/edit">
           <ProductForm />
+        </Route>
+        <Route path={`/${ACTIVATION_STATUS}`}>
+          <AccountActivationStatusForm />
         </Route>
         <Route path="/">
           <Home />

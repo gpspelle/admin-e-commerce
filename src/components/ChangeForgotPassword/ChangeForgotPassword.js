@@ -10,6 +10,7 @@ import {
 } from "../../constants/constants"
 import useQuery from "../../hooks/useQuery"
 import PasswordRequirements from "../PasswordRequirements/PasswordRequirements"
+import { patchAccountOnDatabase } from "../../actions/database"
 
 const successMessage = "Senha alterada com sucesso."
 
@@ -32,39 +33,16 @@ export default function ChangeForgotPassword() {
     setPasswordShown(!passwordShown)
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+  const handleChangeForgotPassword = async (event) => {
+    event.preventDefault()
 
-    try {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          [ACCESS_TOKEN_NAME]: token,
-        },
-      }
-
-      const body = JSON.stringify({
-        email,
-        password,
-      })
-
-      setIsWaitingResponse(true)
-      await axios.patch(`${REST_API}/${ACCOUNT_ENDPOINT}`, body, config)
-
-      setOperationStatus({
-        variant: "success",
-        show: true,
-        message: successMessage,
-      })
-    } catch (error) {
-      setOperationStatus({
-        variant: "danger",
-        show: true,
-        message: error?.response?.data?.message,
-      })
-    } finally {
-      setIsWaitingResponse(false)
-    }
+    patchAccountOnDatabase({
+      token,
+      setIsWaitingResponse,
+      setOperationStatus,
+      bodyAttributes: { email, password },
+      successMessage: "Senha alterada com sucesso",
+    })
   }
 
   return (
@@ -76,7 +54,7 @@ export default function ChangeForgotPassword() {
         padding: "30px",
       }}
     >
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleChangeForgotPassword}>
         <h1>Alterar senha</h1>
         <AlertWithMessage
           {...operationStatus}
