@@ -1,7 +1,9 @@
-import "react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css"
 import React from "react"
 import RangeSlider from "react-bootstrap-range-slider"
+import "react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css"
+
 import { ButtonGroup, Form, ToggleButton } from "react-bootstrap"
+
 import "./ProductStockSlider.css"
 
 export const PRODUCT_STOCK = "0"

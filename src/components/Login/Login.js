@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react"
 import PropTypes from "prop-types"
 import { useHistory, useLocation } from "react-router-dom"
-import { CREATE_ACCOUNT, FORGOT_PASSWORD } from "../../constants/constants"
 import { Form, Button, Container } from "react-bootstrap"
+
+import { CREATE_ACCOUNT, FORGOT_PASSWORD } from "../../constants/constants"
 import AlertWithMessage from "../Alert/AlertWithMessage"
 import { postLogin } from "../../actions/database"
 

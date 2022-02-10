@@ -1,5 +1,6 @@
 import React from "react"
 import { Alert } from "react-bootstrap"
+
 import { productTypes } from "../ProductType/ProductType"
 
 const getMissingRequiredFields = (

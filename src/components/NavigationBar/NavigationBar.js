@@ -1,12 +1,13 @@
 import React from "react"
-import "./NavigationBar.css"
 import { Container, Nav, Navbar, Offcanvas } from "react-bootstrap"
+
 import {
   ACTIVATION_STATUS,
   ADD_PRODUCT,
   MANAGE_PRODUCTS,
   MY_ACCOUNT,
 } from "../../constants/constants"
+import "./NavigationBar.css"
 
 export default function NavigationBar() {
   return (

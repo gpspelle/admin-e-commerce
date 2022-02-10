@@ -1,9 +1,10 @@
 import React from "react"
-import DatePicker from "react-datepicker"
-import TimeInput from "./TimeInput.jsx"
-import "react-datepicker/dist/react-datepicker.css"
-import "./DateTimePicker.css"
 import { Form } from "react-bootstrap"
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css"
+
+import TimeInput from "./TimeInput.jsx"
+import "./DateTimePicker.css"
 
 const TimeWrapper = ({ selectedTime, setSelectedTime }) => {
   const onTimeChangeHandler = (val) => {

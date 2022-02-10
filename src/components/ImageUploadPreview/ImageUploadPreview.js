@@ -1,10 +1,11 @@
 import React, { useEffect } from "react"
+import axios from "axios"
 import Compress from "compress.js"
 import { Card, Form, Row, Container, Col } from "react-bootstrap"
 import { IoArrowDownCircleSharp, IoArrowUpCircleSharp } from "react-icons/io5"
-import "./ImageUploadPreview.css"
+
 import { arrayMove } from "../../utils/arrayMove"
-import axios from "axios"
+import "./ImageUploadPreview.css"
 
 const compress = new Compress()
 

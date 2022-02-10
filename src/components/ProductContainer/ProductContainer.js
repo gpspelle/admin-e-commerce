@@ -1,11 +1,12 @@
 import React, { useState, useEffect, memo } from "react"
 import { Container, Row, Col } from "react-bootstrap"
+
+import useToken from "../../hooks/useToken"
+import useWindowDimensions from "../../hooks/useWindowDimensions"
 import { NO_TAGS_STRING } from "../../constants/constants"
 import Product from "../Product/Product"
-import useWindowDimensions from "../../hooks/useWindowDimensions"
 import NoProductFoundMessage from "../NoProductFoundMessage/NoProductFoundMessage"
 import MemoizedProductPagination from "../ProductPagination/ProductPagination"
-import useToken from "../../hooks/useToken"
 import AlertWithMessage from "../Alert/AlertWithMessage"
 import { getProductsFromDatabase } from "../../actions/database"
 

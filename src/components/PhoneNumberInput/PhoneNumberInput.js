@@ -1,7 +1,7 @@
 import React from "react"
-import "react-phone-number-input/style.css"
-import PhoneInput from "react-phone-number-input/input"
 import { Form } from "react-bootstrap"
+import PhoneInput from "react-phone-number-input/input"
+import "react-phone-number-input/style.css"
 
 export default function PhoneNumberInput({ phone_number, userData, setUserData }) {
   // `value` will be the parsed phone number in E.164 format.

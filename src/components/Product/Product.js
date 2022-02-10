@@ -1,13 +1,14 @@
 import React, { useState } from "react"
 import { useHistory } from "react-router-dom"
 import { Button, Card, Modal, Spinner } from "react-bootstrap"
+
 import useToken from "../../hooks/useToken"
 import { productTypes } from "../ProductType/ProductType"
 import LightingDealWaterMark from "../LightingDealWaterMark/LightingDealWaterMark"
 import LightingDealDuration from "../LightingDealDuration/LightingDealDuration"
 import { getIsDeal } from "../../utils/DealUtils"
 import { getIsLightingDeal } from "../../utils/LightingDealUtils"
-import ProgressiveBlurryImageLoad from "../ProgressiveBlurryImageLoad.js/ProgressiveBlurryImageLoad"
+import ProgressiveBlurryImageLoad from "../ProgressiveBlurryImageLoad/ProgressiveBlurryImageLoad"
 import { deleteProductOnDatabase } from "../../actions/database"
 
 export default function Product({

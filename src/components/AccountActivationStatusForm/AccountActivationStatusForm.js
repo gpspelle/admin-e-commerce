@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react"
 import { Container, Modal, Button, Row, Col, Spinner } from "react-bootstrap"
-import useToken from "../../hooks/useToken"
 import jwt from "jwt-decode"
+import { useHistory } from "react-router-dom"
+
+import useToken from "../../hooks/useToken"
 import {
   ActivateAccount,
   ActivateAccountModalMessage,
@@ -12,7 +14,6 @@ import AlertWithMessage from "../Alert/AlertWithMessage"
 import { getAccountFromDatabase } from "../../actions/database"
 import { deactivateAccountAndProducts } from "../../actions/deactivateAccountAndProducts"
 import { activateAccountAndProducts } from "../../actions/activateAccountAndProducts"
-import { useHistory } from "react-router-dom"
 
 export default function AccountActivationStatusForm() {
   const history = useHistory()

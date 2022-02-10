@@ -1,4 +1,5 @@
 import React from "react"
+
 import useProgressiveImageLoad from "../../hooks/useProgressiveImageLoad"
 
 export default function ProgressiveBlurryImageLoad({ small, large, height, width }) {

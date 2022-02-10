@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
-import useToken from "../../hooks/useToken"
 import { Container } from "react-bootstrap"
+
+import useToken from "../../hooks/useToken"
 import { getAccountFromDatabase } from "../../actions/database"
 
 export default function Home() {

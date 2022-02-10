@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from "react"
-import { useHistory, useLocation } from "react-router-dom"
 import axios from "axios"
+import { useHistory, useLocation } from "react-router-dom"
+import { Form, Container, Button, Spinner } from "react-bootstrap"
+
+import useToken from "../../hooks/useToken"
 import ImageUploadPreview from "../ImageUploadPreview/ImageUploadPreview"
 import {
   ACCESS_TOKEN_NAME,
@@ -9,11 +12,9 @@ import {
   PRODUCT_ENDPOINT,
   TAGS_ENDPOINT,
 } from "../../constants/constants"
-import { Form, Container, Button, Spinner } from "react-bootstrap"
 import TagSelector from "../TagSelector/TagSelector"
 import { areArraysEqual } from "../../utils/compareTwoArrays"
 import MissingFieldsAlert from "../Alert/MissingFieldsAlert"
-import useToken from "../../hooks/useToken"
 import ProductType, { productTypes } from "../ProductType/ProductType"
 import { isArraySorted } from "../../utils/isArraySorted"
 import { convertDateAndTimeToIsoString } from "../../utils/convertDateToIsoString"

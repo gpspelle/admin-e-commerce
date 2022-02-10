@@ -1,6 +1,7 @@
 import React from "react"
 import { Card, Button, Col, Spinner } from "react-bootstrap"
-import { useHistory } from "react-router"
+import { useHistory } from "react-router-dom"
+
 import { ADD_PRODUCT } from "../../constants/constants"
 
 export default function NoProductFoundMessage({ screenWidth, hasMoreDataToFetch }) {

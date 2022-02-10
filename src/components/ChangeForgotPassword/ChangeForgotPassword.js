@@ -1,14 +1,10 @@
 import React, { useState } from "react"
 import { Container, Form, Button, Spinner } from "react-bootstrap"
-import AlertWithMessage from "../Alert/AlertWithMessage"
 import { useHistory } from "react-router-dom"
-import axios from "axios"
-import {
-  REST_API,
-  ACCESS_TOKEN_NAME,
-  ACCOUNT_ENDPOINT,
-} from "../../constants/constants"
+
 import useQuery from "../../hooks/useQuery"
+import AlertWithMessage from "../Alert/AlertWithMessage"
+import { ACCESS_TOKEN_NAME } from "../../constants/constants"
 import PasswordRequirements from "../PasswordRequirements/PasswordRequirements"
 import { patchAccountOnDatabase } from "../../actions/database"
 

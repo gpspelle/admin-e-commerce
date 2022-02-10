@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from "react"
 import axios from "axios"
+import Compress from "compress.js"
 import { useHistory } from "react-router-dom"
+import { Form, Container, Button, Spinner, Modal } from "react-bootstrap"
+
+import useToken from "../../hooks/useToken"
 import {
   ACCESS_TOKEN_NAME,
   ACCOUNT_ENDPOINT,
   REST_API,
   SAME_ORIGINAL_PROFILE_PHOTO_STRING,
 } from "../../constants/constants"
-import { Form, Container, Button, Spinner, Modal } from "react-bootstrap"
 import PhoneNumberInput from "../PhoneNumberInput/PhoneNumberInput"
-import useToken from "../../hooks/useToken"
 import AlertWithMessage from "../Alert/AlertWithMessage"
 import PasswordRequirements from "../PasswordRequirements/PasswordRequirements"
-import "./AccountForm.css"
 import ProfilePhoto, { rotateMin, zoomMin } from "../ProfilePhoto/ProfilePhoto"
-import Compress from "compress.js"
 import { postVerificationEmail, putAccountOnDatabase } from "../../actions/database"
+import "./AccountForm.css"
 
 const compress = new Compress()
 export default function AccountForm(props) {

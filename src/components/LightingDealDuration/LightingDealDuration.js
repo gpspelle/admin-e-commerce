@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react"
+import { AiOutlineClockCircle } from "react-icons/ai"
+
 import {
   msToTime,
   processLightingDealInformation,
 } from "../../utils/LightingDealUtils"
-import { AiOutlineClockCircle } from "react-icons/ai"
 
 export default function LightingDealDuration({
   lightingDealDuration,

@@ -61,7 +61,6 @@ export const putAccountOnDatabase = async ({
     password,
   })
 
-  console.log(body)
   var config = {
     headers: { "Content-Type": "application/json" },
   }

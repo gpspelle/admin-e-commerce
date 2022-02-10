@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react"
+import { Col, Spinner } from "react-bootstrap"
+
 import useToken from "../../hooks/useToken"
 import AccountForm from "../AccountForm/AccountForm"
-import { Col, Spinner } from "react-bootstrap"
 import { defaultPosition } from "../ProfilePhoto/ProfilePhoto"
 import { getAccountFromDatabase } from "../../actions/database"
 

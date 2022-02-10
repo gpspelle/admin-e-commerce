@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+
 import ProfilePhotoDetails from "./ProfilePhotoDetails"
 
 export const zoomMin = 1
