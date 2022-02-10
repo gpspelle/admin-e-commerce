@@ -1,7 +1,7 @@
 import React from "react"
 import { AiFillThunderbolt } from "react-icons/ai"
 
-export default function LightingDealWaterMark() {
+export default function LightningDealWaterMark() {
   return (
     <>
       <AiFillThunderbolt

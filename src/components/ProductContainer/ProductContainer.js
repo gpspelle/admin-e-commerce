@@ -69,8 +69,8 @@ const ProductContainer = () => {
           tags={item.PRODUCT_TAGS?.SS}
           productType={item.PRODUCT_TYPE?.S}
           dealPrice={item.DEAL_PRICE?.N}
-          lightingDealDuration={item.LIGHTING_DEAL_DURATION?.S}
-          lightingDealStartTime={item.LIGHTING_DEAL_START_TIME?.S}
+          lightningDealDuration={item.LIGHTNING_DEAL_DURATION?.S}
+          lightningDealStartTime={item.LIGHTNING_DEAL_START_TIME?.S}
           hasMoreDataToFetch={pagination.fetch}
           productStock={item.PRODUCT_STOCK?.N || 1}
         />

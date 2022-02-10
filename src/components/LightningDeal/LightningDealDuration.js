@@ -3,24 +3,14 @@ import { AiOutlineClockCircle } from "react-icons/ai"
 
 import {
   msToTime,
-  processLightingDealInformation,
-} from "../../utils/lightingDealUtils"
+  processLightningDealInformation,
+} from "../../utils/lightningDealUtils"
 
-export default function LightingDealDuration({
-  lightingDealDuration,
-  lightingDealStartTime,
+export default function LightningDealDuration({
+  lightningDealDuration,
+  lightningDealStartTime,
 }) {
   const [now, setNow] = useState(new Date())
-
-  const getProgressBarVariant = (val) => {
-    if (val > 0.4) {
-      return "success"
-    } else if (val > 0.2) {
-      return "warning"
-    }
-
-    return "danger"
-  }
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -29,14 +19,14 @@ export default function LightingDealDuration({
     return () => clearInterval(interval)
   }, [])
 
-  if (!lightingDealDuration || !lightingDealStartTime) {
+  if (!lightningDealDuration || !lightningDealStartTime) {
     return <></>
   }
 
-  const { miliseconds } = processLightingDealInformation({
+  const { miliseconds } = processLightningDealInformation({
     now,
-    lightingDealDuration,
-    lightingDealStartTime,
+    lightningDealDuration,
+    lightningDealStartTime,
   })
   const displayLeftDuration = msToTime(miliseconds)
 

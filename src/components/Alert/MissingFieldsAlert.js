@@ -10,7 +10,7 @@ const getMissingRequiredFields = (
   images,
   productType,
   dealPrice,
-  lightingDealStartTime
+  lightningDealStartTime
 ) => {
   let missingRequiredFields = ""
 
@@ -36,13 +36,13 @@ const getMissingRequiredFields = (
     }
   }
 
-  if (productType === productTypes.LIGHTING_DEAL.name) {
+  if (productType === productTypes.LIGHTNING_DEAL.name) {
     if (dealPrice === "") {
       missingRequiredFields += "preço promocional (oferta relâmpago), "
     }
 
     const now = new Date()
-    if (now > new Date(lightingDealStartTime)) {
+    if (now > new Date(lightningDealStartTime)) {
       missingRequiredFields +=
         "o início da oferta relâmpago não pode ser no passado, "
     }
@@ -60,7 +60,7 @@ export default function MissingFieldsAlert({
   images,
   productType,
   dealPrice,
-  lightingDealStartTime,
+  lightningDealStartTime,
 }) {
   const missingRequiredFields = getMissingRequiredFields(
     name,
@@ -69,7 +69,7 @@ export default function MissingFieldsAlert({
     images,
     productType,
     dealPrice,
-    lightingDealStartTime
+    lightningDealStartTime
   )
   if (missingRequiredFields.length === 0) {
     setShow(false)

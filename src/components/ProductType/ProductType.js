@@ -2,23 +2,23 @@ import React from "react"
 import { ButtonGroup, Button, Form } from "react-bootstrap"
 
 import DealProduct from "../DealProduct/DealProduct"
-import LightingDealProduct from "../LightingDealProduct/LightingDealProduct"
+import LightningDealProduct from "../LightningDeal/LightningDealProduct"
 
 export const productTypes = {
   NORMAL: { name: "NORMAL", showName: "Normal" },
   DEAL: { name: "DEAL", showName: "Oferta" },
-  LIGHTING_DEAL: { name: "LIGHTING_DEAL", showName: "Oferta Relâmpago" },
+  LIGHTNING_DEAL: { name: "LIGHTNING_DEAL", showName: "Oferta Relâmpago" },
 }
 
 export default function ProductType({
   productType,
   setProductType,
-  lightingDealDuration,
-  setLightingDealDuration,
-  lightingDealTime,
-  setLightingDealTime,
-  lightingDealDate,
-  setLightingDealDate,
+  lightningDealDuration,
+  setLightningDealDuration,
+  lightningDealTime,
+  setLightningDealTime,
+  lightningDealDate,
+  setLightningDealDate,
   dealPrice,
   setDealPrice,
 }) {
@@ -41,16 +41,16 @@ export default function ProductType({
       {productType === productTypes.DEAL.name && (
         <DealProduct price={dealPrice} setPrice={setDealPrice} />
       )}
-      {productType === productTypes.LIGHTING_DEAL.name && (
-        <LightingDealProduct
+      {productType === productTypes.LIGHTNING_DEAL.name && (
+        <LightningDealProduct
           price={dealPrice}
           setPrice={setDealPrice}
-          selectedDuration={lightingDealDuration}
-          setSelectedDuration={setLightingDealDuration}
-          selectedTime={lightingDealTime}
-          setSelectedTime={setLightingDealTime}
-          selectedDate={lightingDealDate}
-          setSelectedDate={setLightingDealDate}
+          selectedDuration={lightningDealDuration}
+          setSelectedDuration={setLightningDealDuration}
+          selectedTime={lightningDealTime}
+          setSelectedTime={setLightningDealTime}
+          selectedDate={lightningDealDate}
+          setSelectedDate={setLightningDealDate}
         />
       )}
     </Form.Group>

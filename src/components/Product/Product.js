@@ -4,13 +4,13 @@ import { Button, Card, Modal, Spinner } from "react-bootstrap"
 
 import useToken from "../../hooks/useToken"
 import { productTypes } from "../ProductType/ProductType"
-import LightingDealWaterMark from "../LightingDealWaterMark/LightingDealWaterMark"
-import LightingDealDuration from "../LightingDealDuration/LightingDealDuration"
 import { getIsDeal } from "../../utils/dealUtils"
-import { getIsLightingDeal } from "../../utils/lightingDealUtils"
+import { getIsLightningDeal } from "../../utils/lightningDealUtils"
 import ProgressiveBlurryImageLoad from "../ProgressiveBlurryImageLoad/ProgressiveBlurryImageLoad"
 import { deleteProductOnDatabase } from "../../actions/database"
 import { EDIT_PRODUCT } from "../../constants/constants"
+import LightningDealDuration from "../LightningDeal/LightningDealDuration"
+import LightningDealWaterMark from "../LightningDeal/LightningDealWaterMark"
 
 export default function Product({
   setOperationStatus,
@@ -22,8 +22,8 @@ export default function Product({
   images,
   coverImage,
   productType,
-  lightingDealStartTime,
-  lightingDealDuration,
+  lightningDealStartTime,
+  lightningDealDuration,
   dealPrice,
   productStock,
 }) {
@@ -36,7 +36,7 @@ export default function Product({
   const handleShowModal = () => setShowModal(true)
 
   const isDeal = getIsDeal(productType)
-  const isLightingDeal = getIsLightingDeal(productType)
+  const isLightningDeal = getIsLightningDeal(productType)
 
   const handleDeleteProduct = async () => {
     deleteProductOnDatabase({
@@ -64,17 +64,17 @@ export default function Product({
 
     if (productType === productTypes.DEAL.name) {
       state.dealPrice = dealPrice
-    } else if (productType === productTypes.LIGHTING_DEAL.name) {
-      const date = new Date(lightingDealStartTime)
+    } else if (productType === productTypes.LIGHTNING_DEAL.name) {
+      const date = new Date(lightningDealStartTime)
       const minutes = date.getMinutes()
-      const lightingDealTime = `${date.getHours()}:${
+      const lightningDealTime = `${date.getHours()}:${
         minutes < 10 ? "0" : ""
       }${minutes}`
-      state.lightingDealDate = date
-      state.lightingDealTime = lightingDealTime
-      state.lightingDealDuration = lightingDealDuration
+      state.lightningDealDate = date
+      state.lightningDealTime = lightningDealTime
+      state.lightningDealDuration = lightningDealDuration
       state.dealPrice = dealPrice
-      state.lightingDealStartTime = lightingDealStartTime
+      state.lightningDealStartTime = lightningDealStartTime
     }
 
     history.push({
@@ -85,6 +85,7 @@ export default function Product({
 
   var productContainerSize = "260px"
   var productImageSize = "258px"
+
   return (
     <div>
       <Modal show={showModal} onHide={handleCloseModal}>
@@ -124,7 +125,7 @@ export default function Product({
             alt={`286x256`}
           />
         )}
-        {isLightingDeal && <LightingDealWaterMark />}
+        {isLightningDeal && <LightningDealWaterMark />}
         <Card.Body style={{ width: productContainerSize }}>
           <Card.Title className="notranslate">{name}</Card.Title>
           <Button
@@ -162,9 +163,9 @@ export default function Product({
               <Card.Text className="notranslate">&nbsp;R$ {dealPrice}</Card.Text>
             )}
           </div>
-          <LightingDealDuration
-            lightingDealDuration={lightingDealDuration}
-            lightingDealStartTime={lightingDealStartTime}
+          <LightningDealDuration
+            lightningDealDuration={lightningDealDuration}
+            lightningDealStartTime={lightningDealStartTime}
           />
         </Card.Body>
       </Card>

@@ -3,13 +3,13 @@ import { Form, ButtonGroup, Button, Card } from "react-bootstrap"
 
 import DateTimePicker from "../DateTimePicker/DateTimePicker"
 
-export const lightingDealDurations = {
+export const lightningDealDurations = {
   "12h": { name: "12h", showName: "12 horas" },
   "24h": { name: "24h", showName: "24 horas" },
   "72h": { name: "72h", showName: "72 horas" },
 }
 
-export default function LightingDealProduct({
+export default function LightningDealProduct({
   selectedDuration,
   setSelectedDuration,
   selectedTime,
@@ -40,7 +40,7 @@ export default function LightingDealProduct({
           />
           <Form.Label>Duração</Form.Label>
           <ButtonGroup className="w-100" vertical aria-label="First group">
-            {Object.entries(lightingDealDurations).map((duration, i) => (
+            {Object.entries(lightningDealDurations).map((duration, i) => (
               <Button
                 active={duration[1].name === selectedDuration}
                 onClick={() => setSelectedDuration(duration[1].name)}

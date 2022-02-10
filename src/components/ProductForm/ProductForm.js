@@ -18,8 +18,8 @@ import MissingFieldsAlert from "../Alert/MissingFieldsAlert"
 import ProductType, { productTypes } from "../ProductType/ProductType"
 import { isArraySorted } from "../../utils/isArraySorted"
 import { convertDateAndTimeToIsoString } from "../../utils/convertDateToIsoString"
-import { lightingDealDurations } from "../LightingDealProduct/LightingDealProduct"
-import { calculateLightingDealEndTime } from "../../utils/lightingDealUtils"
+import { lightningDealDurations } from "../LightningDeal/LightningDealProduct"
+import { calculateLightningDealEndTime } from "../../utils/lightningDealUtils"
 import scrollToTop from "../../utils/scrollToTop"
 import AlertWithMessage from "../Alert/AlertWithMessage"
 import ProductStockSlider, {
@@ -36,7 +36,6 @@ export default function ProductForm() {
   const [edit, setEdit] = useState()
   const [id, setId] = useState()
   const [name, setName] = useState("")
-  const [createdProductName, setCreatedProductName] = useState("")
   const [description, setDescription] = useState("")
   const [price, setPrice] = useState("")
   const [tags, setTags] = useState(new Set([]))
@@ -55,25 +54,25 @@ export default function ProductForm() {
   const [showMissingFieldsAlert, setShowMissingFieldsAlert] = useState(false)
   const [isWaitingResponse, setIsWaitingResponse] = useState(false)
   const [productType, setProductType] = useState(productTypes.NORMAL.name)
-  const [lightingDealTime, setLightingDealTime] = useState("10:00")
-  const [lightingDealDate, setLightingDealDate] = useState(new Date())
-  const [lightingDealDuration, setLightingDealDuration] = useState(
-    lightingDealDurations["12h"].name
+  const [lightningDealTime, setLightningDealTime] = useState("10:00")
+  const [lightningDealDate, setLightningDealDate] = useState(new Date())
+  const [lightningDealDuration, setLightningDealDuration] = useState(
+    lightningDealDurations["12h"].name
   )
   const [dealPrice, setDealPrice] = useState("")
-  const [lightingDealStartTime, setLightingDealStartTime] = useState()
+  const [lightningDealStartTime, setLightningDealStartTime] = useState()
   const [orderIndex, setOrderIndex] = useState([])
   const [productStockOrOrder, setProductStockOrOrder] = useState(PRODUCT_STOCK)
   const [productStock, setProductStock] = useState("1")
   const { images, imageNames, imagesResized } = imageData
 
   useEffect(() => {
-    if (lightingDealTime && lightingDealDate) {
-      setLightingDealStartTime(
-        convertDateAndTimeToIsoString(lightingDealDate, lightingDealTime)
+    if (lightningDealTime && lightningDealDate) {
+      setLightningDealStartTime(
+        convertDateAndTimeToIsoString(lightningDealDate, lightningDealTime)
       )
     }
-  }, [lightingDealDate, lightingDealTime])
+  }, [lightningDealDate, lightningDealTime])
 
   useEffect(() => {
     async function getTagsFromDatabase() {
@@ -104,11 +103,11 @@ export default function ProductForm() {
       }
       if (location.state.productType === productTypes.DEAL.name) {
         setDealPrice(location.state.dealPrice)
-      } else if (location.state.productType === productTypes.LIGHTING_DEAL.name) {
+      } else if (location.state.productType === productTypes.LIGHTNING_DEAL.name) {
         setDealPrice(location.state.dealPrice)
-        setLightingDealDate(location.state.lightingDealDate)
-        setLightingDealTime(location.state.lightingDealTime)
-        setLightingDealDuration(location.state.lightingDealDuration)
+        setLightningDealDate(location.state.lightningDealDate)
+        setLightningDealTime(location.state.lightningDealTime)
+        setLightningDealDuration(location.state.lightningDealDuration)
       }
     }
   }, [location])
@@ -119,8 +118,10 @@ export default function ProductForm() {
 
     if (productType === productTypes.DEAL.name) {
       return isNormalCreateInput && dealPrice !== ""
-    } else if (productType === productTypes.LIGHTING_DEAL.name) {
-      return isNormalCreateInput && lightingDealTime.length === 5 && dealPrice !== ""
+    } else if (productType === productTypes.LIGHTNING_DEAL.name) {
+      return (
+        isNormalCreateInput && lightningDealTime.length === 5 && dealPrice !== ""
+      )
     }
 
     return isNormalCreateInput
@@ -155,17 +156,17 @@ export default function ProductForm() {
       images: transformedImages,
       productType: productType,
       coverImage: imagesResized[0],
-      productStock, // if it's an order, productStock is 0
+      productStock, // products made on demand have productStock equal 0
     }
 
     if (productType === productTypes.DEAL.name) {
       body.dealPrice = dealPrice
-    } else if (productType === productTypes.LIGHTING_DEAL.name) {
-      body.lightingDealStartTime = lightingDealStartTime
-      body.lightingDealDuration = lightingDealDuration
-      body.lightingDealEndTime = calculateLightingDealEndTime(
-        lightingDealDuration,
-        lightingDealStartTime
+    } else if (productType === productTypes.LIGHTNING_DEAL.name) {
+      body.lightningDealStartTime = lightningDealStartTime
+      body.lightningDealDuration = lightningDealDuration
+      body.lightningDealEndTime = calculateLightningDealEndTime(
+        lightningDealDuration,
+        lightningDealStartTime
       )
       body.dealPrice = dealPrice
     }
@@ -187,7 +188,6 @@ export default function ProductForm() {
 
       if (res.status === 200) {
         imageInput.current.value = null
-        setCreatedProductName(name)
         setName("")
         setDescription("")
         setPrice("")
@@ -203,7 +203,7 @@ export default function ProductForm() {
 
         if (
           productType === productTypes.DEAL.name ||
-          productType === productTypes.LIGHTING_DEAL.name
+          productType === productTypes.LIGHTNING_DEAL.name
         ) {
           setDealPrice("")
         }
@@ -253,27 +253,27 @@ export default function ProductForm() {
       if (location.state.dealPrice !== dealPrice) {
         body.DEAL_PRICE = parseInt(dealPrice, 10)
         body.removeAttributes = [
-          "LIGHTING_DEAL_DURATION",
-          "LIGHTING_DEAL_START_TIME",
-          "LIGHTING_DEAL_END_TIME",
+          "LIGHTNING_DEAL_DURATION",
+          "LIGHTNING_DEAL_START_TIME",
+          "LIGHTNING_DEAL_END_TIME",
         ]
       }
-    } else if (productType === productTypes.LIGHTING_DEAL.name) {
-      if (location.state.lightingDealDuration !== lightingDealDuration) {
-        body.LIGHTING_DEAL_DURATION = lightingDealDuration
+    } else if (productType === productTypes.LIGHTNING_DEAL.name) {
+      if (location.state.lightningDealDuration !== lightningDealDuration) {
+        body.LIGHTNING_DEAL_DURATION = lightningDealDuration
       }
 
-      if (location.state.lightingDealStartTime !== lightingDealStartTime) {
-        body.LIGHTING_DEAL_START_TIME = lightingDealStartTime
+      if (location.state.lightningDealStartTime !== lightningDealStartTime) {
+        body.LIGHTNING_DEAL_START_TIME = lightningDealStartTime
       }
 
       if (
-        location.state.lightingDealDuration !== lightingDealDuration ||
-        location.state.lightingDealStartTime !== lightingDealStartTime
+        location.state.lightningDealDuration !== lightningDealDuration ||
+        location.state.lightningDealStartTime !== lightningDealStartTime
       ) {
-        body.LIGHTING_DEAL_END_TIME = calculateLightingDealEndTime(
-          lightingDealDuration,
-          lightingDealStartTime
+        body.LIGHTNING_DEAL_END_TIME = calculateLightningDealEndTime(
+          lightningDealDuration,
+          lightningDealStartTime
         )
       }
 
@@ -282,10 +282,10 @@ export default function ProductForm() {
       }
     } else if (location.state.productType !== productTypes.NORMAL.name) {
       body.removeAttributes = [
-        "LIGHTING_DEAL_DURATION",
+        "LIGHTNING_DEAL_DURATION",
         "DEAL_PRICE",
-        "LIGHTING_DEAL_START_TIME",
-        "LIGHTING_DEAL_END_TIME",
+        "LIGHTNING_DEAL_START_TIME",
+        "LIGHTNING_DEAL_END_TIME",
       ]
     }
 
@@ -380,7 +380,7 @@ export default function ProductForm() {
           images={images}
           productType={productType}
           dealPrice={dealPrice}
-          lightingDealStartTime={lightingDealStartTime}
+          lightningDealStartTime={lightningDealStartTime}
         />
         <h1>{edit ? "Edite o produto" : "Crie um novo produto"}</h1>
         <Form.Group className="mb-3" controlId="formBasicProductName">
@@ -418,12 +418,12 @@ export default function ProductForm() {
         />
         <TagSelector createdTags={createdTags} tags={tags} setTags={setTags} />
         <ProductType
-          lightingDealDuration={lightingDealDuration}
-          setLightingDealDuration={setLightingDealDuration}
-          lightingDealTime={lightingDealTime}
-          setLightingDealTime={setLightingDealTime}
-          lightingDealDate={lightingDealDate}
-          setLightingDealDate={setLightingDealDate}
+          lightningDealDuration={lightningDealDuration}
+          setLightningDealDuration={setLightningDealDuration}
+          lightningDealTime={lightningDealTime}
+          setLightningDealTime={setLightningDealTime}
+          lightningDealDate={lightningDealDate}
+          setLightningDealDate={setLightningDealDate}
           productType={productType}
           setProductType={setProductType}
           dealPrice={dealPrice}
