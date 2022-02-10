@@ -1,12 +1,13 @@
 import React from "react"
 import { Route, Switch } from "react-router-dom"
+import jwt from "jwt-decode"
+
+import useToken from "./hooks/useToken"
 import AccountForm from "./components/AccountForm/AccountForm"
 import MemoizedProductContainer from "./components/ProductContainer/ProductContainer"
 import Profile from "./components/Profile/Profile"
 import Login from "./components/Login/Login"
 import ProductForm from "./components/ProductForm/ProductForm"
-import useToken from "./hooks/useToken"
-import jwt from "jwt-decode"
 import NavigationBar from "./components/NavigationBar/NavigationBar"
 import Home from "./components/Home/Home"
 import {
@@ -17,6 +18,7 @@ import {
   MY_ACCOUNT,
   CHANGE_FORGOT_PASSWORD,
   ACTIVATION_STATUS,
+  EDIT_PRODUCT,
 } from "./constants/constants"
 import ForgotPassword from "./components/ForgotPassword/ForgotPassword"
 import ChangeForgotPassword from "./components/ChangeForgotPassword/ChangeForgotPassword"
@@ -62,7 +64,7 @@ function App() {
         <Route path={`/${MY_ACCOUNT}`}>
           <Profile />
         </Route>
-        <Route path="/:id/edit">
+        <Route path={`/:id/${EDIT_PRODUCT}`}>
           <ProductForm />
         </Route>
         <Route path={`/${ACTIVATION_STATUS}`}>

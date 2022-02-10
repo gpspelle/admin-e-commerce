@@ -10,6 +10,7 @@ import { getIsDeal } from "../../utils/DealUtils"
 import { getIsLightingDeal } from "../../utils/LightingDealUtils"
 import ProgressiveBlurryImageLoad from "../ProgressiveBlurryImageLoad/ProgressiveBlurryImageLoad"
 import { deleteProductOnDatabase } from "../../actions/database"
+import { EDIT_PRODUCT } from "../../constants/constants"
 
 export default function Product({
   setOperationStatus,
@@ -77,7 +78,7 @@ export default function Product({
     }
 
     history.push({
-      pathname: `/${id}/edit`,
+      pathname: `/${id}/${EDIT_PRODUCT}`,
       state,
     })
   }

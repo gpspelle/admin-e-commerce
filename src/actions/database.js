@@ -1,5 +1,4 @@
 import axios from "axios"
-import jwt from "jwt-decode"
 import {
   ACCESS_TOKEN_NAME,
   ACCOUNT_ENDPOINT,
