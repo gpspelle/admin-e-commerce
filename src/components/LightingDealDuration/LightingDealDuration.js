@@ -4,7 +4,7 @@ import { AiOutlineClockCircle } from "react-icons/ai"
 import {
   msToTime,
   processLightingDealInformation,
-} from "../../utils/LightingDealUtils"
+} from "../../utils/lightingDealUtils"
 
 export default function LightingDealDuration({
   lightingDealDuration,

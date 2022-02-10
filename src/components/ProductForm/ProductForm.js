@@ -19,7 +19,7 @@ import ProductType, { productTypes } from "../ProductType/ProductType"
 import { isArraySorted } from "../../utils/isArraySorted"
 import { convertDateAndTimeToIsoString } from "../../utils/convertDateToIsoString"
 import { lightingDealDurations } from "../LightingDealProduct/LightingDealProduct"
-import { calculateLightingDealEndTime } from "../../utils/LightingDealUtils"
+import { calculateLightingDealEndTime } from "../../utils/lightingDealUtils"
 import scrollToTop from "../../utils/scrollToTop"
 import AlertWithMessage from "../Alert/AlertWithMessage"
 import ProductStockSlider, {
