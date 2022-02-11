@@ -11,6 +11,8 @@ import {
   MANAGE_PRODUCTS,
   PRODUCT_ENDPOINT,
   TAGS_ENDPOINT,
+  PRODUCT_STOCK_SELL_TYPE,
+  PRODUCT_ORDER_SELL_TYPE,
 } from "../../constants/constants"
 import TagSelector from "../TagSelector/TagSelector"
 import { areArraysEqual } from "../../utils/compareTwoArrays"
@@ -23,8 +25,6 @@ import { calculateLightningDealEndTime } from "../../utils/lightningDealUtils"
 import scrollToTop from "../../utils/scrollToTop"
 import AlertWithMessage from "../Alert/AlertWithMessage"
 import ProductSellTypes, {
-  productOrderSellType,
-  productStockSellType,
   setSellTypeStatesUsingSellTypesArray,
 } from "../ProductSellTypes/ProductSellTypes"
 
@@ -156,9 +156,9 @@ export default function ProductForm() {
     const productSellTypes = []
 
     var actualProductStock = productStock
-    if (isProductOrder) productSellTypes.push(productOrderSellType)
+    if (isProductOrder) productSellTypes.push(PRODUCT_ORDER_SELL_TYPE)
     if (isProductStock) {
-      productSellTypes.push(productStockSellType)
+      productSellTypes.push(PRODUCT_STOCK_SELL_TYPE)
     } else {
       actualProductStock = "1"
     }
@@ -266,8 +266,8 @@ export default function ProductForm() {
 
     const productSellTypes = []
 
-    if (isProductOrder) productSellTypes.push(productOrderSellType)
-    if (isProductStock) productSellTypes.push(productStockSellType)
+    if (isProductOrder) productSellTypes.push(PRODUCT_ORDER_SELL_TYPE)
+    if (isProductStock) productSellTypes.push(PRODUCT_STOCK_SELL_TYPE)
     if (!areArraysEqual(location.state.productSellTypes, productSellTypes)) {
       body.PRODUCT_SELL_TYPES = productSellTypes
     }

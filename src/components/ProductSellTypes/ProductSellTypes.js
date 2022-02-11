@@ -1,8 +1,9 @@
 import React from "react"
 import { Form } from "react-bootstrap"
-
-export const productStockSellType = "PRODUCT_STOCK"
-export const productOrderSellType = "PRODUCT_ORDER"
+import {
+  PRODUCT_ORDER_SELL_TYPE,
+  PRODUCT_STOCK_SELL_TYPE,
+} from "../../constants/constants"
 
 export const setSellTypeStatesUsingSellTypesArray = ({
   sellTypes,
@@ -10,9 +11,9 @@ export const setSellTypeStatesUsingSellTypesArray = ({
   setIsProductStock,
 }) => {
   sellTypes.forEach((sellType) => {
-    if (sellType.S === productOrderSellType) {
+    if (sellType.S === PRODUCT_ORDER_SELL_TYPE) {
       setIsProductOrder(true)
-    } else if (sellType.S === productStockSellType) {
+    } else if (sellType.S === PRODUCT_STOCK_SELL_TYPE) {
       setIsProductStock(true)
     }
   })

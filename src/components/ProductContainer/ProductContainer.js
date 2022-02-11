@@ -3,13 +3,12 @@ import { Container, Row, Col } from "react-bootstrap"
 
 import useToken from "../../hooks/useToken"
 import useWindowDimensions from "../../hooks/useWindowDimensions"
-import { NO_TAGS_STRING } from "../../constants/constants"
+import { NO_TAGS_STRING, PRODUCT_STOCK_SELL_TYPE } from "../../constants/constants"
 import Product from "../Product/Product"
 import NoProductFoundMessage from "../NoProductFoundMessage/NoProductFoundMessage"
 import MemoizedProductPagination from "../ProductPagination/ProductPagination"
 import AlertWithMessage from "../Alert/AlertWithMessage"
 import { getProductsFromDatabase } from "../../actions/database"
-import { productStockSellType } from "../ProductSellTypes/ProductSellTypes"
 
 const ProductContainer = () => {
   const [productData, setProductData] = useState({
@@ -74,7 +73,7 @@ const ProductContainer = () => {
           lightningDealStartTime={item.LIGHTNING_DEAL_START_TIME?.S}
           hasMoreDataToFetch={pagination.fetch}
           productStock={item.PRODUCT_STOCK?.N || 1}
-          productSellTypes={item.PRODUCT_SELL_TYPES?.L || [productStockSellType]}
+          productSellTypes={item.PRODUCT_SELL_TYPES?.L || [PRODUCT_STOCK_SELL_TYPE]}
         />
       </Col>
     )

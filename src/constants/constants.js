@@ -14,7 +14,10 @@ export const PRODUCTS_DUMP_FILE_NAME =
   process.env.REACT_APP_PRODUCTS_DUMP_FILE_NAME || "products-dump"
 export const ADMINS_BUCKET =
   process.env.REACT_APP_ADMINS_BUCKET || "us-east-1-beta-e-commerce-admins-bucket"
-
+export const PRODUCT_STOCK_SELL_TYPE =
+  process.env.REACT_APP_PRODUCT_STOCK || "PRODUCT_STOCK"
+export const PRODUCT_ORDER_SELL_TYPE =
+  process.env.REACT_APP_PRODUCT_ORDER || "PRODUCT_ORDER"
 export const PRODUCT_ENDPOINT = "product"
 export const PRODUCTS_ENDPOINT = "products"
 export const TAGS_ENDPOINT = "tags"
