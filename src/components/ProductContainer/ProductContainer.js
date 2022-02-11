@@ -9,6 +9,7 @@ import NoProductFoundMessage from "../NoProductFoundMessage/NoProductFoundMessag
 import MemoizedProductPagination from "../ProductPagination/ProductPagination"
 import AlertWithMessage from "../Alert/AlertWithMessage"
 import { getProductsFromDatabase } from "../../actions/database"
+import { productStockSellType } from "../ProductSellTypes/ProductSellTypes"
 
 const ProductContainer = () => {
   const [productData, setProductData] = useState({
@@ -73,6 +74,7 @@ const ProductContainer = () => {
           lightningDealStartTime={item.LIGHTNING_DEAL_START_TIME?.S}
           hasMoreDataToFetch={pagination.fetch}
           productStock={item.PRODUCT_STOCK?.N || 1}
+          productSellTypes={item.PRODUCT_SELL_TYPES?.L || [productStockSellType]}
         />
       </Col>
     )

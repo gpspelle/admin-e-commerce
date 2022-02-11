@@ -26,6 +26,7 @@ export default function Product({
   lightningDealDuration,
   dealPrice,
   productStock,
+  productSellTypes,
 }) {
   const { token } = useToken()
   const history = useHistory()
@@ -60,6 +61,7 @@ export default function Product({
       images,
       productType,
       productStock,
+      productSellTypes,
     }
 
     if (productType === productTypes.DEAL.name) {

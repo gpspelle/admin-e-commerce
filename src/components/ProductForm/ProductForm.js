@@ -22,10 +22,11 @@ import { lightningDealDurations } from "../LightningDeal/LightningDealProduct"
 import { calculateLightningDealEndTime } from "../../utils/lightningDealUtils"
 import scrollToTop from "../../utils/scrollToTop"
 import AlertWithMessage from "../Alert/AlertWithMessage"
-import ProductStockSlider, {
-  PRODUCT_ORDER,
-  PRODUCT_STOCK,
-} from "../ProductStockSlider/ProductStockSlider"
+import ProductSellTypes, {
+  productOrderSellType,
+  productStockSellType,
+  setSellTypeStatesUsingSellTypesArray,
+} from "../ProductSellTypes/ProductSellTypes"
 
 export default function ProductForm() {
   const { token } = useToken()
@@ -62,7 +63,9 @@ export default function ProductForm() {
   const [dealPrice, setDealPrice] = useState("")
   const [lightningDealStartTime, setLightningDealStartTime] = useState()
   const [orderIndex, setOrderIndex] = useState([])
-  const [productStockOrOrder, setProductStockOrOrder] = useState(PRODUCT_STOCK)
+
+  const [isProductStock, setIsProductStock] = useState(false)
+  const [isProductOrder, setIsProductOrder] = useState(false)
   const [productStock, setProductStock] = useState("1")
   const { images, imageNames, imagesResized } = imageData
 
@@ -96,11 +99,13 @@ export default function ProductForm() {
       setImageData({ ...imageData, imagePreview: location.state.images })
       setProductType(location.state.productType)
       setProductStock(location.state.productStock)
-      if (parseInt(location.state.productStock) > 0) {
-        setProductStockOrOrder(PRODUCT_STOCK)
-      } else {
-        setProductStockOrOrder(PRODUCT_ORDER)
-      }
+
+      setSellTypeStatesUsingSellTypesArray({
+        sellTypes: location.state.productSellTypes,
+        setIsProductOrder,
+        setIsProductStock,
+      })
+
       if (location.state.productType === productTypes.DEAL.name) {
         setDealPrice(location.state.dealPrice)
       } else if (location.state.productType === productTypes.LIGHTNING_DEAL.name) {
@@ -148,6 +153,16 @@ export default function ProductForm() {
       })
     }
 
+    const productSellTypes = []
+
+    var actualProductStock = productStock
+    if (isProductOrder) productSellTypes.push(productOrderSellType)
+    if (isProductStock) {
+      productSellTypes.push(productStockSellType)
+    } else {
+      actualProductStock = "1"
+    }
+
     const body = {
       name,
       description,
@@ -156,7 +171,8 @@ export default function ProductForm() {
       images: transformedImages,
       productType: productType,
       coverImage: imagesResized[0],
-      productStock, // products made on demand have productStock equal 0
+      productStock: actualProductStock, // productStock is 1 if isProductStock is false
+      productSellTypes,
     }
 
     if (productType === productTypes.DEAL.name) {
@@ -193,7 +209,8 @@ export default function ProductForm() {
         setPrice("")
         setTags(new Set([]))
         setProductStock("1")
-        setProductStockOrOrder(PRODUCT_STOCK)
+        setIsProductOrder(false)
+        setIsProductStock(false)
         setImageData({
           images: [],
           imagesResized: [],
@@ -246,7 +263,18 @@ export default function ProductForm() {
     if (!areArraysEqual(location.state.tags, [...tags]))
       body.PRODUCT_TAGS = [...tags]
     if (location.state.productType !== productType) body.PRODUCT_TYPE = productType
-    if (location.state.productStock !== productStock)
+
+    const productSellTypes = []
+
+    if (isProductOrder) productSellTypes.push(productOrderSellType)
+    if (isProductStock) productSellTypes.push(productStockSellType)
+    if (!areArraysEqual(location.state.productSellTypes, productSellTypes)) {
+      body.PRODUCT_SELL_TYPES = productSellTypes
+    }
+
+    if (!isProductStock) {
+      body.PRODUCT_STOCK = "1"
+    } else if (location.state.productStock !== productStock)
       body.PRODUCT_STOCK = productStock
 
     if (productType === productTypes.DEAL.name) {
@@ -410,11 +438,13 @@ export default function ProductForm() {
             placeholder=""
           />
         </Form.Group>
-        <ProductStockSlider
+        <ProductSellTypes
+          isProductStock={isProductStock}
+          setIsProductStock={setIsProductStock}
+          isProductOrder={isProductOrder}
+          setIsProductOrder={setIsProductOrder}
           productStock={productStock}
           setProductStock={setProductStock}
-          productStockOrOrder={productStockOrOrder}
-          setProductStockOrOrder={setProductStockOrOrder}
         />
         <TagSelector createdTags={createdTags} tags={tags} setTags={setTags} />
         <ProductType

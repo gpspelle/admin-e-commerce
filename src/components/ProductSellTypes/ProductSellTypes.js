@@ -1,0 +1,60 @@
+import React from "react"
+import { Form } from "react-bootstrap"
+
+export const productStockSellType = "PRODUCT_STOCK"
+export const productOrderSellType = "PRODUCT_ORDER"
+
+export const setSellTypeStatesUsingSellTypesArray = ({
+  sellTypes,
+  setIsProductOrder,
+  setIsProductStock,
+}) => {
+  sellTypes.forEach((sellType) => {
+    if (sellType.S === productOrderSellType) {
+      setIsProductOrder(true)
+    } else if (sellType.S === productStockSellType) {
+      setIsProductStock(true)
+    }
+  })
+}
+
+export default function ProductSellTypes({
+  isProductStock,
+  setIsProductStock,
+  isProductOrder,
+  setIsProductOrder,
+  productStock,
+  setProductStock,
+}) {
+  return (
+    <Form.Group className="mb-3" controlId="formBasicStock">
+      <Form.Label>Tipo da venda</Form.Label>
+      <div style={{ display: "flex" }}>
+        <Form.Check
+          checked={isProductStock}
+          className="my-2"
+          type="checkbox"
+          label="Em estoque"
+          onChange={() => setIsProductStock(!isProductStock)}
+          style={{ width: "75%" }}
+        />
+        {isProductStock && (
+          <Form.Control
+            value={productStock}
+            onChange={(e) => setProductStock(e.target.value)}
+            type="number"
+            placeholder="1"
+            style={{ width: "25%" }}
+          />
+        )}
+      </div>
+      <Form.Check
+        checked={isProductOrder}
+        className="my-2"
+        type="checkbox"
+        label="Sob encomenda"
+        onChange={() => setIsProductOrder(!isProductOrder)}
+      />
+    </Form.Group>
+  )
+}
