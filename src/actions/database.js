@@ -11,6 +11,7 @@ import {
   REST_API,
   SEND_FORGOT_PASSWORD_EMAIL_ENDPOINT,
   SEND_VERIFY_EMAIL_ENDPOINT,
+  TAGS_ENDPOINT,
 } from "../constants/constants"
 
 export const getAccountFromDatabase = async ({
@@ -429,4 +430,11 @@ export const batchAddProductsOnDatabase = async ({
     setIsWaitingResponse(false)
     return false
   }
+}
+
+export const getTagsFromDatabase = async ({ setCreatedTags }) => {
+  const data = await fetch(`${REST_API}/${TAGS_ENDPOINT}`)
+  const json = await data.json()
+
+  setCreatedTags(json)
 }

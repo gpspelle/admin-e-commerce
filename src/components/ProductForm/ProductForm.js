@@ -10,7 +10,6 @@ import {
   REST_API,
   MANAGE_PRODUCTS,
   PRODUCT_ENDPOINT,
-  TAGS_ENDPOINT,
   PRODUCT_STOCK_SELL_TYPE,
   PRODUCT_ORDER_SELL_TYPE,
 } from "../../constants/constants"
@@ -27,6 +26,7 @@ import AlertWithMessage from "../Alert/AlertWithMessage"
 import ProductSellTypes, {
   setSellTypeStatesUsingSellTypesArray,
 } from "../ProductSellTypes/ProductSellTypes"
+import { getTagsFromDatabase } from "../../actions/database"
 
 export default function ProductForm() {
   const { token } = useToken()
@@ -78,14 +78,7 @@ export default function ProductForm() {
   }, [lightningDealDate, lightningDealTime])
 
   useEffect(() => {
-    async function getTagsFromDatabase() {
-      const data = await fetch(`${REST_API}/${TAGS_ENDPOINT}`)
-      const json = await data.json()
-
-      setCreatedTags(json)
-    }
-
-    getTagsFromDatabase()
+    getTagsFromDatabase({ setCreatedTags })
   }, [operationStatus.status])
 
   useEffect(() => {
