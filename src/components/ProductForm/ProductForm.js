@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react"
 import axios from "axios"
 import { useHistory, useLocation } from "react-router-dom"
 import { Form, Container, Button, Spinner } from "react-bootstrap"
+import CurrencyInput from "react-currency-input-field"
 
 import useToken from "../../hooks/useToken"
 import ImageUploadPreview from "../ImageUploadPreview/ImageUploadPreview"
@@ -424,11 +425,14 @@ export default function ProductForm() {
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicPrice">
           <Form.Label>Preço</Form.Label>
-          <Form.Control
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            type="number"
+          <CurrencyInput
+            className="form-control"
             placeholder=""
+            decimalsLimit={2}
+            onValueChange={(value) => setPrice(value)}
+            allowNegativeValue={false}
+            prefix="R$ "
+            disableGroupSeparators
           />
         </Form.Group>
         <ProductSellTypes
