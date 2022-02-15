@@ -433,6 +433,7 @@ export default function ProductForm() {
             allowNegativeValue={false}
             prefix="R$ "
             disableGroupSeparators
+            value={price}
           />
         </Form.Group>
         <ProductSellTypes
