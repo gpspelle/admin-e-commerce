@@ -1,5 +1,6 @@
 import React from "react"
 import { Form, ButtonGroup, Button, Card } from "react-bootstrap"
+import CurrencyInput from "react-currency-input-field"
 
 import DateTimePicker from "../DateTimePicker/DateTimePicker"
 
@@ -24,11 +25,15 @@ export default function LightningDealProduct({
       <Card.Body>
         <Form.Group className="preview" controlId="formDealPrice">
           <Form.Label>Preço promocional</Form.Label>
-          <Form.Control
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            type="number"
+          <CurrencyInput
+            className="form-control"
             placeholder=""
+            decimalsLimit={2}
+            onValueChange={(value) => setPrice(value)}
+            allowNegativeValue={false}
+            prefix="R$ "
+            disableGroupSeparators
+            value={price}
           />
         </Form.Group>
         <Form.Group>
