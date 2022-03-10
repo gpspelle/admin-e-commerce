@@ -29,6 +29,8 @@ export default function AccountForm(props) {
     name: props.name,
     commercial_name: props.commercial_name,
     phone_number: props.phone_number,
+    facebook_link: props.facebook_link,
+    instagram_link: props.instagram_link,
     is_email_verified: props.is_email_verified,
     about_me: props.about_me,
     about_products: props.about_products,
@@ -57,6 +59,8 @@ export default function AccountForm(props) {
     name,
     commercial_name,
     phone_number,
+    facebook_link,
+    instagram_link,
     about_me,
     about_products,
     is_email_verified,
@@ -147,6 +151,8 @@ export default function AccountForm(props) {
     if (props.about_products !== about_products) body.about_products = about_products
     if (props.image_zoom !== zoom) body.image_zoom = zoom
     if (props.image_rotate !== rotate) body.image_rotate = rotate
+    if (props.facebook_link !== facebook_link) body.facebook_link = facebook_link
+    if (props.instagram_link !== instagram_link) body.instagram_link = instagram_link
     if (
       props.image_position.x !== image_position.x ||
       props.image_position.y !== image_position.y
@@ -227,6 +233,18 @@ export default function AccountForm(props) {
     if (props.commercial_name !== commercial_name)
       body.commercial_name = commercial_name
     if (props.phone_number !== phone_number) body.phone_number = phone_number
+    if (props.about_me !== about_me) body.about_me = about_me
+    if (props.about_products !== about_products) body.about_products = about_products
+    if (props.image_zoom !== zoom) body.image_zoom = zoom
+    if (props.image_rotate !== rotate) body.image_rotate = rotate
+    if (props.facebook_link !== facebook_link) body.facebook_link = facebook_link
+    if (props.instagram_link !== instagram_link) body.instagram_link = instagram_link
+    if (
+      props.image_position.x !== image_position.x ||
+      props.image_position.y !== image_position.y
+    ) {
+      body.image_position = JSON.stringify(image_position)
+    }
 
     const config = {
       headers: {
@@ -409,6 +427,26 @@ export default function AccountForm(props) {
                   as="textarea"
                   rows={7}
                   placeholder="Esse é um espaço para você contar contar mais sobre os produtos que você faz, há quanto tempo você produz esse tipo de produto, como você começou, quais são os materiais que você mais gosta de utilizar, etc. Fique a vontade para adicionar o que você quiser!"
+                />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="formEditAccountFacebookLink">
+                <Form.Label>Facebook</Form.Label>
+                <Form.Control
+                  value={facebook_link}
+                  onChange={(e) =>
+                    setUserData({ ...userData, facebook_link: e.target.value })
+                  }
+                  placeholder="Link para a sua página no facebook"
+                />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="formEditAccountInstagramLink">
+                <Form.Label>Instagram</Form.Label>
+                <Form.Control
+                  value={instagram_link}
+                  onChange={(e) =>
+                    setUserData({ ...userData, instagram_link: e.target.value })
+                  }
+                  placeholder="Link para a sua página no instagram"
                 />
               </Form.Group>
               <Form.Group className="mb-3" controlId="formEditAccountPassword">

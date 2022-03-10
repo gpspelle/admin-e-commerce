@@ -26,6 +26,8 @@ export default function Profile() {
         "image_rotate",
         "about_me",
         "about_products",
+        "facebook_link",
+        "instagram_link",
       ],
     })
   }, [token])
@@ -48,6 +50,8 @@ export default function Profile() {
         }
         image_zoom={userData.image_zoom}
         image_rotate={userData.image_rotate}
+        facebook_link={userData.facebook_link}
+        instagram_link={userData.instagram_link}
       />
     )
   }
