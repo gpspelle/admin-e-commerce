@@ -1,0 +1,141 @@
+/** primary **/
+.primary-light-background {
+    background: #B35A7A !important;
+}
+
+.primary-light-color {
+    color: #B35A7A !important;
+}
+
+.primary-background {
+    background: #B33E69 !important;
+}
+
+.primary-color {
+    color: #B33E69 !important;
+}
+
+.primary-dark-background {
+    background: #8C2A4E !important;
+}
+
+.primary-dark-color {
+    color: #8C2A4E !important;
+}
+
+/** secondary **/
+.secondary-light-background {
+    background: #587798 !important;
+}
+
+.secondary-light-color {
+    color: #587798 !important;
+}
+
+.secondary-background {
+    background: #426B98 !important;
+}
+
+.secondary-color {
+    color: #426B98 !important;
+}
+
+.secondary-dark-background {
+    background: #2C4E73 !important;
+}
+
+.secondary-dark-color {
+    color: #2C4E73 !important;
+}
+
+/** helpers **/
+.helper-error-background {
+    background: #BE464C !important;
+}
+
+.helper-error-color {
+    color: #BE464C !important;
+}
+
+.helper-success-background {
+    background: #3AA669 !important;
+}
+
+.helper-success-color {
+    color: #3AA669 !important;
+}
+
+.helper-warning-background {
+    background: #F2994A !important;
+}
+
+.helper-warning-color {
+    color: #F2994A !important;
+}
+
+/** black and white **/
+.dark-background {
+    background: #263F59 !important;
+}
+
+.dark-color {
+    color: #263F59 !important;
+}
+
+.dark-dark-background {
+    background: #132333 !important;
+}
+
+.dard-dark-color {
+    color: #132333 !important;
+}
+
+.light-background {
+    background: #FFFFFF !important;
+}
+
+.light-color {
+    color: #FFFFFF !important;
+}
+
+.light-dark-background {
+    background: #F5F7FA !important;
+}
+
+.light-dark-color {
+    color: #F5F7FA !important;
+}
+
+.grey-background {
+    background: #AFC1D3 !important;
+}
+
+.grey-color {
+    color: #AFC1D3 !important;
+}
+
+.grey-dark-background {
+    background: #879AAD;
+}
+
+.grey-dark-color {
+    color: #879AAD !important;
+}
+
+/** button border**/
+.no-border {
+    border: none !important;
+}
+
+/* condition for screen size max of 810px */
+@media (max-width:810px) {
+
+    /* your conditional / responsive CSS inside this condition */
+    p { font-size: 12px; line-height: 18px; }
+  
+}
+
+.container, .container-fluid {
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+}
