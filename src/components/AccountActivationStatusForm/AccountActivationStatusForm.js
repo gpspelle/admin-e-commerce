@@ -86,14 +86,16 @@ export default function AccountActivationStatusForm() {
         <Modal.Body>{modalMessage}</Modal.Body>
         <Modal.Footer>
           <Button
-            variant="secondary"
+            className="no-border grey-dark-background"
             disabled={isWaitingResponse}
             onClick={handleCloseModal}
           >
             Cancelar
           </Button>
           <Button
-            variant={is_active ? "danger" : "success"}
+            className={`no-border
+              ${is_active ? "helper-error-background" : "helper-success-background"}
+            `}
             disabled={isWaitingResponse}
             onClick={handleEditAccountActivationStatus}
           >
@@ -119,8 +121,9 @@ export default function AccountActivationStatusForm() {
             />
             {message}
             <Button
-              variant={is_active ? "danger" : "success"}
-              className="w-100"
+              className={`w-100 no-border font-face-poppins-bold ${
+                is_active ? "helper-error-background" : "helper-success-background"
+              }`}
               disabled={isWaitingResponse || userData.email === undefined}
               onClick={handleShowModal}
             >
