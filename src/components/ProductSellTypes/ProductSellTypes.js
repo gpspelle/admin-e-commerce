@@ -1,9 +1,11 @@
 import React from "react"
 import { Form } from "react-bootstrap"
+
 import {
   PRODUCT_ORDER_SELL_TYPE,
   PRODUCT_STOCK_SELL_TYPE,
 } from "../../constants/constants"
+import "./ProductSellTypes.css"
 
 export const setSellTypeStatesUsingSellTypesArray = ({
   sellTypes,

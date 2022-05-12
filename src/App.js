@@ -23,6 +23,7 @@ import {
 import ForgotPassword from "./components/ForgotPassword/ForgotPassword"
 import ChangeForgotPassword from "./components/ChangeForgotPassword/ChangeForgotPassword"
 import AccountActivationStatusForm from "./components/AccountActivationStatusForm/AccountActivationStatusForm"
+import "./App.css"
 import "./style/guidelines.css"
 
 function App() {

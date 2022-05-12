@@ -26,7 +26,7 @@ export default function TagSelector({ createdTags, tags, setTags }) {
       <Button
         style={{ width: "100%" }}
         active={showTagMenu}
-        variant="outline-secondary"
+        className="no-border grey-dark-background"
         onClick={() => setShowTagMenu(!showTagMenu)}
       >
         Adicionar Tags

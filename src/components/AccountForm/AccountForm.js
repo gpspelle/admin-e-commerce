@@ -326,10 +326,16 @@ export default function AccountForm(props) {
             </Form.Group>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseModal}>
+            <Button
+              className="no-border grey-dark-background"
+              onClick={handleCloseModal}
+            >
               Cancelar
             </Button>
-            <Button variant="primary" onClick={handleEditPasswordAccount}>
+            <Button
+              className="no-border secondary-background"
+              onClick={handleEditPasswordAccount}
+            >
               Alterar senha
             </Button>
           </Modal.Footer>
@@ -458,8 +464,7 @@ export default function AccountForm(props) {
                   placeholder=""
                 />
                 <Button
-                  variant="primary"
-                  className="w-100 my-2"
+                  className="w-100 my-2 no-border secondary-background"
                   onClick={handleShowModal}
                 >
                   Alterar senha
@@ -499,8 +504,7 @@ export default function AccountForm(props) {
           )}
           <Button
             type="submit"
-            variant="success"
-            className="w-100"
+            className="w-100 no-border helper-success-background"
             disabled={isWaitingResponse}
           >
             {isWaitingResponse && (

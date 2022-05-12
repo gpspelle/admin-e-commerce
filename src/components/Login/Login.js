@@ -56,8 +56,7 @@ export default function Login({ setToken }) {
         />
         <Button
           onClick={() => history.push(`/${CREATE_ACCOUNT}`)}
-          className="w-100 my-5"
-          variant="success"
+          className="w-100 my-5 no-border helper-success-background"
         >
           Ainda não tem conta? Clique aqui!
         </Button>
@@ -86,7 +85,7 @@ export default function Login({ setToken }) {
           />
         </Form.Group>
         <div style={{ justifyContent: "right", display: "flex" }}>
-          <Button variant="primary" type="submit">
+          <Button className="no-border secondary-background" type="submit">
             Fazer login
           </Button>
         </div>
@@ -99,13 +98,12 @@ export default function Login({ setToken }) {
         />
         <div
           onClick={() => history.push(`/${FORGOT_PASSWORD}`)}
+          className="font-face-poppins-bold secondary-color"
           style={{
             justifyContent: "center",
             display: "flex",
             cursor: "pointer",
             marginTop: "22px",
-            color: "#0b5ed7",
-            fontWeight: "bold",
           }}
         >
           Esqueceu a senha?

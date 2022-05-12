@@ -31,8 +31,11 @@ export default function ProductType({
             active={pt[1].name === productType}
             onClick={() => setProductType(pt[1].name)}
             key={i}
-            className="my-2"
-            variant="outline-secondary"
+            className={`my-2 ${
+              pt[1].name === productType
+                ? "no-border grey-dark-background"
+                : "no-border light-dark-background dark-color"
+            }`}
           >
             {pt[1].showName}
           </Button>

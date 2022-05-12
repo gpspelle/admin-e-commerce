@@ -2,9 +2,10 @@ import React from "react"
 import AvatarEditor from "react-avatar-editor"
 import { Form } from "react-bootstrap"
 import RangeSlider from "react-bootstrap-range-slider"
-import "react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css"
 
 import { rotateMin, zoomMin } from "./ProfilePhoto"
+import "react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css"
+import "./ProfilePhotoDetails.css"
 
 const zoomMax = 10
 const zoomStep = 0.25

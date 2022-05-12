@@ -96,10 +96,16 @@ export default function Product({
         </Modal.Header>
         <Modal.Body>{`Deseja mesmo deletar o produto ${name}?`}</Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
+          <Button
+            className="no-border grey-dark-background"
+            onClick={handleCloseModal}
+          >
             Não
           </Button>
-          <Button variant="primary" onClick={() => handleDeleteProduct()}>
+          <Button
+            className="no-border helper-error-background"
+            onClick={() => handleDeleteProduct()}
+          >
             Sim
           </Button>
         </Modal.Footer>
@@ -131,7 +137,7 @@ export default function Product({
         <Card.Body style={{ width: productContainerSize }}>
           <Card.Title className="notranslate">{name}</Card.Title>
           <Button
-            className="helper-error-background"
+            className="helper-error-background font-face-poppins-bold"
             disabled={isWaitingResponse}
             variant="danger"
             style={{ width: "100%", marginBottom: "4%" }}

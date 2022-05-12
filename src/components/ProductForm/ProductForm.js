@@ -464,7 +464,11 @@ export default function ProductForm() {
           orderIndex={orderIndex}
           setOrderIndex={setOrderIndex}
         />
-        <Button variant="primary" type="submit" disabled={isWaitingResponse}>
+        <Button
+          className="no-border secondary-background font-face-poppins-bold"
+          type="submit"
+          disabled={isWaitingResponse}
+        >
           {isWaitingResponse && (
             <>
               <Spinner

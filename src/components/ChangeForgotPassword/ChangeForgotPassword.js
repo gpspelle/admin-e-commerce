@@ -81,7 +81,11 @@ export default function ChangeForgotPassword() {
               <PasswordRequirements password={password} />
             </Form.Group>
             <div style={{ justifyContent: "right", display: "flex" }}>
-              <Button type="submit" variant="primary" disabled={isWaitingResponse}>
+              <Button
+                type="submit"
+                className="no-border secondary-background"
+                disabled={isWaitingResponse}
+              >
                 {isWaitingResponse && (
                   <>
                     <Spinner
