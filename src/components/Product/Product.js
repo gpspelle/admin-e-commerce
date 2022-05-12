@@ -172,10 +172,12 @@ export default function Product({
               <Card.Text className="notranslate">&nbsp;R$ {dealPrice}</Card.Text>
             )}
           </div>
-          <LightningDealDuration
-            lightningDealDuration={lightningDealDuration}
-            lightningDealStartTime={lightningDealStartTime}
-          />
+          {isLightningDeal && (
+            <LightningDealDuration
+              lightningDealDuration={lightningDealDuration}
+              lightningDealStartTime={lightningDealStartTime}
+            />
+          )}
         </Card.Body>
       </Card>
     </div>
