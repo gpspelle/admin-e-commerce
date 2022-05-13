@@ -274,12 +274,13 @@ export default function ProductForm() {
     if (productType === productTypes.DEAL.name) {
       if (location.state.dealPrice !== dealPrice) {
         body.DEAL_PRICE = parseInt(dealPrice, 10)
-        body.removeAttributes = [
-          "LIGHTNING_DEAL_DURATION",
-          "LIGHTNING_DEAL_START_TIME",
-          "LIGHTNING_DEAL_END_TIME",
-        ]
       }
+
+      body.removeAttributes = [
+        "LIGHTNING_DEAL_DURATION",
+        "LIGHTNING_DEAL_START_TIME",
+        "LIGHTNING_DEAL_END_TIME",
+      ]
     } else if (productType === productTypes.LIGHTNING_DEAL.name) {
       if (location.state.lightningDealDuration !== lightningDealDuration) {
         body.LIGHTNING_DEAL_DURATION = lightningDealDuration
@@ -302,14 +303,19 @@ export default function ProductForm() {
       if (location.state.dealPrice !== dealPrice) {
         body.DEAL_PRICE = parseInt(dealPrice, 10)
       }
-    } else if (location.state.productType !== productTypes.NORMAL.name) {
+    } else {
       body.removeAttributes = [
         "LIGHTNING_DEAL_DURATION",
-        "DEAL_PRICE",
         "LIGHTNING_DEAL_START_TIME",
         "LIGHTNING_DEAL_END_TIME",
       ]
+
+      if (productType === productTypes.NORMAL.name) {
+        body.removeAttributes.push("DEAL_PRICE")
+      }
     }
+
+    console.log(body)
 
     if (images.length > 0 && imagesResized.length > 0) {
       const transformedImages = []
