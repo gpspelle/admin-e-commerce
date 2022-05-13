@@ -471,7 +471,7 @@ export default function ProductForm() {
           setOrderIndex={setOrderIndex}
         />
         <Button
-          className="no-border secondary-background font-face-poppins-bold"
+          className="no-border secondary-background"
           type="submit"
           disabled={isWaitingResponse}
         >

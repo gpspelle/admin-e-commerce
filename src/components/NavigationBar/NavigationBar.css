@@ -1,11 +1,11 @@
 .navigation-link {
-    color: #212529 !important;
+    color: #263F59 !important;
     transition: 0s !important;
 }
 
 .navigation-link:hover {
-    color: #fff !important;
-    background-color: #212529;
+    color: #F5F7FA !important;
+    background-color: #263F59;
     border-radius: 8px;
     opacity: 0.4;
 }

@@ -121,7 +121,7 @@ export default function AccountActivationStatusForm() {
             />
             {message}
             <Button
-              className={`w-100 no-border font-face-poppins-bold ${
+              className={`w-100 no-border ${
                 is_active ? "helper-error-background" : "helper-success-background"
               }`}
               disabled={isWaitingResponse || userData.email === undefined}

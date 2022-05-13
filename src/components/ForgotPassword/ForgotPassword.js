@@ -50,7 +50,11 @@ export default function ForgotPassword() {
           />
         </Form.Group>
         <div style={{ justifyContent: "right", display: "flex" }}>
-          <Button type="submit" variant="primary" disabled={isWaitingResponse}>
+          <Button
+            type="submit"
+            className="no-border secondary-background"
+            disabled={isWaitingResponse}
+          >
             {isWaitingResponse && (
               <>
                 <Spinner

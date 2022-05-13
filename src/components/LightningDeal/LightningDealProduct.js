@@ -50,8 +50,11 @@ export default function LightningDealProduct({
                 active={duration[1].name === selectedDuration}
                 onClick={() => setSelectedDuration(duration[1].name)}
                 key={i}
-                className="my-1"
-                variant="outline-secondary"
+                className={`my-1 ${
+                  duration[1].name === selectedDuration
+                    ? "no-border grey-dark-background"
+                    : "no-border light-dark-background dark-color"
+                }`}
                 style={{ zIndex: 0 }}
               >
                 {duration[1].showName}

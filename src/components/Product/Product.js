@@ -137,7 +137,7 @@ export default function Product({
         <Card.Body style={{ width: productContainerSize }}>
           <Card.Title className="notranslate">{name}</Card.Title>
           <Button
-            className="helper-error-background font-face-poppins-bold"
+            className="helper-error-background"
             disabled={isWaitingResponse}
             variant="danger"
             style={{ width: "100%", marginBottom: "4%" }}

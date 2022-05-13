@@ -98,7 +98,7 @@ export default function Login({ setToken }) {
         />
         <div
           onClick={() => history.push(`/${FORGOT_PASSWORD}`)}
-          className="font-face-poppins-bold secondary-color"
+          className="secondary-color"
           style={{
             justifyContent: "center",
             display: "flex",
