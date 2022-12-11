@@ -3,6 +3,7 @@ import { Container, Nav, Navbar, Offcanvas } from "react-bootstrap"
 
 import {
   ACTIVATION_STATUS,
+  AMAZON_PAY,
   ADD_PRODUCT,
   MANAGE_PRODUCTS,
   MY_ACCOUNT,
@@ -32,6 +33,9 @@ export default function NavigationBar() {
               </Nav.Link>
               <Nav.Link className="navigation-link" href={`/${MY_ACCOUNT}`}>
                 &nbsp;Minha conta
+              </Nav.Link>
+              <Nav.Link className="navigation-link" href={`/${AMAZON_PAY}`}>
+                &nbsp;Amazon Pay
               </Nav.Link>
               <Nav.Link className="navigation-link" href={`/${ACTIVATION_STATUS}`}>
                 &nbsp;Ativar/Desativar conta

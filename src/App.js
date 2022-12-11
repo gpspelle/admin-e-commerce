@@ -12,6 +12,7 @@ import NavigationBar from "./components/NavigationBar/NavigationBar"
 import Home from "./components/Home/Home"
 import {
   ADD_PRODUCT,
+  AMAZON_PAY,
   CREATE_ACCOUNT,
   FORGOT_PASSWORD,
   MANAGE_PRODUCTS,
@@ -25,6 +26,7 @@ import ChangeForgotPassword from "./components/ChangeForgotPassword/ChangeForgot
 import AccountActivationStatusForm from "./components/AccountActivationStatusForm/AccountActivationStatusForm"
 import "./App.css"
 import "./style/guidelines.css"
+import AmazonPay from "./components/AmazonPay/AmazonPay"
 
 function App() {
   const { token, setToken } = useToken()
@@ -65,6 +67,9 @@ function App() {
         </Route>
         <Route path={`/${MY_ACCOUNT}`}>
           <Profile />
+        </Route>
+        <Route path={`/${AMAZON_PAY}`}>
+          <AmazonPay />
         </Route>
         <Route path={`/:id/${EDIT_PRODUCT}`}>
           <ProductForm />

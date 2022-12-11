@@ -315,8 +315,6 @@ export default function ProductForm() {
       }
     }
 
-    console.log(body)
-
     if (images.length > 0 && imagesResized.length > 0) {
       const transformedImages = []
 
